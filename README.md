@@ -28,3 +28,14 @@
   <li>Components that do not specify content guide-lines were ignored, such as any, anyAttribute, documentation, or appinfo.</li>
   <li>Import and include components that compile documents out of multiple sources are not directly supported, because their implementation is application-dependent. The conjoined doc-ument can be transformed with our algorithms.</li>
 </ul>
+<h2>How to use</h2>
+<p>It's really quite simple: pick your XSD file, transform it with either xsd2html.xsl or with xsd+xsd2html.xsl, and voila: a generated HTML5 form.</p>
+<p>Here's more detail: using xsd2html2xml.xsl is the easiest way to go. It's a shortcut file containing only the variables needed for configuration. If you want, you can also use xsd+xml2html.xsl or xsd2html.xsl directly.</p>
+<p>The configuration is as follows:</p>
+<ul>
+  <li>Import xsd+xml2html.xsl if you want to populate the generated form with data, or xsd2html.xsl if you want it empty.</li>
+  <li>xml-doc: this variable should point to the XML data file, if you selected xsd+xml2html.xsl. Otherwise, it is ignored.</li>
+  <li>config-xml-generator: this variable should be either 'xslt' or 'js'. The XML generated from the form can be extracted through JavaScript (via a built-in script) or a separate XSL transformation, using html2xml.xsl. Default is 'js' (JavaScript).</li>
+  <li>output: if you selected 'xslt' as config-xml-generator, the output method should be XHTML. Otherwise closing tags will be omitted, resulting in invalid XML that cannot be processed by an XSLT parser. Note that XHTML is unforgiving, and that the form should be included in documents with a valid doctype, served as application/xhtml+xml. Default is HTML.</li>
+  <li>config-js-callback: this JavaScript function is called when the form is submitted (onsubmit). It should point to a function expecting a single string parameter. If config-xml-generator is 'js' this parameter will contain the resulting XML, if it is 'config-xml-generator' the parameter will contain the form's outerHTML, which can be processed by html2xml.xsl.</li>
+</ul>
