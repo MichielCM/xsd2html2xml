@@ -29,7 +29,7 @@
   <li>Import and include components that compile documents out of multiple sources are not directly supported, because their implementation is application-dependent. The conjoined doc-ument can be transformed with our algorithms.</li>
 </ul>
 <h2>How to use</h2>
-<p>It's really quite simple: pick your XSD file, transform it with either xsd2html.xsl or with xsd+xsd2html.xsl, and voila: a generated HTML5 form.</p>
+<p>It's really quite simple: pick your XSD file, transform it with either xsd2html.xsl or with xsd+xml2html.xsl, and voila: a generated HTML5 form.</p>
 <p>Here's more detail: using xsd2html2xml.xsl is the easiest way to go. It's a shortcut file containing only the variables needed for configuration. If you want, you can also use xsd+xml2html.xsl or xsd2html.xsl directly.</p>
 <p>The configuration is as follows:</p>
 <ul>
@@ -38,4 +38,11 @@
   <li>config-xml-generator: this variable should be either 'xslt' or 'js'. The XML generated from the form can be extracted through JavaScript (via a built-in script) or a separate XSL transformation, using html2xml.xsl. Default is 'js' (JavaScript).</li>
   <li>output-method: if you selected 'xslt' as config-xml-generator, the output method should be XHTML. Otherwise closing tags will be omitted, resulting in invalid XML that cannot be processed by an XSLT parser. Note that XHTML is unforgiving, and that the form should be included in documents with a valid doctype, served as application/xhtml+xml. Default is 'html'. Note that you should edit both the output-method variable and the xsl:output tag.</li>
   <li>config-js-callback: this JavaScript fuction is called when the form is submitted (onsubmit). It should point to a function expecting a single string parameter. If config-xml-generator is 'js' this parameter will contain the resulting XML, if it is 'config-xml-generator' the parameter will contain the form's outerHTML, which can be processed by html2xml.xsl. Default is 'console.log', writing the resulting XML to the console.</li>
+  <li>config-add-button-label, config-remove-button-label, config-submit-button-label: The values of these variables are used for the labels of add, remove, or submit buttons. Defaults are +, -, and OK.</li>
+</ul>
+<h2>Examples</h2>
+<h2>FAQ</h2>
+<ul>
+<li><strong>Will this work with any XML schema?</strong><br />Yes, as long as you don't use the more esoteric elements of XSD, such as field or keygen. See the full list of supported tags above.</li>
+<li><strong>Do I have to annotate my XML schema?</strong><br />No, but you can to override the default labels. By default, the name attribute of elements is used for labels. If you want a custom label, add an xs:annotation/xs:documentation containing your custom label to the element.</li>
 </ul>
