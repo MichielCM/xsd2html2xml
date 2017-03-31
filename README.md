@@ -40,6 +40,12 @@
   <li>config-js-callback: this JavaScript fuction is called when the form is submitted (onsubmit). It should point to a function expecting a single string parameter. If config-xml-generator is 'js' this parameter will contain the resulting XML, if it is 'config-xml-generator' the parameter will contain the form's outerHTML, which can be processed by html2xml.xsl. Default is 'console.log', writing the resulting XML to the console.</li>
   <li>config-add-button-label, config-remove-button-label, config-submit-button-label: The values of these variables are used for the labels of add, remove, or submit buttons. Defaults are +, -, and OK.</li>
 </ul>
+<h2>Input Elements</h2>
+<p>Input elements are assigned based on an element's primitive type. Most types work just like you would expect (e.g. int becomes number, boolean becomes checkbox, date becomes date). Some have additional options or peculiarities:</p>
+<ul>
+  <li>xs:string: by default, this is rendered as an input[type=text] element. If you would like to support multiline and render a textarea instead, you have to specify allowance of line breaks specifically in the pattern by including '\n'. Note that the pattern can be anything, as long as it contains a '\n'. The simplest way to do this is by adding '(\n)?' after a pattern. A multiline pattern with no further restrictions could look like this: '.*(\n)?'.</li>
+  <li>xs:duration: durations are rendered as input[type=range] elements, which look like sliders in most browser implementations. Durations have to follow a specific format according to W3C's specification. This format can be (partially) included in a pattern restriction. This pattern is used by xsd2html to determine the smallest unit that needs to be supported. For example, to use a duration that supports hours and minutes, add this pattern: 'PT\d{2}H\d{2}M'. The rendered range will be scaled in minutes (following the last M). To further restrict this duration to a maximum of 1 day, specify maxInclusive following W3C's notation in the smallest scale (i.e. minutes): 'PT1440M' (=60 minutes * 24).</li>
+</ul>
 <h2>Examples</h2>
 <h2>FAQ</h2>
 <ul>
