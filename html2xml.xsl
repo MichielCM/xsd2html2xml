@@ -25,41 +25,47 @@
 	<xsl:output method="xml" omit-xml-declaration="no" />
 	<xsl:strip-space elements="*"/>
 	
-	<xsl:template match="xhtml:style|xhtml:script|xhtml:legend|xhtml:span|xhtml:button|xhtml:input|xhtml:select" />
+	<xsl:template match="xhtml:style|xhtml:script|xhtml:legend|xhtml:span|xhtml:button|xhtml:input|xhtml:select|xhtml:textarea" />
 	
-	<xsl:template match="*[@data-xsd2form-type='element' and not(@style)]">
-		<xsl:if test="not(ancestor::*[@data-xsd2form-choice]) or ancestor::*[@data-xsd2form-choice]/preceding-sibling::*[1]/xhtml:input[@checked]">
-			<xsl:element name="{@data-xsd2form-name}">
-				<xsl:for-each select="*[@data-xsd2form-type='attribute']">
-					<xsl:attribute name="{@data-xsd2form-name}">
+	<xsl:template match="*[@data-xsd2html2xml-type='element' and not(@style)]">
+		<xsl:if test="not(ancestor::*[@style])">
+			<xsl:if test="not(ancestor::*[@data-xsd2html2xml-choice]) or ancestor::*[@data-xsd2html2xml-choice]/preceding-sibling::*[1]/xhtml:input[@checked]">
+				<xsl:element name="{@data-xsd2html2xml-name}">
+					<xsl:for-each select="*[@data-xsd2html2xml-type='attribute']">
 						<xsl:choose>
 							<xsl:when test="xhtml:input[@type='checkbox']/@checked">
-								<xsl:text>true</xsl:text>
+								<xsl:attribute name="{@data-xsd2html2xml-name}">true</xsl:attribute>
 							</xsl:when>
 							<xsl:when test="xhtml:input[@type='checkbox']">
-								<xsl:text>false</xsl:text>
+								<xsl:attribute name="{@data-xsd2html2xml-name}">false</xsl:attribute>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="xhtml:input/@value|xhtml:select/xhtml:option[@selected]/text()" />
+								<xsl:if test="xhtml:input/@value|xhtml:textarea/text()|xhtml:select/xhtml:option[@selected]/text()">
+									<xsl:attribute name="{@data-xsd2html2xml-name}">
+										<xsl:value-of select="xhtml:input/@value|xhtml:textarea/text()|xhtml:select/xhtml:option[@selected]/text()" />
+									</xsl:attribute>
+								</xsl:if>
 							</xsl:otherwise>
 						</xsl:choose>
-					</xsl:attribute>
-				</xsl:for-each>
-				
-				<xsl:choose>
-					<xsl:when test="*[@data-xsd2form-type='cdata']/xhtml:input[@type='checkbox']/@checked|xhtml:input[@type='checkbox']/@checked">
-						<xsl:text>true</xsl:text>
-					</xsl:when>
-					<xsl:when test="*[@data-xsd2form-type='cdata']/xhtml:input[@type='checkbox']|xhtml:input[@type='checkbox']">
-						<xsl:text>false</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="*[@data-xsd2form-type='cdata']/xhtml:input/@value|xhtml:input/@value|xhtml:select/xhtml:option[@selected]/text()|*[@data-xsd2form-type='cdata']/xhtml:select/xhtml:option[@selected]/text()" />
-					</xsl:otherwise>
-				</xsl:choose>
-				
-				<xsl:apply-templates />
-			</xsl:element>
+					</xsl:for-each>
+					
+					<xsl:choose>
+						<xsl:when test="*[@data-xsd2html2xml-type='cdata']/xhtml:input[@type='checkbox']/@checked|xhtml:input[@type='checkbox']/@checked">
+							<xsl:text>true</xsl:text>
+						</xsl:when>
+						<xsl:when test="*[@data-xsd2html2xml-type='cdata']/xhtml:input[@type='checkbox']|xhtml:input[@type='checkbox']">
+							<xsl:text>false</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:if test="*[@data-xsd2html2xml-type='cdata']/xhtml:input/@value|xhtml:input/@value|*[@data-xsd2html2xml-type='cdata']/xhtml:textarea/text()|xhtml:textarea/text()|xhtml:select/xhtml:option[@selected]/text()|*[@data-xsd2html2xml-type='cdata']/xhtml:select/xhtml:option[@selected]/text()">
+								<xsl:value-of select="*[@data-xsd2html2xml-type='cdata']/xhtml:input/@value|xhtml:input/@value|*[@data-xsd2html2xml-type='cdata']/xhtml:textarea/text()|xhtml:textarea/text()|xhtml:select/xhtml:option[@selected]/text()|*[@data-xsd2html2xml-type='cdata']/xhtml:select/xhtml:option[@selected]/text()" />
+							</xsl:if>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+					<xsl:apply-templates />
+				</xsl:element>
+			</xsl:if>
 		</xsl:if>
 	</xsl:template>
 	

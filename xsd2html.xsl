@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:dyn="http://exslt.org/dynamic" xmlns:date="http://exslt.org/dates-and-times">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<!-- MIT License
 
 	Copyright (c) 2017 Michiel Meulendijk
@@ -59,19 +59,11 @@
 	<xsl:variable name="config-months">months</xsl:variable>
 	<xsl:variable name="config-years">years</xsl:variable>
 	
-	<!-- optionally specify the xml document to populate the form with -->
-	<xsl:variable name="xml-doc">
-		<xsl:copy-of select="document('complex-sample.xml')/*"/>
-	</xsl:variable>
-	
 	<!-- override default matching template -->
 	<xsl:template match="*"/>
 	
 	<!-- root match from which all other templates are invoked -->
 	<xsl:template match="/xs:schema">
-		<!-- load xml-doc as nodeset for future use -->
-		<xsl:message><xsl:value-of select="exsl:node-set($xml-doc)/*" /></xsl:message>
-		
 		<xsl:element name="form">
 			<!-- disable action attribute -->
 			<xsl:attribute name="action">javascript:void(0);</xsl:attribute>
@@ -269,7 +261,6 @@
 	<xsl:template match="xs:element[@type]">
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share --> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences --> <!-- is used to disable elements that are copies for additional occurrences -->
-		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' --> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		
 		<xsl:variable name="type">
 			<xsl:value-of select="@type"/>
@@ -281,7 +272,6 @@
 					<xsl:with-param name="simple">true</xsl:with-param>
 					<xsl:with-param name="choice" select="$choice"/>
 					<xsl:with-param name="disabled" select="$disabled" />
-					<xsl:with-param name="tree" select="$tree" />
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:when test="//xs:complexType[@name=$type]">
@@ -289,21 +279,18 @@
 					<xsl:with-param name="simple">false</xsl:with-param>
 					<xsl:with-param name="choice" select="$choice"/>
 					<xsl:with-param name="disabled" select="$disabled" />
-					<xsl:with-param name="tree" select="$tree" />
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:when test="//xs:simpleType[@name=$type]">
 				<xsl:call-template name="handle-simple-elements">
 					<xsl:with-param name="choice" select="$choice"/>
 					<xsl:with-param name="disabled" select="$disabled" />
-					<xsl:with-param name="tree" select="$tree" />
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:when test="starts-with($type, 'xs:')">
 				<xsl:call-template name="handle-simple-elements">
 					<xsl:with-param name="choice" select="$choice"/>
 					<xsl:with-param name="disabled" select="$disabled" />
-					<xsl:with-param name="tree" select="$tree" />
 				</xsl:call-template>
 			</xsl:when>
 		</xsl:choose>
@@ -313,13 +300,11 @@
 	<xsl:template match="xs:element[xs:complexType/xs:simpleContent]">
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		
 		<xsl:call-template name="handle-complex-elements">
 			<xsl:with-param name="simple">true</xsl:with-param>
 			<xsl:with-param name="choice" select="$choice"/>
 			<xsl:with-param name="disabled" select="$disabled" />
-			<xsl:with-param name="tree" select="$tree" />
 		</xsl:call-template>
 	</xsl:template>
 	
@@ -327,27 +312,23 @@
 	<xsl:template match="xs:group[@ref]">
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		
 		<xsl:call-template name="handle-complex-elements">
 			<xsl:with-param name="id" select="@ref" />
 			<xsl:with-param name="simple" select="false" />
 			<xsl:with-param name="choice" select="$choice"/>
 			<xsl:with-param name="disabled" select="$disabled" />
-			<xsl:with-param name="tree" select="$tree" />
 		</xsl:call-template>
 	</xsl:template>
 	
 	<!-- handles groups existing of other attributes; note that 'ref' is used as id overriding local-name() -->
 	<xsl:template match="xs:attributeGroup[@ref]">
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		
 		<xsl:variable name="ref" select="@ref" />
 		<xsl:apply-templates select="//xs:attributeGroup[@name=$ref]/xs:attribute">
 			<xsl:with-param name="id" select="@ref" />
 			<xsl:with-param name="disabled" select="$disabled" />
-			<xsl:with-param name="tree" select="$tree" />
 		</xsl:apply-templates>
 	</xsl:template>
 	
@@ -358,7 +339,6 @@
 		<xsl:param name="simple" /> <!-- indicates whether this complex element has simple content --> <!-- indicates if an element allows simple content -->
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		
 		<!-- add radio button if $choice is specified -->
 		<xsl:if test="not($choice = '')">
@@ -383,26 +363,15 @@
 				<xsl:with-param name="simple" select="$simple" />
 				<xsl:with-param name="count">
 					<xsl:choose>
-						<!-- by default, the minOccurs number of elements is added (or 1); if populated, the number of populated entries is added -->
 						<xsl:when test="@minOccurs">
-							<xsl:choose>
-								<xsl:when test="count(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'/',$id))) &gt; @minOccurs">
-									<xsl:value-of select="count(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'/',$id)))" />
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="@minOccurs" />
-								</xsl:otherwise>
-							</xsl:choose>
+							<xsl:value-of select="@minOccurs" />
 						</xsl:when>
 						<xsl:otherwise>1</xsl:otherwise>
 					</xsl:choose>
 				</xsl:with-param>
-				<xsl:with-param name="index">1</xsl:with-param>
 				<xsl:with-param name="disabled" select="$disabled" />
-				<xsl:with-param name="tree" select="concat($tree,'/',$id)" />
 			</xsl:call-template>
 			
-			<!-- add another element to be used for dynamically inserted elements -->
 			<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs)">
 				<xsl:call-template name="handle-complex-element">
 					<xsl:with-param name="id" select="$id"/>
@@ -411,10 +380,8 @@
 					</xsl:with-param>
 					<xsl:with-param name="simple" select="$simple" />
 					<xsl:with-param name="count">1</xsl:with-param>
-					<xsl:with-param name="index">0</xsl:with-param>
 					<xsl:with-param name="invisible">true</xsl:with-param>
 					<xsl:with-param name="disabled">true</xsl:with-param>
-					<xsl:with-param name="tree" select="concat($tree,'/',$id)" />
 				</xsl:call-template>
 				
 				<xsl:call-template name="add-add-button">
@@ -431,11 +398,9 @@
 		<xsl:param name="id" select="@name" /> <!-- contains the 'name' attribute of the element -->
 		<xsl:param name="description" /> <!-- contains the node's description, either @name or annotation/documentation -->
 		<xsl:param name="count" select="1"/>  <!-- counts down from maxOccurs -->
-		<xsl:param name="index" /> <!-- keeps track of the element number for population; to be used with 'tree' -->
 		<xsl:param name="simple" /> <!-- indicates whether this complex element has simple content -->
 		<xsl:param name="invisible">false</xsl:param>
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		
 		<xsl:if test="$count > 0">
 			<xsl:element name="fieldset">
@@ -459,8 +424,7 @@
 				<xsl:variable name="ref" select="@ref"/>
 				<xsl:apply-templates select="xs:complexType/xs:sequence|xs:complexType/xs:all|xs:complexType/xs:choice|xs:complexType/xs:attribute|xs:complexType/xs:attributeGroup|//xs:group[@name=$ref]/*">
 					<xsl:with-param name="disabled" select="$disabled" />
-					<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
-				</xsl:apply-templates>
+					</xsl:apply-templates>
 				
 				<xsl:choose>
 					<!-- add simple element if the element allows simpleContent -->
@@ -469,47 +433,40 @@
 							<xsl:with-param name="description" select="$description" />
 							<xsl:with-param name="static">true</xsl:with-param>
 							<xsl:with-param name="count">1</xsl:with-param>
-							<xsl:with-param name="index">1</xsl:with-param>
 							<xsl:with-param name="html-type">cdata</xsl:with-param>
 							<xsl:with-param name="disabled" select="$disabled" />
-							<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
 						</xsl:call-template>
 					</xsl:when>
 					<xsl:otherwise>
 						<!-- add direct extensions of the element -->
 						<xsl:apply-templates select="*/*/xs:extension/*">
 							<xsl:with-param name="disabled" select="$disabled" />
-							<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
 						</xsl:apply-templates>
 						<!-- add inherited extensions -->
 						<xsl:call-template name="add-extensions-recursively">
 							<xsl:with-param name="disabled" select="$disabled" />
-							<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:element>
 			
-			<!-- call itself with count - 1 and index + 1 to account for multiple occurrences -->
+			<!-- call itself with count - 1 to account for multiple occurrences -->
 			<xsl:call-template name="handle-complex-element">
 				<xsl:with-param name="id" select="$id"/>
 				<xsl:with-param name="description" select="$description" />
 				<xsl:with-param name="simple" select="$simple"/>
 				<xsl:with-param name="count" select="$count - 1"/>
-				<xsl:with-param name="index" select="$index + 1"/>
 				<xsl:with-param name="disabled" select="$disabled" />
-				<xsl:with-param name="tree" select="$tree"/>
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
-
+	
 	<!-- handle simple elements -->
 	<!-- handle minOccurs and maxOccurs, calls handle-simple-element for further processing -->
 	<xsl:template name="handle-simple-elements" match="xs:element[xs:simpleType]">
 		<xsl:param name="id" select="@name" />
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		
 		<xsl:if test="not($choice = '')">
 			<xsl:call-template name="add-choice-button">
@@ -533,23 +490,13 @@
 				<xsl:with-param name="static">false</xsl:with-param>
 				<xsl:with-param name="count">
 					<xsl:choose>
-						<!-- by default, the minOccurs number of elements is added (or 1); if populated, the number of populated entries is added -->
 						<xsl:when test="@minOccurs">
-							<xsl:choose>
-								<xsl:when test="count(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'/',@name))) &gt; @minOccurs">
-									<xsl:value-of select="count(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'/',@name)))" />
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="@minOccurs" />
-								</xsl:otherwise>
-							</xsl:choose>
+							<xsl:value-of select="@minOccurs" />
 						</xsl:when>
 						<xsl:otherwise>1</xsl:otherwise>
 					</xsl:choose>
 				</xsl:with-param>
-				<xsl:with-param name="index">1</xsl:with-param>
 				<xsl:with-param name="disabled" select="$disabled" />
-				<xsl:with-param name="tree" select="concat($tree,'/',@name)" />
 			</xsl:call-template>
 			
 			<!-- add another element to be used for dynamically inserted elements -->
@@ -561,10 +508,8 @@
 					</xsl:with-param>
 					<xsl:with-param name="static">false</xsl:with-param>
 					<xsl:with-param name="count">1</xsl:with-param>
-					<xsl:with-param name="index">0</xsl:with-param>
-					<xsl:with-param name="invisible">true</xsl:with-param>
+					<xsl:with-param name="invisible" select="'true'" />
 					<xsl:with-param name="disabled">true</xsl:with-param>
-					<xsl:with-param name="tree" select="concat($tree,'/',@name)" />
 				</xsl:call-template>
 				
 				<xsl:call-template name="add-add-button">
@@ -579,7 +524,6 @@
 	<!-- handle attribute as simple element, without option for minOccurs or maxOccurs -->
 	<xsl:template name="handle-attributes" match="xs:attribute">
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		
 		<xsl:call-template name="handle-simple-element">
 			<xsl:with-param name="description">
@@ -587,10 +531,8 @@
 			</xsl:with-param>
 			<xsl:with-param name="static">true</xsl:with-param>
 			<xsl:with-param name="count">1</xsl:with-param>
-			<xsl:with-param name="index">1</xsl:with-param>
 			<xsl:with-param name="attribute">true</xsl:with-param>
 			<xsl:with-param name="disabled" select="$disabled" />
-			<xsl:with-param name="tree" select="concat($tree,'/@',@name)" />
 		</xsl:call-template>
 	</xsl:template>
 	
@@ -598,14 +540,12 @@
 	<xsl:template name="handle-simple-element">
 		<xsl:param name="id" select="@name" />
 		<xsl:param name="description" />
-		<xsl:param name="count" />
-		<xsl:param name="index" />
+		<xsl:param name="count"/>
 		<xsl:param name="static" /> <!-- indicates whether or not the element may be removed or is 'static' -->
 		<xsl:param name="attribute">false</xsl:param> <!-- indicates if the node is an element or an attribute -->
 		<xsl:param name="invisible">false</xsl:param> <!-- indicates if the generated element should be invisible, for use with occurrences -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		<xsl:param name="html-type" select="local-name()"/> <!-- contains the element name, or 'cdata' in the case of simple content -->
-		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		
 		<xsl:if test="$count > 0">
 			<xsl:variable name="type"> <!-- holds the primive type (xs:*) with which the element type will be determined -->
@@ -662,9 +602,6 @@
 				<xsl:if test="$type = 'xs:duration'">
 					<xsl:element name="output">
 						<xsl:choose>
-							<xsl:when test="not($invisible = 'true') and not(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']'))) = ''">
-								<xsl:value-of select="translate(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']')),translate(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']')), '0123456789.-', ''), '')"/>
-							</xsl:when>
 							<xsl:when test="@fixed">
 								<xsl:value-of select="translate(@fixed,translate(@fixed, '0123456789.-', ''), '')"/>
 							</xsl:when>
@@ -713,17 +650,10 @@
 								</xsl:otherwise>
 							</xsl:choose>
 							
-							<xsl:if test="not($invisible = 'true') and not(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']'))) = ''">
-								<xsl:attribute name="data-xsd2html2xml-filled">true</xsl:attribute>
-							</xsl:if>
-							
 							<!-- add options for each value; populate the element if there is corresponding data, or fill it with a fixed or default value -->
 							<xsl:call-template name="handle-enumerations">
 								<xsl:with-param name="default">
 									<xsl:choose>
-										<xsl:when test="not($invisible = 'true') and not(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']'))) = ''">
-											<xsl:value-of select="dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']'))" />
-										</xsl:when>
 										<xsl:when test="@default"><xsl:value-of select="@default" /></xsl:when>
 										<xsl:when test="@fixed"><xsl:value-of select="@fixed" /></xsl:when>
 									</xsl:choose>
@@ -770,10 +700,6 @@
 							
 							<!-- populate the element if there is corresponding data, or fill it with a fixed or default value -->
 							<xsl:choose>
-								<xsl:when test="not($invisible = 'true') and not(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']'))) = ''">
-									<xsl:attribute name="data-xsd2html2xml-filled">true</xsl:attribute>
-									<xsl:value-of select="dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']'))" />
-								</xsl:when>
 								<xsl:when test="@fixed">
 									<xsl:attribute name="readonly">readonly</xsl:attribute>
 									<xsl:value-of select="@fixed"/>
@@ -858,7 +784,7 @@
 								<xsl:when test="$attribute = 'true'">
 									<xsl:if test="@use = 'required'">
 										<xsl:choose><!-- in case of xs:base64binary, default values cannot be set to an input[type=file] element; because of this, a required attribute on these elements is omitted when fixed, default, or data is found -->
-											<xsl:when test="$type = 'xs:base64binary' and (@fixed or @default or (not($invisible = 'true') and not(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']'))) = ''))">
+											<xsl:when test="$type = 'xs:base64binary' and (@fixed or @default)">
 												<xsl:attribute name="data-xsd2html2xml-required">true</xsl:attribute>
 											</xsl:when>
 											<xsl:otherwise>
@@ -869,7 +795,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:choose><!-- in case of xs:base64binary, default values cannot be set to an input[type=file] element; because of this, a required attribute on these elements is omitted when fixed, default, or data is found -->
-										<xsl:when test="$type = 'xs:base64binary' and (@fixed or @default or (not($invisible = 'true') and not(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']'))) = ''))">
+										<xsl:when test="$type = 'xs:base64binary' and (@fixed or @default)">
 											<xsl:attribute name="data-xsd2html2xml-required">true</xsl:attribute>
 										</xsl:when>
 										<xsl:otherwise>
@@ -902,33 +828,13 @@
 							</xsl:attribute>
 							
 							<xsl:choose>
-								<!-- populate the element if there is corresponding data -->
-								<xsl:when test="not($invisible = 'true') and not(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']'))) = ''">
-									<xsl:attribute name="data-xsd2html2xml-filled">true</xsl:attribute>
-									<xsl:choose>
-										<xsl:when test="@type = 'xs:boolean'">
-											<xsl:if test="dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']')) = 'true'">
-												<xsl:attribute name="checked">
-													<xsl:text>checked</xsl:text>
-												</xsl:attribute>
-											</xsl:if>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:attribute name="value">
-												<xsl:value-of select="dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']'))" />
-											</xsl:attribute>
-										</xsl:otherwise>
-									</xsl:choose>
-								</xsl:when>
 								<!-- use fixed attribute as data if specified -->
 								<xsl:when test="@fixed">
 									<xsl:attribute name="readonly">readonly</xsl:attribute>
 									<xsl:choose>
 										<xsl:when test="$type = 'xs:boolean'">
 											<xsl:if test="@fixed = 'true'">
-												<!--<xsl:if test="not(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']')) = 'false')"> -->
-													<xsl:attribute name="checked">checked</xsl:attribute>
-												<!--</xsl:if> -->
+												<xsl:attribute name="checked">checked</xsl:attribute>
 											</xsl:if>
 										</xsl:when>
 										<xsl:otherwise>
@@ -943,9 +849,7 @@
 									<xsl:choose>
 										<xsl:when test="$type = 'xs:boolean'">
 											<xsl:if test="@default = 'true'">
-												<!--<xsl:if test="not(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']')) = 'false')"> -->
-													<xsl:attribute name="checked">checked</xsl:attribute>
-												<!--</xsl:if> -->
+												<xsl:attribute name="checked">checked</xsl:attribute>
 											</xsl:if>
 										</xsl:when>
 										<xsl:otherwise>
@@ -981,57 +885,46 @@
 			
 			<!-- add descending extensions -->
 			<xsl:apply-templates select="*/*/xs:extension/*">
-				<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
 				<xsl:with-param name="disabled" select="$disabled" />
 			</xsl:apply-templates>
 			
 			<!-- add inherited extensions -->
 			<xsl:call-template name="add-extensions-recursively">
-				<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
 				<xsl:with-param name="disabled" select="$disabled" />
 			</xsl:call-template>
 			
-			<!-- call self recursively, to account for occurrences -->
 			<xsl:call-template name="handle-simple-element">
 				<xsl:with-param name="id" select="$id" />
 				<xsl:with-param name="description" select="$description" />
 				<xsl:with-param name="static" select="$static" />
 				<xsl:with-param name="count" select="$count - 1" />
-				<xsl:with-param name="index" select="$index + 1" />
 				<xsl:with-param name="disabled" select="$disabled" />
-				<xsl:with-param name="tree" select="$tree" />
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="xs:sequence">
-		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		
 		<xsl:apply-templates select="xs:element|xs:attribute|xs:group">
 			<xsl:with-param name="disabled" select="$disabled" />
-			<xsl:with-param name="tree" select="$tree" />
 		</xsl:apply-templates>
 	</xsl:template>
 	
 	<xsl:template match="xs:all">
-		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		
 		<xsl:apply-templates select="xs:element|xs:attribute|xs:group">
 			<xsl:with-param name="disabled" select="$disabled" />
-			<xsl:with-param name="tree" select="$tree" />
 		</xsl:apply-templates>
 	</xsl:template>
 	
 	<xsl:template match="xs:choice">
-		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		
 		<xsl:apply-templates select="xs:element|xs:attribute|xs:group">
 			<xsl:with-param name="choice" select="generate-id()" />
 			<xsl:with-param name="disabled" select="$disabled" />
-			<xsl:with-param name="tree" select="$tree" />
 		</xsl:apply-templates>
 	</xsl:template>
 	
@@ -1052,7 +945,7 @@
 		<xsl:for-each select="//xs:simpleType[@name=$type]">
 			<xsl:call-template name="handle-enumerations">
 				<xsl:with-param name="default" select="$default" />
-				<xsl:with-param name="disabled" select="$disabled" />
+			<xsl:with-param name="disabled" select="$disabled" />
 			</xsl:call-template>
 		</xsl:for-each>
 	</xsl:template>
@@ -1216,12 +1109,11 @@
 		
 		<xsl:apply-templates select=".//xs:restriction/xs:pattern" mode="input"/>
 		<xsl:apply-templates select=".//xs:restriction/xs:length" mode="input"/>
-		<xsl:apply-templates select=".//xs:restriction/xs:maxLength" mode="input"/>
+		<xsl:apply-templates select=".//xs:restriction/xs:maxLength" mode="input"/>	
 	</xsl:template>
 	
 	<!-- Adds elements and attributes in extension recursively -->
 	<xsl:template name="add-extensions-recursively">
-		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		
 		<xsl:variable name="type">
@@ -1232,7 +1124,6 @@
 			<xsl:for-each select="//xs:simpleType[@name=$type]|//xs:complexType[@name=$type]">
 				<xsl:apply-templates select=".//xs:element|.//xs:attribute">
 					<xsl:with-param name="disabled" select="$disabled" />
-					<xsl:with-param name="tree" select="$tree" />
 				</xsl:apply-templates>
 			</xsl:for-each>
 		</xsl:if>
