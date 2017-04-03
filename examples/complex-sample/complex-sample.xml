@@ -16,14 +16,14 @@
         <time>02:02:00</time>
         <dateTime>2017-03-14T14:02:03</dateTime>
         <anyURI>http://www.github.com</anyURI>
-        <base64Binary>text/plain;base64,YmxhYXQ=</base64Binary>
+        <base64Binary>YmxhYXQ=</base64Binary>
     </simpleTypes>
     <dates>
         <date>2017-04-03</date>
         <time>02:03:04</time>
         <dateTime>2017-04-03T14:03:04</dateTime>
-        <gDay>3</gDay>
-        <gMonth>4</gMonth>
+        <gDay>---03</gDay>
+        <gMonth>--04</gMonth>
         <gMonthDay>--04-05</gMonthDay>
         <gYear>2017</gYear>
         <gYearMonth>2017-04</gYearMonth>
