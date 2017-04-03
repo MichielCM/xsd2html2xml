@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <rootElement>
     <simpleTypes>
         <string>abc</string>
@@ -11,21 +11,26 @@
         <float>1.1</float>
         <double>2.2</double>
         <boolean>true</boolean>
+        <duration>PT60S</duration>
         <date>2017-03-14</date>
         <time>02:02:00</time>
         <dateTime>2017-03-14T14:02:03</dateTime>
         <anyURI>http://www.github.com</anyURI>
-        <base64Binary>application/vnd.ms-excel;base64,YSxiLGMNCjEsMiwzDQo=</base64Binary>
+        <base64Binary>text/plain;base64,YmxhYXQ=</base64Binary>
     </simpleTypes>
     <dates>
-    	<gDay>---03</gDay>
-    	<gMonth>--04</gMonth>
-    	<gMonthDay>--05-01</gMonthDay>
-    	<gYear>2000</gYear>
-    	<gYearMonth>2000-12</gYearMonth>
+        <date>2017-04-03</date>
+        <time>02:03:04</time>
+        <dateTime>2017-04-03T14:03:04</dateTime>
+        <gDay>3</gDay>
+        <gMonth>4</gMonth>
+        <gMonthDay>--04-05</gMonthDay>
+        <gYear>2017</gYear>
+        <gYearMonth>2017-04</gYearMonth>
     </dates>
     <durations>
-    	<timeDuration>PT5M</timeDuration>
+        <dateDuration>P0D</dateDuration>
+        <timeDuration>PT5M</timeDuration>
     </durations>
     <defaults>
         <defaultString>this is no longer the default value</defaultString>
@@ -58,7 +63,6 @@
     <occurrencesComplex>
         <child attribute="3"/>
     </occurrencesComplex>
-    <child attribute=""/>
     <complexSimpleContent attribute="attribute">simple content</complexSimpleContent>
     <choice>
         <byte>1</byte>
