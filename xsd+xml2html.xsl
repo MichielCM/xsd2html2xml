@@ -129,6 +129,18 @@
 								}
 							}
 							
+							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']").length; i++) {
+								document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value").replace(/\D/g, "");
+							}
+							
+							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']").length; i++) {
+								document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value").replace(/\D/g, "");
+							}
+							
+							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']").length; i++) {
+								document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].value = new Date().getFullYear().toString().concat(document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value").substring(1));
+							}
+							
 							var htmlToXML = function(root) {
 							    return "&lt;?xml version=\"1.0\"?&gt;".concat(getXML(root));
 							};
@@ -168,9 +180,19 @@
 							                return node.getElementsByTagName("input")[0].checked;
 							            case "file":
 							            case "range":
+							            case "date":
 							            	return node.getElementsByTagName("input")[0].getAttribute("value");
 							            default:
-							                return node.getElementsByTagName("input")[0].value;
+							            	switch (node.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase()) {
+									            case "xs:gday":
+									            case "xs:gmonth":
+									            case "xs:gmonthday":
+									            case "xs:gyear":
+									            case "xs:gyearmonth":
+									            	return node.getElementsByTagName("input")[0].getAttribute("value");
+									            default:
+									            	return node.getElementsByTagName("input")[0].value;
+							            	}
 							        }
 							    } else if (node.getElementsByTagName("select").length > 0) {
 							        return node.getElementsByTagName("select")[0].value;
@@ -181,7 +203,7 @@
 						</xsl:text>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:text disable-output-escaping="no"> <!-- html requires output escaping -->
+						<xsl:text disable-output-escaping="no"> <!-- xhtml requires output escaping -->
 							if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector; if (!Element.prototype.closest) Element.prototype.closest = function (selector) {     var el = this;     while (el) {         if (el.matches(selector)) {             return el;         }         el = el.parentElement;     } };
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-filled]").length; i++) { if (document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]")) document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]").previousElementSibling.querySelector("input[type='radio']").click(); }
 							
@@ -248,9 +270,19 @@
 							                return node.getElementsByTagName("input")[0].checked;
 							            case "file":
 							            case "range":
+							            case "date":
 							            	return node.getElementsByTagName("input")[0].getAttribute("value");
 							            default:
-							                return node.getElementsByTagName("input")[0].value;
+							            	switch (node.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase()) {
+									            case "xs:gday":
+									            case "xs:gmonth":
+									            case "xs:gmonthday":
+									            case "xs:gyear":
+									            case "xs:gyearmonth":
+									            	return node.getElementsByTagName("input")[0].getAttribute("value");
+									            default:
+									            	return node.getElementsByTagName("input")[0].value;
+							            	}
 							        }
 							    } else if (node.getElementsByTagName("select").length > 0) {
 							        return node.getElementsByTagName("select")[0].value;
@@ -833,7 +865,7 @@
 										<xsl:text>if (this.checked) { this.setAttribute("checked","checked") } else { this.removeAttribute("checked") }</xsl:text>
 									</xsl:when>
 									<xsl:when test="$type = 'xs:base64binary'"> <!-- Use the FileReader API to set the value of file inputs -->
-										<xsl:text>var fileReader  = new FileReader(); var o = this; fileReader.onloadend = function () { o.setAttribute("value", fileReader.result.substring(5)); }; if(arguments[0].target.files[0]) { fileReader.readAsDataURL(arguments[0].target.files[0]); } else { this.removeAttribute("value"); }; if (this.getAttribute("data-xsd2html2xml-required")) this.setAttribute("required", "required");</xsl:text>
+										<xsl:text>var fileReader = new FileReader(); var o = this; fileReader.onloadend = function () { o.setAttribute("value", fileReader.result.substring(fileReader.result.indexOf("base64,") + 7)); }; if(arguments[0].target.files[0]) { fileReader.readAsDataURL(arguments[0].target.files[0]); } else { this.removeAttribute("value"); }; if (this.getAttribute("data-xsd2html2xml-required")) this.setAttribute("required", "required");</xsl:text>
 									</xsl:when>
 									<xsl:when test="$type = 'xs:gday'"> 
 										<xsl:text>if (this.value) { this.setAttribute("value", (this.value.length == 2 ? "---" : "---0").concat(this.value)) } else { this.removeAttribute("value"); };</xsl:text>
