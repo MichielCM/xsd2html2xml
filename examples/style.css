@@ -1,0 +1,16 @@
+form fieldset {
+	margin-bottom: 10px;
+}
+form label { 
+	display: block;
+}
+form label > span {
+	float: left;
+	min-width: 200px;
+}
+form label > input[required] + span:after, form label > textarea[required] + span:after, form label > select[required] + span:after {
+	content: "*:";
+}
+form button.add {
+	margin-bottom: 10px;
+}
