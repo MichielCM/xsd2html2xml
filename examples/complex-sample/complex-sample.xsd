@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="nestedString">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="nestedString Option 1"/>
+			<xs:enumeration value="nestedString Option 2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="nestedByte">
+		<xs:restriction base="xs:byte">
+			<xs:minInclusive value="0" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="doubleNestedByte">
+		<xs:restriction base="nestedByte">
+			<xs:maxInclusive value="10" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="rootElement">
+		<xs:annotation>
+			<xs:documentation>Root Element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="simpleTypes">
+					<xs:annotation>
+						<xs:documentation>Simple xs:* types with default restrictions:</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element type="xs:string" name="string" />
+							<xs:element name="multiline-string" default="hello">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:pattern value=".*(\n)?.*"></xs:pattern>
+										<xs:whiteSpace value="collapse" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element type="xs:byte" name="byte">
+								<xs:annotation>
+									<xs:documentation>byte (-128 to 127)</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element type="xs:short" name="short" />
+							<xs:element type="xs:int" name="int" />
+							<xs:element type="xs:long" name="long" />
+							<xs:element type="xs:decimal" name="decimal" />
+							<xs:element type="xs:float" name="float" />
+							<xs:element type="xs:double" name="double" />
+							<xs:element type="xs:boolean" name="boolean" />
+							<xs:element type="xs:duration" name="duration" default="PT60S" />
+							<xs:element type="xs:date" name="date" />
+							<xs:element type="xs:time" name="time" />
+							<xs:element type="xs:dateTime" name="dateTime" />
+							<xs:element type="xs:anyURI" name="anyURI" />
+							<xs:element type="xs:base64Binary" name="base64Binary" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="dates">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element type="xs:date" name="date" />
+							<xs:element type="xs:time" name="time" />
+							<xs:element type="xs:dateTime" name="dateTime" />
+							<xs:element type="xs:gDay" name="gDay" />
+							<xs:element type="xs:gMonth" name="gMonth" />
+							<xs:element type="xs:gMonthDay" name="gMonthDay"/>
+							<xs:element type="xs:gYear" name="gYear"/>
+							<xs:element type="xs:gYearMonth" name="gYearMonth"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="durations">
+					<xs:annotation>
+						<xs:documentation>Various durations:</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="dateDuration">
+								<xs:simpleType>
+									<xs:restriction base="xs:duration">
+										<xs:pattern value="P\d{4}Y\d{2}M\d{2}D" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="timeDuration">
+								<xs:simpleType>
+									<xs:restriction base="xs:duration">
+										<xs:pattern value="PT\d{2}H\d{2}M" />
+										<xs:minInclusive value="PT1M" />
+										<xs:maxInclusive value="PT10M" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="defaults">
+					<xs:annotation>
+						<xs:documentation>Simple elements with default and fixed values:</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element type="xs:string" name="defaultString" default="this is the default value" />
+							<xs:element type="xs:string" name="fixedString" fixed="this is a fixed value" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="positiveIntegers">
+					<xs:annotation>
+						<xs:documentation>Integers that all allow only positive values:</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element type="xs:positiveInteger" name="positiveInteger" />
+							<xs:element type="xs:nonNegativeInteger" name="negativeInteger" />
+							<xs:element type="xs:unsignedInt" name="unsignedInt" />
+							<xs:element name="integer">
+								<xs:annotation>
+									<xs:documentation>integer with min restriction</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:int">
+										<xs:minInclusive value="0" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="restrictions">
+					<xs:annotation>
+						<xs:documentation>Simple type with enumerations:</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="enumeration">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="Option 1" />
+										<xs:enumeration value="Option 2">
+											<xs:annotation>
+												<xs:documentation>Custom labeled option 2</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+										<xs:enumeration value="Option 3" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="fixed-enumeration" fixed="Option 3">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="Option 1" />
+										<xs:enumeration value="Option 2" />
+										<xs:enumeration value="Option 3" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="extensions">
+					<xs:annotation>
+						<xs:documentation>Various nested (and double nested) extensions:</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element type="nestedString" name="nestedString">
+								<xs:annotation>
+									<xs:documentation>nestedString-type determines the enumaration values</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element type="nestedByte" name="nestedByte">
+								<xs:annotation>
+									<xs:documentation>nestedByte-type restricts the byte to min=0</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element type="doubleNestedByte" name="doubleNestedByte">
+								<xs:annotation>
+									<xs:documentation>doubleNestedByte-type restricts nestedByte to max=10</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element type="xs:string" name="occurrencesSimple" minOccurs="1" maxOccurs="3">
+					<xs:annotation>
+						<xs:documentation>Recurring simple</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="occurrencesComplex" minOccurs="1" maxOccurs="3">
+					<xs:annotation>
+						<xs:documentation>Recurring complex</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="child">
+								<xs:complexType>
+									<xs:attribute type="xs:byte" name="attribute" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="complexSimpleContent">
+					<xs:annotation>
+						<xs:documentation>Complex element with simple content</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute type="xs:string" name="attribute" use="required" />
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="choice">
+					<xs:annotation>
+						<xs:documentation>Element with xs:choice:</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:choice>
+							<xs:element type="xs:byte" name="byte" />
+							<xs:element type="xs:short" name="short" />
+							<xs:element type="xs:long" name="long" />
+						</xs:choice>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
