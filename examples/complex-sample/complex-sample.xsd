@@ -81,14 +81,14 @@
 							<xs:element name="dateDuration">
 								<xs:simpleType>
 									<xs:restriction base="xs:duration">
-										<xs:pattern value="P\d{4}Y\d{2}M\d{2}D" />
+										<xs:pattern value="P\d{1,3}D" />
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>
 							<xs:element name="timeDuration">
 								<xs:simpleType>
 									<xs:restriction base="xs:duration">
-										<xs:pattern value="PT\d{2}H\d{2}M" />
+										<xs:pattern value="PT\d{1,2}M" />
 										<xs:minInclusive value="PT1M" />
 										<xs:maxInclusive value="PT10M" />
 									</xs:restriction>
