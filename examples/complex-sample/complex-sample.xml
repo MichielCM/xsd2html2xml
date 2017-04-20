@@ -11,7 +11,6 @@
         <float>1.1</float>
         <double>2.2</double>
         <boolean>true</boolean>
-        <duration>PT60S</duration>
         <date>2017-03-14</date>
         <time>02:02:00</time>
         <dateTime>2017-03-14T14:02:03</dateTime>

@@ -49,7 +49,6 @@
 							<xs:element type="xs:float" name="float" />
 							<xs:element type="xs:double" name="double" />
 							<xs:element type="xs:boolean" name="boolean" />
-							<xs:element type="xs:duration" name="duration" default="PT60S" />
 							<xs:element type="xs:date" name="date" />
 							<xs:element type="xs:time" name="time" />
 							<xs:element type="xs:dateTime" name="dateTime" />
