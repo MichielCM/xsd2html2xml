@@ -133,15 +133,21 @@
 							}
 							
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']").length; i++) {
-								document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value").replace(/\D/g, "");
+								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value")) {
+									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value").replace(/\D/g, "");
+								}
 							}
 							
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']").length; i++) {
-								document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value").replace(/\D/g, "");
+								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value")) {
+									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value").replace(/\D/g, "");
+								}
 							}
 							
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']").length; i++) {
-								document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].value = new Date().getFullYear().toString().concat(document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value").substring(1));
+								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value")) {
+									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].value = new Date().getFullYear().toString().concat(document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value").substring(1));
+								}
 							}
 							
 							var htmlToXML = function(root) {
@@ -225,15 +231,21 @@
 							}
 							
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']").length; i++) {
-								document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value").replace(/\D/g, "");
+								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value")) {
+									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value").replace(/\D/g, "");
+								}
 							}
 							
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']").length; i++) {
-								document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value").replace(/\D/g, "");
+								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value")) {
+									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value").replace(/\D/g, "");
+								}
 							}
 							
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']").length; i++) {
-								document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].value = new Date().getFullYear().toString().concat(document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value").substring(1));
+								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value")) {
+									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].value = new Date().getFullYear().toString().concat(document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value").substring(1));
+								}
 							}
 							
 							var htmlToXML = function(root) {
