@@ -1,4 +1,4 @@
-<h1>XSD2HTML2XML (pre-release)</h1>
+<h1>XSD2HTML2XML</h1>
 <p>Generates plain HTML5 forms from XML schemas (XSDs). Transforms filled-in forms into XML.</p>
 <p>XML schemas contain a wealth of information about what data is allowed in an XML structure, and thus how a user interface should be presented. HTML5 supports many new input types and attributes that are compatible with XML schemas. XSD2HTML2XML automates the process of generating forms from XML schemas and extracting valid XML from them after users fill them out. This makes user-generated entering of well-formed, valid XML input easier than ever before.</p>
 <p>In a nutshell:</p>
