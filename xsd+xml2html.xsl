@@ -48,6 +48,9 @@
 	<!-- use 'float: left' or something similar on the span to still make it appear before the input element -->
 	<xsl:variable name="config-label-after-input">true</xsl:variable>
 	
+	<!-- optionally specify which annotation/documentation language (determined by xml:lang) should be used -->
+	<xsl:variable name="config-language" />
+	
 	<!-- optionally specify text for interactive elements -->
 	<xsl:variable name="config-add-button-label">+</xsl:variable>
 	<xsl:variable name="config-remove-button-label">-</xsl:variable>
@@ -181,6 +184,8 @@
 							            case "file":
 							            case "range":
 							            case "date":
+							            case "time":
+							            case "datetime-local":
 							            	return node.getElementsByTagName("input")[0].getAttribute("value");
 							            default:
 							            	switch (node.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase()) {
@@ -271,6 +276,8 @@
 							            case "file":
 							            case "range":
 							            case "date":
+							            case "time":
+							            case "datetime-local":
 							            	return node.getElementsByTagName("input")[0].getAttribute("value");
 							            default:
 							            	switch (node.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase()) {
@@ -867,11 +874,14 @@
 									<xsl:when test="$type = 'xs:base64binary'"> <!-- Use the FileReader API to set the value of file inputs -->
 										<xsl:text>var fileReader = new FileReader(); var o = this; fileReader.onloadend = function () { o.setAttribute("value", fileReader.result.substring(fileReader.result.indexOf("base64,") + 7)); }; if(arguments[0].target.files[0]) { fileReader.readAsDataURL(arguments[0].target.files[0]); } else { this.removeAttribute("value"); }; if (this.getAttribute("data-xsd2html2xml-required")) this.setAttribute("required", "required");</xsl:text>
 									</xsl:when>
+									<xsl:when test="$type = 'xs:datetime' or $type = 'xs:time'"> 
+										<xsl:text>if (this.value) { this.setAttribute("value", (this.value.match(/.*\d\d:\d\d:\d\d/) ? this.value : this.value.concat(":00"))); } else { this.removeAttribute("value"); };</xsl:text>
+									</xsl:when>
 									<xsl:when test="$type = 'xs:gday'"> 
-										<xsl:text>if (this.value) { this.setAttribute("value", (this.value.length == 2 ? "---" : "---0").concat(this.value)) } else { this.removeAttribute("value"); };</xsl:text>
+										<xsl:text>if (this.value) { this.setAttribute("value", (this.value.length == 2 ? "---" : "---0").concat(this.value)); } else { this.removeAttribute("value"); };</xsl:text>
 									</xsl:when>
 									<xsl:when test="$type = 'xs:gmonth'"> 
-										<xsl:text>if (this.value) { this.setAttribute("value", (this.value.length == 2 ? "--" : "--0").concat(this.value)) } else { this.removeAttribute("value"); };</xsl:text>
+										<xsl:text>if (this.value) { this.setAttribute("value", (this.value.length == 2 ? "--" : "--0").concat(this.value)); } else { this.removeAttribute("value"); };</xsl:text>
 									</xsl:when>
 									<xsl:when test="$type = 'xs:gmonthday'"> 
 										<xsl:text>if (this.value) { this.setAttribute("value", this.value.replace(/^\d+/, "-")); } else { this.removeAttribute("value"); };</xsl:text>
@@ -1134,8 +1144,14 @@
 	<!-- Returns an element's description from xs:annotation/xs:documentation if it exists, @value in the case of enumerations, or @name otherwise -->
 	<xsl:template name="get-description">
 		<xsl:choose>
-			<xsl:when test="xs:annotation/xs:documentation">
-				<xsl:value-of select="xs:annotation/xs:documentation/text()" />	
+			<xsl:when test="not($config-language = '') and xs:annotation/xs:documentation[@xml:lang=$config-language]">
+				<xsl:value-of select="xs:annotation/xs:documentation[@xml:lang=$config-language]/text()" />
+			</xsl:when>
+			<xsl:when test="not($config-language = '') and xs:annotation/xs:documentation[not(@xml:lang)]">
+				<xsl:value-of select="xs:annotation/xs:documentation[not(@xml:lang)]/text()" />
+			</xsl:when>
+			<xsl:when test="$config-language = '' and xs:annotation/xs:documentation">
+				<xsl:value-of select="xs:annotation/xs:documentation/text()" />
 			</xsl:when>
 			<xsl:when test="@name">
 				<xsl:value-of select="@name" />

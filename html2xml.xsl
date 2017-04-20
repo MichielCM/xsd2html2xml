@@ -25,7 +25,7 @@
 	<xsl:output method="xml" omit-xml-declaration="no" />
 	<xsl:strip-space elements="*"/>
 	
-	<xsl:template match="xhtml:style|xhtml:script|xhtml:legend|xhtml:span|xhtml:button|xhtml:input|xhtml:select|xhtml:textarea" />
+	<xsl:template match="xhtml:style|xhtml:script|xhtml:legend|xhtml:span|xhtml:button|xhtml:output|xhtml:input|xhtml:select|xhtml:textarea" />
 	
 	<xsl:template match="*[@data-xsd2html2xml-type='element' and not(@style)]">
 		<xsl:if test="not(ancestor::*[@style])">
@@ -57,8 +57,8 @@
 							<xsl:text>false</xsl:text>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:if test="*[@data-xsd2html2xml-type='cdata']/xhtml:input/@value|xhtml:input/@value|*[@data-xsd2html2xml-type='cdata']/xhtml:textarea/text()|xhtml:textarea/text()|xhtml:select/xhtml:option[@selected]/text()|*[@data-xsd2html2xml-type='cdata']/xhtml:select/xhtml:option[@selected]/text()">
-								<xsl:value-of select="*[@data-xsd2html2xml-type='cdata']/xhtml:input/@value|xhtml:input/@value|*[@data-xsd2html2xml-type='cdata']/xhtml:textarea/text()|xhtml:textarea/text()|xhtml:select/xhtml:option[@selected]/text()|*[@data-xsd2html2xml-type='cdata']/xhtml:select/xhtml:option[@selected]/text()" />
+							<xsl:if test="*[@data-xsd2html2xml-type='cdata']/xhtml:input/@value|xhtml:input/@value|*[@data-xsd2html2xml-type='cdata']/xhtml:textarea/text()|xhtml:textarea/text()|xhtml:select/xhtml:option[@selected]/@value|*[@data-xsd2html2xml-type='cdata']/xhtml:select/xhtml:option[@selected]/@value">
+								<xsl:value-of select="*[@data-xsd2html2xml-type='cdata']/xhtml:input/@value|xhtml:input/@value|*[@data-xsd2html2xml-type='cdata']/xhtml:textarea/text()|xhtml:textarea/text()|xhtml:select/xhtml:option[@selected]/@value|*[@data-xsd2html2xml-type='cdata']/xhtml:select/xhtml:option[@selected]/@value" />
 							</xsl:if>
 						</xsl:otherwise>
 					</xsl:choose>

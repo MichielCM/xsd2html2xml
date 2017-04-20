@@ -34,8 +34,17 @@
 	<!-- use 'float: left' or something similar on the span to still make it appear before the input element -->
 	<xsl:variable name="config-label-after-input">true</xsl:variable>
 	
+	<!-- optionally specify which annotation/documentation language (determined by xml:lang) should be used -->
+	<xsl:variable name="config-language">nl</xsl:variable>
+	
 	<!-- optionally specify text for interactive elements -->
-	<xsl:variable name="config-add-button-label">New</xsl:variable>
-	<xsl:variable name="config-remove-button-label">Remove</xsl:variable>
-	<xsl:variable name="config-submit-button-label">Submit</xsl:variable>
+	<xsl:variable name="config-add-button-label">+</xsl:variable>
+	<xsl:variable name="config-remove-button-label">-</xsl:variable>
+	<xsl:variable name="config-submit-button-label">OK</xsl:variable>
+	<xsl:variable name="config-seconds">seconds</xsl:variable>
+	<xsl:variable name="config-minutes">minutes</xsl:variable>
+	<xsl:variable name="config-hours">hours</xsl:variable>
+	<xsl:variable name="config-days">days</xsl:variable>
+	<xsl:variable name="config-months">months</xsl:variable>
+	<xsl:variable name="config-years">years</xsl:variable>
 </xsl:stylesheet>
