@@ -12,6 +12,12 @@
   <li>Is easily stylable with CSS, or extendable with any library or framework;</li>
   <li>Is free for any purpose.</li>
 </ul>
+<h2>Versions</h2>
+<p>I strongly recommend using only <strong>released</strong> versions. Newer commits may contain new, experimental, features, but have not been thoroughly tested to perform well in a production environment.
+<ul>
+  <li>April 20, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v1.0">1.0: First release of XSD2HTML2XML.</a></li>
+</ul>
+<h2>Features</h2>
 <p>Supported XSD features:</p>
 <ul>
   <li>Simple and complex elements, attributes, exclusions, restrictions, groups, etc. The full list of supported XSD tags is as follows: all, attribute, attributeGroup, choice, complexContent, complexType, element, extension, group, restriction, schema, sequence, simpleContent, simpleType, union (partially).</li>
