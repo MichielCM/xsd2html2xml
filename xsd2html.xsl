@@ -3,17 +3,17 @@
 	<!-- MIT License
 
 	Copyright (c) 2017 Michiel Meulendijk
-	
+
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
 	in the Software without restriction, including without limitation the rights
 	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 	copies of the Software, and to permit persons to whom the Software is
 	furnished to do so, subject to the following conditions:
-	
+
 	The above copyright notice and this permission notice shall be included in all
 	copies or substantial portions of the Software.
-	
+
 	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,36 +21,36 @@
 	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE. -->
-	
+
 	<xsl:strip-space elements="*"/>
-	
+
 	<!-- set method as either html or xhtml. Note: if you want to process the results
 	with html2xml.xsl, you need to use xhtml. Note 2: browsers won't display the form correctly if
 	it does not contain a valid XHTML doctype and if it is not served with content type application/xhtml+xml -->
 	<!-- <xsl:output method="xhtml" omit-xml-declaration="no" /> -->
 	<xsl:output method="html" omit-xml-declaration="yes" indent="no" />
 	<xsl:variable name="output-method">html</xsl:variable>
-	
+
 	<!-- choose the JavaScript (js) or XSLT (xslt) option for processing the form results -->
 	<!-- <xsl:variable name="config-to-xml">xslt</xsl:variable> -->
 	<xsl:variable name="config-xml-generator">xslt</xsl:variable>
-	
+
 	<!-- choose a JavaScript function to be called when the form is submitted.
 	it should accept a string argument containing the xml or html -->
 	<xsl:variable name="config-js-callback">console.log</xsl:variable>
-	
+
 	<!-- optionally specify a css stylesheet to use for the form.
 	it will be inserted as a link tag inside the form element. -->
 	<xsl:variable name="config-css">style.css</xsl:variable>
-	
+
 	<!-- optionally specify whether you want the span element before or after the input / select element within the label tag -->
 	<!-- entering 'true' enables you to use the CSS next-sibling selector '+' to style the span based on the input's attributes -->
 	<!-- use 'float: left' or something similar on the span to still make it appear before the input element -->
 	<xsl:variable name="config-label-after-input">true</xsl:variable>
-	
+
 	<!-- optionally specify which annotation/documentation language (determined by xml:lang) should be used -->
 	<xsl:variable name="config-language" />
-	
+
 	<!-- optionally specify text for interactive elements -->
 	<xsl:variable name="config-add-button-label">+</xsl:variable>
 	<xsl:variable name="config-remove-button-label">-</xsl:variable>
@@ -61,16 +61,16 @@
 	<xsl:variable name="config-days">days</xsl:variable>
 	<xsl:variable name="config-months">months</xsl:variable>
 	<xsl:variable name="config-years">years</xsl:variable>
-	
+
 	<!-- override default matching template -->
 	<xsl:template match="*"/>
-	
+
 	<!-- root match from which all other templates are invoked -->
 	<xsl:template match="/xs:schema">
 		<xsl:element name="form">
 			<!-- disable action attribute -->
 			<xsl:attribute name="action">javascript:void(0);</xsl:attribute>
-			
+
 			<!-- call JS or XSLT functions based on configuration -->
 			<xsl:attribute name="onsubmit">
 				<xsl:if test="$config-xml-generator='js'">
@@ -80,10 +80,10 @@
 					<xsl:value-of select="$config-js-callback" />(this.outerHTML);
 				</xsl:if>
 			</xsl:attribute>
-			
+
 			<!-- start parsing the XSD from the top -->
 			<xsl:apply-templates select="xs:element" />
-			
+
 			<!-- add submit button -->
 			<xsl:element name="input">
 				<xsl:attribute name="type">submit</xsl:attribute>
@@ -91,7 +91,7 @@
 					<xsl:value-of select="$config-submit-button-label" />
 				</xsl:attribute>
 			</xsl:element>
-			
+
 			<!-- add optional CSS file reference -->
 			<xsl:if test="$config-css">
 				<xsl:element name="link">
@@ -102,7 +102,7 @@
 					</xsl:attribute>
 				</xsl:element>
 			</xsl:if>
-			
+
 			<!-- add initial scripts that run after all elements have been generated -->
 			<xsl:element name="script">
 				<xsl:attribute name="type">text/javascript</xsl:attribute>
@@ -111,7 +111,7 @@
 						<xsl:text disable-output-escaping="yes"> <!-- html requires no output escaping -->
 							if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector; if (!Element.prototype.closest) Element.prototype.closest = function (selector) {     var el = this;     while (el) {         if (el.matches(selector)) {             return el;         }         el = el.parentElement;     } };
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-filled]").length; i++) { if (document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]")) document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]").previousElementSibling.querySelector("input[type='radio']").click(); }
-							
+
 							for (var i=0; i&lt;document.querySelectorAll("[type='range']").length; i++) {
 								if (document.querySelectorAll("[type='range']")[i].getAttribute("value")) {
 									document.querySelectorAll("[type='range']")[i].value = document.querySelectorAll("[type='range']")[i].getAttribute("value").replace(/\D/g, "");
@@ -123,25 +123,25 @@
 									document.querySelectorAll("[type='range']")[i].value = 0; document.querySelectorAll("[type='range']")[i].onchange();
 								}
 							}
-							
+
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']").length; i++) {
 								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value")) {
 									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value").replace(/\D/g, "");
 								}
 							}
-							
+
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']").length; i++) {
 								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value")) {
 									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value").replace(/\D/g, "");
 								}
 							}
-							
+
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']").length; i++) {
 								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value")) {
 									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].value = new Date().getFullYear().toString().concat(document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value").substring(1));
 								}
 							}
-							
+
 							var htmlToXML = function(root) {
 							    return "&lt;?xml version=\"1.0\"?&gt;".concat(getXML(root));
 							};
@@ -203,13 +203,53 @@
 							    	return node.getElementsByTagName("textarea")[0].value;
 							    }
 							}
+                            var clickRemoveButton(button) {
+                                if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-min"))
+                                    button.parentNode.parentNode.parentNode.lastElementChild.click();
+
+                                if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-max"))
+                                    button.parentNode.parentNode.parentNode.lastElementChild.removeAttribute("disabled");
+
+                                button.parentNode.parentNode.parentNode.removeChild(
+                                    button.parentNode.parentNode
+                                );
+                            }
+                            var clickAddButton = function(button) {
+                                var newNode = button.previousElementSibling.cloneNode(true);
+
+                                for (var i=0; i&lt;newNode.querySelectorAll("input, select").length; i++) {
+                                    newNode.querySelectorAll("input, select")[i].removeAttribute("disabled");
+                                }
+
+                                newNode.removeAttribute("style");
+
+                                button.parentNode.insertBefore(
+                                    newNode, button.previousElementSibling
+                                );
+
+                                if ((button.parentNode.children.length - 2) == button.getAttribute("data-xsd2html2xml-max"))
+                                    button.setAttribute("disabled", "disabled");
+                            }
+                            var clickRadioInput=function (input, name) {
+                                for (var i=0; i&lt;document.querySelectorAll("[name="+name+"]").length; i++) {
+                                    var e = document.querySelectorAll("[name="+name+"]")[i];
+                                    e.removeAttribute("checked");
+                                    for (var j=0; j&lt;e.parentElement.nextElementSibling.querySelectorAll("input, select").length; j++) {
+                                        if (input.parentElement.nextElementSibling.contains(e.parentElement.nextElementSibling.querySelectorAll("input, select")[j]))
+                                            e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].removeAttribute("disabled");
+                                        else
+                                            e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].setAttribute("disabled", "disabled");
+                                    }
+                                }
+                                input.setAttribute("checked","checked");
+                            }
 						</xsl:text>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:text disable-output-escaping="no"> <!-- xhtml requires output escaping -->
 							if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector; if (!Element.prototype.closest) Element.prototype.closest = function (selector) {     var el = this;     while (el) {         if (el.matches(selector)) {             return el;         }         el = el.parentElement;     } };
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-filled]").length; i++) { if (document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]")) document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]").previousElementSibling.querySelector("input[type='radio']").click(); }
-							
+
 							for (var i=0; i&lt;document.querySelectorAll("[type='range']").length; i++) {
 								if (document.querySelectorAll("[type='range']")[i].getAttribute("value")) {
 									document.querySelectorAll("[type='range']")[i].value = document.querySelectorAll("[type='range']")[i].getAttribute("value").replace(/\D/g, "");
@@ -221,25 +261,25 @@
 									document.querySelectorAll("[type='range']")[i].value = 0; document.querySelectorAll("[type='range']")[i].onchange();
 								}
 							}
-							
+
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']").length; i++) {
 								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value")) {
 									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value").replace(/\D/g, "");
 								}
 							}
-							
+
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']").length; i++) {
 								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value")) {
 									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value").replace(/\D/g, "");
 								}
 							}
-							
+
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']").length; i++) {
 								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value")) {
 									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].value = new Date().getFullYear().toString().concat(document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value").substring(1));
 								}
 							}
-							
+
 							var htmlToXML = function(root) {
 							    return "&lt;?xml version=\"1.0\"?&gt;".concat(getXML(root));
 							};
@@ -301,22 +341,62 @@
 							    	return node.getElementsByTagName("textarea")[0].value;
 							    }
 							}
+                            var clickRemoveButton(button) {
+                                if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-min"))
+                                    button.parentNode.parentNode.parentNode.lastElementChild.click();
+
+                                if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-max"))
+                                    button.parentNode.parentNode.parentNode.lastElementChild.removeAttribute("disabled");
+
+                                button.parentNode.parentNode.parentNode.removeChild(
+                                    button.parentNode.parentNode
+                                );
+                            }
+                            var clickAddButton = function(button) {
+                                var newNode = button.previousElementSibling.cloneNode(true);
+
+                                for (var i=0; i&lt;newNode.querySelectorAll("input, select").length; i++) {
+                                    newNode.querySelectorAll("input, select")[i].removeAttribute("disabled");
+                                }
+
+                                newNode.removeAttribute("style");
+
+                                button.parentNode.insertBefore(
+                                    newNode, button.previousElementSibling
+                                );
+
+                                if ((button.parentNode.children.length - 2) == button.getAttribute("data-xsd2html2xml-max"))
+                                    button.setAttribute("disabled", "disabled");
+                            }
+                            var clickRadioInput=function (input, name) {
+                                for (var i=0; i&lt;document.querySelectorAll("[name="+name+"]").length; i++) {
+                                    var e = document.querySelectorAll("[name="+name+"]")[i];
+                                    e.removeAttribute("checked");
+                                    for (var j=0; j&lt;e.parentElement.nextElementSibling.querySelectorAll("input, select").length; j++) {
+                                        if (input.parentElement.nextElementSibling.contains(e.parentElement.nextElementSibling.querySelectorAll("input, select")[j]))
+                                            e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].removeAttribute("disabled");
+                                        else
+                                            e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].setAttribute("disabled", "disabled");
+                                    }
+                                }
+                                input.setAttribute("checked","checked");
+                            }
 						</xsl:text>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:element>
 		</xsl:element>
 	</xsl:template>
-	
+
 	<!-- handle elements with type attribute; determine if they're complex or simple and process them accordingly -->
 	<xsl:template match="xs:element[@type]">
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share --> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences --> <!-- is used to disable elements that are copies for additional occurrences -->
-		
+
 		<xsl:variable name="type">
 			<xsl:value-of select="@type"/>
 		</xsl:variable>
-		
+
 		<xsl:choose>
 			<xsl:when test="//xs:complexType[@name=$type]/xs:simpleContent">
 				<xsl:call-template name="handle-complex-elements">
@@ -346,24 +426,24 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- handle complex elements with simple content -->
 	<xsl:template match="xs:element[xs:complexType/xs:simpleContent]">
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		
+
 		<xsl:call-template name="handle-complex-elements">
 			<xsl:with-param name="simple">true</xsl:with-param>
 			<xsl:with-param name="choice" select="$choice"/>
 			<xsl:with-param name="disabled" select="$disabled" />
 		</xsl:call-template>
 	</xsl:template>
-	
+
 	<!-- handles groups existing of other elements; note that 'ref' is used as id overriding local-name() -->
 	<xsl:template match="xs:group[@ref]">
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		
+
 		<xsl:call-template name="handle-complex-elements">
 			<xsl:with-param name="id" select="@ref" />
 			<xsl:with-param name="simple" select="false" />
@@ -371,18 +451,18 @@
 			<xsl:with-param name="disabled" select="$disabled" />
 		</xsl:call-template>
 	</xsl:template>
-	
+
 	<!-- handles groups existing of other attributes; note that 'ref' is used as id overriding local-name() -->
 	<xsl:template match="xs:attributeGroup[@ref]">
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		
+
 		<xsl:variable name="ref" select="@ref" />
 		<xsl:apply-templates select="//xs:attributeGroup[@name=$ref]/xs:attribute">
 			<xsl:with-param name="id" select="@ref" />
 			<xsl:with-param name="disabled" select="$disabled" />
 		</xsl:apply-templates>
 	</xsl:template>
-	
+
 	<!-- handle complex elements, which optionally contain simple content -->
 	<!-- handle minOccurs and maxOccurs, calls handle-complex-element for further processing -->
 	<xsl:template name="handle-complex-elements" match="xs:element[xs:complexType/*[not(self::xs:simpleContent)]]">
@@ -390,7 +470,7 @@
 		<xsl:param name="simple" /> <!-- indicates whether this complex element has simple content --> <!-- indicates if an element allows simple content -->
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		
+
 		<!-- add radio button if $choice is specified -->
 		<xsl:if test="not($choice = '')">
 			<xsl:call-template name="add-choice-button">
@@ -400,12 +480,12 @@
 				</xsl:with-param>
 			</xsl:call-template>
 		</xsl:if>
-		
+
 		<xsl:element name="section">
 			<xsl:if test="not($choice = '')">
 				<xsl:attribute name="data-xsd2html2xml-choice">true</xsl:attribute>
 			</xsl:if>
-			
+
 			<xsl:call-template name="handle-complex-element">
 				<xsl:with-param name="id" select="$id" />
 				<xsl:with-param name="description">
@@ -422,7 +502,7 @@
 				</xsl:with-param>
 				<xsl:with-param name="disabled" select="$disabled" />
 			</xsl:call-template>
-			
+
 			<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs)">
 				<xsl:call-template name="handle-complex-element">
 					<xsl:with-param name="id" select="$id"/>
@@ -434,7 +514,7 @@
 					<xsl:with-param name="invisible">true</xsl:with-param>
 					<xsl:with-param name="disabled">true</xsl:with-param>
 				</xsl:call-template>
-				
+
 				<xsl:call-template name="add-add-button">
 					<xsl:with-param name="description">
 						<xsl:call-template name="get-description" />
@@ -443,7 +523,7 @@
 			</xsl:if>
 		</xsl:element>
 	</xsl:template>
-	
+
 	<!-- handle complex element -->
 	<xsl:template name="handle-complex-element">
 		<xsl:param name="id" select="@name" /> <!-- contains the 'name' attribute of the element -->
@@ -452,7 +532,7 @@
 		<xsl:param name="simple" /> <!-- indicates whether this complex element has simple content -->
 		<xsl:param name="invisible">false</xsl:param>
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		
+
 		<xsl:if test="$count > 0">
 			<xsl:element name="fieldset">
 				<xsl:attribute name="data-xsd2html2xml-type">
@@ -461,22 +541,22 @@
 				<xsl:attribute name="data-xsd2html2xml-name">
 					<xsl:value-of select="@name" />
 				</xsl:attribute>
-				
+
 				<xsl:if test="$invisible = 'true'">
 					<xsl:attribute name="style">display: none;</xsl:attribute>
 				</xsl:if>
-				
+
 				<xsl:element name="legend">
 					<xsl:value-of select="$description" />
 					<xsl:call-template name="add-remove-button" />
 				</xsl:element>
-				
+
 				<!-- let child elements be handled by their own templates -->
 				<xsl:variable name="ref" select="@ref"/>
 				<xsl:apply-templates select="xs:complexType/xs:sequence|xs:complexType/xs:all|xs:complexType/xs:choice|xs:complexType/xs:attribute|xs:complexType/xs:attributeGroup|//xs:group[@name=$ref]/*">
 					<xsl:with-param name="disabled" select="$disabled" />
 					</xsl:apply-templates>
-				
+
 				<xsl:choose>
 					<!-- add simple element if the element allows simpleContent -->
 					<xsl:when test="$simple = 'true'">
@@ -500,7 +580,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:element>
-			
+
 			<!-- call itself with count - 1 to account for multiple occurrences -->
 			<xsl:call-template name="handle-complex-element">
 				<xsl:with-param name="id" select="$id"/>
@@ -511,14 +591,14 @@
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<!-- handle simple elements -->
 	<!-- handle minOccurs and maxOccurs, calls handle-simple-element for further processing -->
 	<xsl:template name="handle-simple-elements" match="xs:element[xs:simpleType]">
 		<xsl:param name="id" select="@name" />
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		
+
 		<xsl:if test="not($choice = '')">
 			<xsl:call-template name="add-choice-button">
 				<xsl:with-param name="name" select="$choice" />
@@ -527,12 +607,12 @@
 				</xsl:with-param>
 			</xsl:call-template>
 		</xsl:if>
-		
+
 		<xsl:element name="section">
 			<xsl:if test="not($choice = '')">
 				<xsl:attribute name="data-xsd2html2xml-choice">true</xsl:attribute>
 			</xsl:if>
-			
+
 			<xsl:call-template name="handle-simple-element">
 				<xsl:with-param name="id" select="$id" />
 				<xsl:with-param name="description">
@@ -549,7 +629,7 @@
 				</xsl:with-param>
 				<xsl:with-param name="disabled" select="$disabled" />
 			</xsl:call-template>
-			
+
 			<!-- add another element to be used for dynamically inserted elements -->
 			<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs)">
 				<xsl:call-template name="handle-simple-element">
@@ -562,7 +642,7 @@
 					<xsl:with-param name="invisible" select="'true'" />
 					<xsl:with-param name="disabled">true</xsl:with-param>
 				</xsl:call-template>
-				
+
 				<xsl:call-template name="add-add-button">
 					<xsl:with-param name="description">
 						<xsl:call-template name="get-description" />
@@ -571,11 +651,11 @@
 			</xsl:if>
 		</xsl:element>
 	</xsl:template>
-	
+
 	<!-- handle attribute as simple element, without option for minOccurs or maxOccurs -->
 	<xsl:template name="handle-attributes" match="xs:attribute">
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		
+
 		<xsl:call-template name="handle-simple-element">
 			<xsl:with-param name="description">
 				<xsl:call-template name="get-description" />
@@ -586,7 +666,7 @@
 			<xsl:with-param name="disabled" select="$disabled" />
 		</xsl:call-template>
 	</xsl:template>
-	
+
 	<!-- handle simple element -->
 	<xsl:template name="handle-simple-element">
 		<xsl:param name="id" select="@name" />
@@ -597,12 +677,12 @@
 		<xsl:param name="invisible">false</xsl:param> <!-- indicates if the generated element should be invisible, for use with occurrences -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		<xsl:param name="html-type" select="local-name()"/> <!-- contains the element name, or 'cdata' in the case of simple content -->
-		
+
 		<xsl:if test="$count > 0">
 			<xsl:variable name="type"> <!-- holds the primive type (xs:*) with which the element type will be determined -->
 				<xsl:call-template name="get-primitive-type"/>
 			</xsl:variable>
-			
+
 			<xsl:element name="label">
 				<!-- metadata required for compiling the xml when the form is submitted -->
 				<xsl:attribute name="data-xsd2html2xml-type">
@@ -611,26 +691,26 @@
 				<xsl:attribute name="data-xsd2html2xml-name">
 					<xsl:value-of select="@name" />
 				</xsl:attribute>
-				
+
 				<!-- invisible elements serve as placeholders for elements with variable occurrences -->
 				<xsl:if test="$invisible = 'true'">
 					<xsl:attribute name="style">display: none;</xsl:attribute>
 				</xsl:if>
-				
+
 				<!-- pattern is used later to determine multiline text fields -->
 				<xsl:variable name="pattern">
 					<xsl:call-template name="attr-value">
 						<xsl:with-param name="attr">xs:pattern</xsl:with-param>
 					</xsl:call-template>
 				</xsl:variable>
-				
+
 				<!-- enumerations are rendered as select elements -->
 				<xsl:variable name="choice">
 					<xsl:call-template name="attr-value">
 						<xsl:with-param name="attr">xs:enumeration</xsl:with-param>
 					</xsl:call-template>
 				</xsl:variable>
-				
+
 				<!-- add label description etc. if label is configured to be placed before the input element -->
 				<xsl:if test="not($config-label-after-input = 'true')">
 					<xsl:element name="span">
@@ -648,7 +728,7 @@
 						</xsl:if>
 					</xsl:element>
 				</xsl:if>
-				
+
 				<!-- in case of xs:duration, an output element is added to show the selected value of the user -->
 				<xsl:if test="$type = 'xs:duration'">
 					<xsl:element name="output">
@@ -662,7 +742,7 @@
 						</xsl:choose>
 					</xsl:element>
 				</xsl:if>
-				
+
 				<!-- handling whitespace as it is specified or default based on type -->
 				<xsl:variable name="whitespace">
 					<xsl:variable name="specified-whitespace">
@@ -670,7 +750,7 @@
 							<xsl:with-param name="attr">xs:whiteSpace</xsl:with-param>
 						</xsl:call-template>
 					</xsl:variable>
-					
+
 					<xsl:choose>
 						<xsl:when test="not($specified-whitespace = '')">
 							<xsl:value-of select="$specified-whitespace" />
@@ -680,7 +760,7 @@
 						<xsl:otherwise>collapse</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				
+
 				<xsl:choose>
 					<!-- enumerations are rendered as select elements -->
 					<xsl:when test="not($choice='')">
@@ -688,7 +768,7 @@
 							<xsl:attribute name="onchange">
 								<xsl:text>for (var i=0; i&lt;this.children.length; i++) { this.children[i].removeAttribute("selected"); } this.children[this.selectedIndex].setAttribute("selected","selected");</xsl:text>
 							</xsl:attribute>
-							
+
 							<!-- attribute can have optional use=required values; normal elements are always required -->
 							<xsl:choose>
 								<xsl:when test="$attribute = 'true'">
@@ -700,7 +780,7 @@
 									<xsl:attribute name="required">required</xsl:attribute>
 								</xsl:otherwise>
 							</xsl:choose>
-							
+
 							<!-- add options for each value; populate the element if there is corresponding data, or fill it with a fixed or default value -->
 							<xsl:call-template name="handle-enumerations">
 								<xsl:with-param name="default">
@@ -724,7 +804,7 @@
 							<xsl:attribute name="onchange">
 								<xsl:text>this.textContent = this.value</xsl:text><xsl:if test="$whitespace = 'replace'">.replace(/\s/g, " ")</xsl:if><xsl:if test="$whitespace = 'collapse'">.replace(/\s+/g, " ").trim()</xsl:if>
 							</xsl:attribute>
-							
+
 							<!-- attribute can have optional use=required values; normal elements are always required -->
 							<xsl:choose>
 								<xsl:when test="$attribute = 'true'">
@@ -736,19 +816,19 @@
 									<xsl:attribute name="required">required</xsl:attribute>
 								</xsl:otherwise>
 							</xsl:choose>
-							
+
 							<!-- attributes can be prohibited, rendered as readonly -->
 							<xsl:if test="@use = 'prohibited'">
 								<xsl:attribute name="readonly">readonly</xsl:attribute>
 							</xsl:if>
-							
+
 							<xsl:call-template name="set-type-specifics-recursively"/>
-							
+
 							<!-- disabled elements are used to omit invisible placeholders from inclusion in the validation and generated xml data -->
 							<xsl:if test="$disabled = 'true'">
 								<xsl:attribute name="disabled">disabled</xsl:attribute>
 							</xsl:if>
-							
+
 							<!-- populate the element if there is corresponding data, or fill it with a fixed or default value -->
 							<xsl:choose>
 								<xsl:when test="@fixed">
@@ -802,7 +882,7 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:attribute>
-							
+
 							<!-- specifically set the value attribute in the HTML to enable XSLT processing of the form contents -->
 							<xsl:attribute name="onchange">
 								<xsl:choose>
@@ -812,16 +892,16 @@
 									<xsl:when test="$type = 'xs:base64binary'"> <!-- Use the FileReader API to set the value of file inputs -->
 										<xsl:text>var fileReader = new FileReader(); var o = this; fileReader.onloadend = function () { o.setAttribute("value", fileReader.result.substring(fileReader.result.indexOf("base64,") + 7)); }; if(arguments[0].target.files[0]) { fileReader.readAsDataURL(arguments[0].target.files[0]); } else { this.removeAttribute("value"); }; if (this.getAttribute("data-xsd2html2xml-required")) this.setAttribute("required", "required");</xsl:text>
 									</xsl:when>
-									<xsl:when test="$type = 'xs:datetime' or $type = 'xs:time'"> 
+									<xsl:when test="$type = 'xs:datetime' or $type = 'xs:time'">
 										<xsl:text>if (this.value) { this.setAttribute("value", (this.value.match(/.*\d\d:\d\d:\d\d/) ? this.value : this.value.concat(":00"))); } else { this.removeAttribute("value"); };</xsl:text>
 									</xsl:when>
-									<xsl:when test="$type = 'xs:gday'"> 
+									<xsl:when test="$type = 'xs:gday'">
 										<xsl:text>if (this.value) { this.setAttribute("value", (this.value.length == 2 ? "---" : "---0").concat(this.value)); } else { this.removeAttribute("value"); };</xsl:text>
 									</xsl:when>
-									<xsl:when test="$type = 'xs:gmonth'"> 
+									<xsl:when test="$type = 'xs:gmonth'">
 										<xsl:text>if (this.value) { this.setAttribute("value", (this.value.length == 2 ? "--" : "--0").concat(this.value)); } else { this.removeAttribute("value"); };</xsl:text>
 									</xsl:when>
-									<xsl:when test="$type = 'xs:gmonthday'"> 
+									<xsl:when test="$type = 'xs:gmonthday'">
 										<xsl:text>if (this.value) { this.setAttribute("value", this.value.replace(/^\d+/, "-")); } else { this.removeAttribute("value"); };</xsl:text>
 									</xsl:when>
 									<xsl:when test="$type = 'xs:duration'"> <!-- Use the output element for ranges -->
@@ -832,7 +912,7 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:attribute>
-							
+
 							<!-- attribute can have optional use=required values; normal elements are always required -->
 							<xsl:choose>
 								<xsl:when test="$attribute = 'true'">
@@ -858,29 +938,29 @@
 									</xsl:choose>
 								</xsl:otherwise>
 							</xsl:choose>
-							
+
 							<!-- attributes can be prohibited, rendered as readonly -->
 							<xsl:if test="@use = 'prohibited'">
 								<xsl:attribute name="readonly">readonly</xsl:attribute>
 							</xsl:if>
-							
+
 							<xsl:call-template name="set-type-specifics-recursively"/>
-							
+
 							<xsl:call-template name="set-type-defaults">
 								<xsl:with-param name="type">
 									<xsl:value-of select="$type"/>
 								</xsl:with-param>
 							</xsl:call-template>
-							
+
 							<!-- disabled elements are used to omit invisible placeholders from inclusion in the validation and generated xml data -->
 							<xsl:if test="$disabled = 'true'">
 								<xsl:attribute name="disabled">disabled</xsl:attribute>
 							</xsl:if>
-							
+
 							<xsl:attribute name="data-xsd2html2xml-primitive">
 								<xsl:value-of select="$type" />
 							</xsl:attribute>
-							
+
 							<xsl:choose>
 								<!-- use fixed attribute as data if specified -->
 								<xsl:when test="@fixed">
@@ -917,7 +997,7 @@
 						</xsl:element>
 					</xsl:otherwise>
 				</xsl:choose>
-				
+
 				<!-- add label description etc. if label is configured to be placed before the input element -->
 				<xsl:if test="$config-label-after-input = 'true'">
 					<xsl:element name="span">
@@ -936,17 +1016,17 @@
 					</xsl:element>
 				</xsl:if>
 			</xsl:element>
-			
+
 			<!-- add descending extensions -->
 			<xsl:apply-templates select="*/*/xs:extension/*">
 				<xsl:with-param name="disabled" select="$disabled" />
 			</xsl:apply-templates>
-			
+
 			<!-- add inherited extensions -->
 			<xsl:call-template name="add-extensions-recursively">
 				<xsl:with-param name="disabled" select="$disabled" />
 			</xsl:call-template>
-			
+
 			<xsl:call-template name="handle-simple-element">
 				<xsl:with-param name="id" select="$id" />
 				<xsl:with-param name="description" select="$description" />
@@ -956,46 +1036,46 @@
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="xs:sequence">
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		
+
 		<xsl:apply-templates select="xs:element|xs:attribute|xs:group">
 			<xsl:with-param name="disabled" select="$disabled" />
 		</xsl:apply-templates>
 	</xsl:template>
-	
+
 	<xsl:template match="xs:all">
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		
+
 		<xsl:apply-templates select="xs:element|xs:attribute|xs:group">
 			<xsl:with-param name="disabled" select="$disabled" />
 		</xsl:apply-templates>
 	</xsl:template>
-	
+
 	<xsl:template match="xs:choice">
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		
+
 		<xsl:apply-templates select="xs:element|xs:attribute|xs:group">
 			<xsl:with-param name="choice" select="generate-id()" />
 			<xsl:with-param name="disabled" select="$disabled" />
 		</xsl:apply-templates>
 	</xsl:template>
-	
+
 	<!-- Recursively searches for xs:enumeration elements and applies templates on them -->
 	<xsl:template name="handle-enumerations">
 		<xsl:param name="default" />
 		<xsl:param name="disabled">false</xsl:param>
-		
+
 		<xsl:variable name="type">
 			<xsl:call-template name="get-type"/>
 		</xsl:variable>
-		
+
 		<xsl:apply-templates select=".//xs:restriction/xs:enumeration" mode="input">
 			<xsl:with-param name="default" select="$default" />
 			<xsl:with-param name="disabled" select="$disabled" />
 		</xsl:apply-templates>
-		
+
 		<xsl:for-each select="//xs:simpleType[@name=$type]">
 			<xsl:call-template name="handle-enumerations">
 				<xsl:with-param name="default" select="$default" />
@@ -1003,12 +1083,12 @@
 			</xsl:call-template>
 		</xsl:for-each>
 	</xsl:template>
-	
+
 	<!-- Returns predetermined values for xs:duration specifics found in patterns -->
 	<xsl:template name="get-duration-info">
 		<xsl:param name="type" />
 		<xsl:param name="pattern" />
-		
+
 		<xsl:choose>
 			<xsl:when test="contains($pattern, 'T') and contains($pattern, 'S')">
 				<xsl:if test="$type = 'prefix'">PT</xsl:if>
@@ -1045,7 +1125,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- Returns an element's description from xs:annotation/xs:documentation if it exists, @value in the case of enumerations, or @name otherwise -->
 	<xsl:template name="get-description">
 		<xsl:choose>
@@ -1066,15 +1146,15 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- Returns the first value that matches attr name -->
 	<xsl:template name="attr-value">
 		<xsl:param name="attr"/>
-		
+
 		<xsl:variable name="type">
 			<xsl:call-template name="get-type"/>
 		</xsl:variable>
-		
+
 		<xsl:choose>
 			<xsl:when test="@*[contains(.,$attr)]">
 				<xsl:value-of select="@*[contains(name(),$attr)]"/>
@@ -1091,7 +1171,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- Returns the type directly specified by the calling node -->
 	<xsl:template name="get-type">
 		<xsl:choose>
@@ -1130,13 +1210,13 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- Returns the original xs:* type specified by the calling node, in lower case -->
 	<xsl:template name="get-primitive-type">
 		<xsl:variable name="type">
 			<xsl:call-template name="get-type"/>
 		</xsl:variable>
-		
+
 		<xsl:choose>
 			<xsl:when test="not(starts-with($type, 'xs:'))">
 				<xsl:for-each select="//xs:simpleType[@name=$type]|//xs:complexType[@name=$type]">
@@ -1148,38 +1228,38 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- Applies templates recursively, overwriting lower-level options -->
 	<xsl:template name="set-type-specifics-recursively">
 		<xsl:variable name="type">
 			<xsl:call-template name="get-type"/>
 		</xsl:variable>
-		
+
 		<xsl:if test="not(starts-with($type, 'xs:'))">
 			<xsl:for-each select="//xs:simpleType[@name=$type]|//xs:complexType[@name=$type]">
 				<xsl:call-template name="set-type-specifics-recursively" />
 			</xsl:for-each>
 		</xsl:if>
-		
+
 		<xsl:apply-templates select=".//xs:restriction/xs:minInclusive" mode="input"/>
 		<xsl:apply-templates select=".//xs:restriction/xs:maxInclusive" mode="input"/>
-		
+
 		<xsl:apply-templates select=".//xs:restriction/xs:minExclusive" mode="input"/>
 		<xsl:apply-templates select=".//xs:restriction/xs:maxExclusive" mode="input"/>
-		
+
 		<xsl:apply-templates select=".//xs:restriction/xs:pattern" mode="input"/>
 		<xsl:apply-templates select=".//xs:restriction/xs:length" mode="input"/>
 		<xsl:apply-templates select=".//xs:restriction/xs:maxLength" mode="input"/>
 	</xsl:template>
-	
+
 	<!-- Adds elements and attributes in extension recursively -->
 	<xsl:template name="add-extensions-recursively">
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
-		
+
 		<xsl:variable name="type">
 			<xsl:call-template name="get-type"/>
 		</xsl:variable>
-		
+
 		<xsl:if test="not(starts-with($type, 'xs:'))">
 			<xsl:for-each select="//xs:simpleType[@name=$type]|//xs:complexType[@name=$type]">
 				<xsl:apply-templates select=".//xs:element|.//xs:attribute">
@@ -1188,31 +1268,21 @@
 			</xsl:for-each>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template name="add-remove-button">
 		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs)">
 			<xsl:element name="button">
 				<xsl:attribute name="type">button</xsl:attribute>
 				<xsl:attribute name="class">remove</xsl:attribute>
-				<xsl:attribute name="onclick">
-					if ((this.parentNode.parentNode.parentNode.children.length - 2) == this.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-min"))
-						this.parentNode.parentNode.parentNode.lastElementChild.click();
-					
-					if ((this.parentNode.parentNode.parentNode.children.length - 2) == this.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-max"))
-						this.parentNode.parentNode.parentNode.lastElementChild.removeAttribute("disabled");
-					
-					this.parentNode.parentNode.parentNode.removeChild(
-						this.parentNode.parentNode
-					);
-				</xsl:attribute>
+				<xsl:attribute name="onclick">clickRemoveButton(this);</xsl:attribute>
 				<xsl:value-of select="$config-remove-button-label" />
 			</xsl:element>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template name="add-add-button">
 		<xsl:param name="description" />
-		
+
 		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs)">
 			<xsl:element name="button">
 				<xsl:attribute name="type">button</xsl:attribute>
@@ -1229,57 +1299,31 @@
 						<xsl:otherwise>1</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
-				<xsl:attribute name="onclick">
-					var newNode = this.previousElementSibling.cloneNode(true);
-					
-					for (var i=0; i&lt;newNode.querySelectorAll("input, select").length; i++) {
-						newNode.querySelectorAll("input, select")[i].removeAttribute("disabled");
-					}
-					
-					newNode.removeAttribute("style");
-					
-					this.parentNode.insertBefore(
-						newNode, this.previousElementSibling
-					);
-					
-					if ((this.parentNode.children.length - 2) == this.getAttribute("data-xsd2html2xml-max"))
-						this.setAttribute("disabled", "disabled");
-				</xsl:attribute>
+				<xsl:attribute name="onclick">clickAddButton(this);</xsl:attribute>
 				<xsl:value-of select="$config-add-button-label" /><xsl:text> </xsl:text><xsl:value-of select="$description" />
 			</xsl:element>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template name="add-choice-button">
 		<xsl:param name="name" />
 		<xsl:param name="description" />
-		
+
 		<xsl:element name="label">
 			<xsl:if test="not($config-label-after-input = 'true')">
 				<xsl:element name="span">
 					<xsl:value-of select="$description" />
 				</xsl:element>
 			</xsl:if>
-		
+
 			<xsl:element name="input">
 				<xsl:attribute name="type">radio</xsl:attribute>
 				<xsl:attribute name="name">
 					<xsl:value-of select="$name"/>
 				</xsl:attribute>
-				<xsl:attribute name="onclick">
-					for (var i=0; i&lt;document.querySelectorAll("[name='<xsl:value-of select="$name" />']").length; i++) {
-						var e = document.querySelectorAll("[name='<xsl:value-of select="$name" />']")[i];
-						e.removeAttribute("checked");
-						for (var j=0; j&lt;e.parentElement.nextElementSibling.querySelectorAll("input, select").length; j++) {
-							if (this.parentElement.nextElementSibling.contains(e.parentElement.nextElementSibling.querySelectorAll("input, select")[j]))
-								e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].removeAttribute("disabled");
-							else
-								e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].setAttribute("disabled", "disabled");
-						}
-					}
-					this.setAttribute("checked","checked");</xsl:attribute>
+				<xsl:attribute name="onclick">clickRadioInput(this, '<xsl:value-of select="$name" />');</xsl:attribute>
 			</xsl:element>
-			
+
 			<xsl:if test="$config-label-after-input = 'true'">
 				<xsl:element name="span">
 					<xsl:value-of select="$description" />
@@ -1287,17 +1331,17 @@
 			</xsl:if>
 		</xsl:element>
 	</xsl:template>
-	
+
 	<!-- sets default values for xs:* types, but does not override already specified values -->
 	<xsl:template name="set-type-defaults">
 		<xsl:param name="type"/>
-		
+
 		<xsl:variable name="fractionDigits">
 			<xsl:call-template name="attr-value">
 				<xsl:with-param name="attr">xs:fractionDigits</xsl:with-param>
 			</xsl:call-template>
 		</xsl:variable>
-		
+
 		<xsl:choose>
 			<xsl:when test="$type = 'xs:decimal'">
 				<xsl:attribute name="step">
@@ -1484,93 +1528,93 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- sets min and max attributes if they have not been specified explicitly -->
 	<xsl:template name="set-numeric-range">
 		<xsl:param name="min-value"/>
 		<xsl:param name="max-value"/>
-		
+
 		<xsl:variable name="minInclusive">
 			<xsl:call-template name="attr-value">
 				<xsl:with-param name="attr">xs:minInclusive</xsl:with-param>
 			</xsl:call-template>
 		</xsl:variable>
-		
+
 		<xsl:variable name="minExclusive">
 			<xsl:call-template name="attr-value">
 				<xsl:with-param name="attr">xs:minExclusive</xsl:with-param>
 			</xsl:call-template>
 		</xsl:variable>
-		
+
 		<xsl:if test="$minInclusive = '' and $minExclusive = ''">
 			<xsl:attribute name="min">
 				<xsl:value-of select="$min-value"/>
 			</xsl:attribute>
 		</xsl:if>
-		
+
 		<xsl:variable name="maxInclusive">
 			<xsl:call-template name="attr-value">
 				<xsl:with-param name="attr">xs:maxInclusive</xsl:with-param>
 			</xsl:call-template>
 		</xsl:variable>
-		
+
 		<xsl:variable name="maxExclusive">
 			<xsl:call-template name="attr-value">
 				<xsl:with-param name="attr">xs:maxExclusive</xsl:with-param>
 			</xsl:call-template>
 		</xsl:variable>
-		
+
 		<xsl:if test="$maxInclusive = '' and $maxExclusive = ''">
 			<xsl:attribute name="max">
 				<xsl:value-of select="$max-value"/>
 			</xsl:attribute>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<!-- sets pattern attribute if it has not been specified explicitly -->
 	<!-- numeric types (depending on totalDigits and fractionDigits) get regex patterns allowing digits and not counting the - and . -->
 	<!-- other types (depending on minLength, maxLength, and length) get simpler regex patterns allowing any characters -->
 	<xsl:template name="set-pattern">
 		<xsl:param name="prefix">.</xsl:param>
 		<xsl:param name="allow-dot">false</xsl:param>
-		
+
 		<xsl:variable name="pattern">
 			<xsl:call-template name="attr-value">
 				<xsl:with-param name="attr">xs:pattern</xsl:with-param>
 			</xsl:call-template>
 		</xsl:variable>
-		
+
 		<xsl:if test="$pattern=''">
 			<xsl:variable name="length">
 				<xsl:call-template name="attr-value">
 					<xsl:with-param name="attr">xs:length</xsl:with-param>
 				</xsl:call-template>
 			</xsl:variable>
-			
+
 			<xsl:variable name="minLength">
 				<xsl:call-template name="attr-value">
 					<xsl:with-param name="attr">xs:minLength</xsl:with-param>
 				</xsl:call-template>
 			</xsl:variable>
-			
+
 			<xsl:variable name="maxLength">
 				<xsl:call-template name="attr-value">
 					<xsl:with-param name="attr">xs:maxLength</xsl:with-param>
 				</xsl:call-template>
 			</xsl:variable>
-			
+
 			<xsl:variable name="totalDigits">
 				<xsl:call-template name="attr-value">
 					<xsl:with-param name="attr">xs:totalDigits</xsl:with-param>
 				</xsl:call-template>
 			</xsl:variable>
-			
+
 			<xsl:variable name="fractionDigits">
 				<xsl:call-template name="attr-value">
 					<xsl:with-param name="attr">xs:fractionDigits</xsl:with-param>
 				</xsl:call-template>
 			</xsl:variable>
-			
+
 			<xsl:attribute name="pattern">
 				<xsl:choose>
 					<xsl:when test="$totalDigits!='' and $fractionDigits!=''">
@@ -1598,66 +1642,66 @@
 			</xsl:attribute>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="xs:minInclusive" mode="input">
 		<xsl:attribute name="min">
 			<xsl:value-of select="translate(@value,translate(@value, '0123456789.-', ''), '')"/> <!-- use double-translate function to extract numbers from possible regex input (e.g. for xs:duration) -->
 		</xsl:attribute>
-	</xsl:template> 
-	
+	</xsl:template>
+
 	<xsl:template match="xs:maxInclusive" mode="input">
 		<xsl:attribute name="max">
 			<xsl:value-of select="translate(@value,translate(@value, '0123456789.-', ''), '')"/> <!-- use double-translate function to extract numbers from possible regex input (e.g. for xs:duration) -->
 		</xsl:attribute>
 	</xsl:template>
-	
+
 	<xsl:template match="xs:minExclusive" mode="input">
 		<xsl:attribute name="min">
 			<xsl:value-of select="translate(@value,translate(@value, '0123456789.-', ''), '') + 1"/> <!-- use double-translate function to extract numbers from possible regex input (e.g. for xs:duration) -->
 		</xsl:attribute>
 	</xsl:template>
-	
+
 	<xsl:template match="xs:maxExclusive" mode="input">
 		<xsl:attribute name="max">
 			<xsl:value-of select="translate(@value,translate(@value, '0123456789.-', ''), '') - 1"/> <!-- use double-translate function to extract numbers from possible regex input (e.g. for xs:duration) -->
 		</xsl:attribute>
 	</xsl:template>
-	
+
 	<xsl:template match="xs:enumeration" mode="input">
 		<xsl:param name="default" />
 		<xsl:param name="disabled" />
-		
+
 		<xsl:variable name="description">
 			<xsl:call-template name="get-description" />
 		</xsl:variable>
-		
+
 		<xsl:element name="option">
 			<xsl:if test="$default = @value">
 				<xsl:attribute name="selected">selected</xsl:attribute>
 			</xsl:if>
-			
+
 			<xsl:if test="$disabled = 'true' and not($default = @value)">
 				<xsl:attribute name="disabled">disabled</xsl:attribute>
 			</xsl:if>
-			
+
 			<xsl:attribute name="value">
 				<xsl:value-of select="@value"/>
 			</xsl:attribute>
-			
+
 			<xsl:value-of select="$description"/>
 		</xsl:element>
 	</xsl:template>
-	
+
 	<xsl:template match="xs:pattern" mode="input">
 		<xsl:attribute name="pattern">
 			<xsl:value-of select="@value"/>
 		</xsl:attribute>
 	</xsl:template>
-	
+
 	<xsl:template match="xs:length|xs:maxLength" mode="input">
 		<xsl:attribute name="maxlength">
 			<xsl:value-of select="@value"/>
 		</xsl:attribute>
 	</xsl:template>
-	
+
 </xsl:stylesheet>
