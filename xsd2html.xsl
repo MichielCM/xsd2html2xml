@@ -109,7 +109,7 @@
 				<xsl:choose>
 					<xsl:when test="$output-method = 'html'">
 						<xsl:text disable-output-escaping="yes"> <!-- html requires no output escaping -->
-							if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector; if (!Element.prototype.closest) Element.prototype.closest = function (selector) {     var el = this;     while (el) {         if (el.matches(selector)) {             return el;         }         el = el.parentElement;     } };
+							if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector; if (!Element.prototype.closest) Element.prototype.closest = function (selector) {	 var el = this;	 while (el) {		 if (el.matches(selector)) {			 return el;		 }		 el = el.parentElement;	 } };
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-filled]").length; i++) { if (document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]")) document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]").previousElementSibling.querySelector("input[type='radio']").click(); }
 
 							for (var i=0; i&lt;document.querySelectorAll("[type='range']").length; i++) {
@@ -143,111 +143,111 @@
 							}
 
 							var htmlToXML = function(root) {
-							    return "&lt;?xml version=\"1.0\"?&gt;".concat(getXML(root));
+								return "&lt;?xml version=\"1.0\"?&gt;".concat(getXML(root));
 							};
 							var getXML = function(parent, attributesOnly) {
-							    var xml = "";
-							    for (var i = 0; i &lt; parent.children.length; i++) {
-							        if (!parent.children[i].getAttribute("style")) {
-							            switch (parent.children[i].getAttribute("data-xsd2html2xml-type")) {
-							                case "element":
-							                    if (!attributesOnly) xml = xml.concat("&lt;").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat(getXML(parent.children[i], true)).concat("&gt;").concat(function() {
-							                        if (parent.children[i].nodeName.toLowerCase() === "label") {
-							                            return getContent(parent.children[i]);
-							                        } else return getXML(parent.children[i])
-							                    }()).concat("&lt;/").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat("&gt;");
-							                    break;
-							                case "attribute":
-							                    if (attributesOnly)
+								var xml = "";
+								for (var i = 0; i &lt; parent.children.length; i++) {
+									if (!parent.children[i].getAttribute("style")) {
+										switch (parent.children[i].getAttribute("data-xsd2html2xml-type")) {
+											case "element":
+												if (!attributesOnly) xml = xml.concat("&lt;").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat(getXML(parent.children[i], true)).concat("&gt;").concat(function() {
+													if (parent.children[i].nodeName.toLowerCase() === "label") {
+														return getContent(parent.children[i]);
+													} else return getXML(parent.children[i])
+												}()).concat("&lt;/").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat("&gt;");
+												break;
+											case "attribute":
+												if (attributesOnly)
 													if (getContent(parent.children[i]))
 														xml = xml.concat(" ").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat("=\"").concat(getContent(parent.children[i])).concat("\"");
-							                    break;
-							                case "cdata":
-							                    if (!attributesOnly) xml = xml.concat(getContent(parent.children[i]));
-							                    break;
-							                default:
-							                    if (!attributesOnly)
-							                        if (!parent.children[i].getAttribute("data-xsd2html2xml-choice") || (parent.children[i].getAttribute("data-xsd2html2xml-choice") &amp;&amp; parent.children[i].previousElementSibling.getElementsByTagName("input")[0].checked)) xml = xml.concat(getXML(parent.children[i]));
-							                    break;
-							            }
-							        }
-							    }
-							    return xml;
+												break;
+											case "cdata":
+												if (!attributesOnly) xml = xml.concat(getContent(parent.children[i]));
+												break;
+											default:
+												if (!attributesOnly)
+													if (!parent.children[i].getAttribute("data-xsd2html2xml-choice") || (parent.children[i].getAttribute("data-xsd2html2xml-choice") &amp;&amp; parent.children[i].previousElementSibling.getElementsByTagName("input")[0].checked)) xml = xml.concat(getXML(parent.children[i]));
+												break;
+										}
+									}
+								}
+								return xml;
 							};
 							var getContent = function(node) {
-							    if (node.getElementsByTagName("input").length > 0) {
-							        switch (node.getElementsByTagName("input")[0].getAttribute("type").toLowerCase()) {
-							            case "checkbox":
-							                return node.getElementsByTagName("input")[0].checked;
-							            case "file":
-							            case "range":
-							            case "date":
-							            case "time":
-							            case "datetime-local":
-							            	return node.getElementsByTagName("input")[0].getAttribute("value");
-							            default:
-							            	switch (node.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase()) {
-									            case "xs:gday":
-									            case "xs:gmonth":
-									            case "xs:gmonthday":
-									            case "xs:gyear":
-									            case "xs:gyearmonth":
-									            	return node.getElementsByTagName("input")[0].getAttribute("value");
-									            default:
-									            	return node.getElementsByTagName("input")[0].value;
-							            	}
-							        }
-							    } else if (node.getElementsByTagName("select").length > 0) {
-							        return node.getElementsByTagName("select")[0].value;
-							    } else if (node.getElementsByTagName("textarea").length > 0) {
-							    	return node.getElementsByTagName("textarea")[0].value;
-							    }
+								if (node.getElementsByTagName("input").length > 0) {
+									switch (node.getElementsByTagName("input")[0].getAttribute("type").toLowerCase()) {
+										case "checkbox":
+											return node.getElementsByTagName("input")[0].checked;
+										case "file":
+										case "range":
+										case "date":
+										case "time":
+										case "datetime-local":
+											return node.getElementsByTagName("input")[0].getAttribute("value");
+										default:
+											switch (node.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase()) {
+												case "xs:gday":
+												case "xs:gmonth":
+												case "xs:gmonthday":
+												case "xs:gyear":
+												case "xs:gyearmonth":
+													return node.getElementsByTagName("input")[0].getAttribute("value");
+												default:
+													return node.getElementsByTagName("input")[0].value;
+											}
+									}
+								} else if (node.getElementsByTagName("select").length > 0) {
+									return node.getElementsByTagName("select")[0].value;
+								} else if (node.getElementsByTagName("textarea").length > 0) {
+									return node.getElementsByTagName("textarea")[0].value;
+								}
 							}
-                            var clickRemoveButton(button) {
-                                if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-min"))
-                                    button.parentNode.parentNode.parentNode.lastElementChild.click();
+							var clickRemoveButton(button) {
+								if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-min"))
+									button.parentNode.parentNode.parentNode.lastElementChild.click();
 
-                                if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-max"))
-                                    button.parentNode.parentNode.parentNode.lastElementChild.removeAttribute("disabled");
+								if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-max"))
+									button.parentNode.parentNode.parentNode.lastElementChild.removeAttribute("disabled");
 
-                                button.parentNode.parentNode.parentNode.removeChild(
-                                    button.parentNode.parentNode
-                                );
-                            }
-                            var clickAddButton = function(button) {
-                                var newNode = button.previousElementSibling.cloneNode(true);
+								button.parentNode.parentNode.parentNode.removeChild(
+									button.parentNode.parentNode
+								);
+							}
+							var clickAddButton = function(button) {
+								var newNode = button.previousElementSibling.cloneNode(true);
 
-                                for (var i=0; i&lt;newNode.querySelectorAll("input, select").length; i++) {
-                                    newNode.querySelectorAll("input, select")[i].removeAttribute("disabled");
-                                }
+								for (var i=0; i&lt;newNode.querySelectorAll("input, select").length; i++) {
+									newNode.querySelectorAll("input, select")[i].removeAttribute("disabled");
+								}
 
-                                newNode.removeAttribute("style");
+								newNode.removeAttribute("style");
 
-                                button.parentNode.insertBefore(
-                                    newNode, button.previousElementSibling
-                                );
+								button.parentNode.insertBefore(
+									newNode, button.previousElementSibling
+								);
 
-                                if ((button.parentNode.children.length - 2) == button.getAttribute("data-xsd2html2xml-max"))
-                                    button.setAttribute("disabled", "disabled");
-                            }
-                            var clickRadioInput=function (input, name) {
-                                for (var i=0; i&lt;document.querySelectorAll("[name="+name+"]").length; i++) {
-                                    var e = document.querySelectorAll("[name="+name+"]")[i];
-                                    e.removeAttribute("checked");
-                                    for (var j=0; j&lt;e.parentElement.nextElementSibling.querySelectorAll("input, select").length; j++) {
-                                        if (input.parentElement.nextElementSibling.contains(e.parentElement.nextElementSibling.querySelectorAll("input, select")[j]))
-                                            e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].removeAttribute("disabled");
-                                        else
-                                            e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].setAttribute("disabled", "disabled");
-                                    }
-                                }
-                                input.setAttribute("checked","checked");
-                            }
+								if ((button.parentNode.children.length - 2) == button.getAttribute("data-xsd2html2xml-max"))
+									button.setAttribute("disabled", "disabled");
+							}
+							var clickRadioInput=function (input, name) {
+								for (var i=0; i&lt;document.querySelectorAll("[name="+name+"]").length; i++) {
+									var e = document.querySelectorAll("[name="+name+"]")[i];
+									e.removeAttribute("checked");
+									for (var j=0; j&lt;e.parentElement.nextElementSibling.querySelectorAll("input, select").length; j++) {
+										if (input.parentElement.nextElementSibling.contains(e.parentElement.nextElementSibling.querySelectorAll("input, select")[j]))
+											e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].removeAttribute("disabled");
+										else
+											e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].setAttribute("disabled", "disabled");
+									}
+								}
+								input.setAttribute("checked","checked");
+							}
 						</xsl:text>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:text disable-output-escaping="no"> <!-- xhtml requires output escaping -->
-							if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector; if (!Element.prototype.closest) Element.prototype.closest = function (selector) {     var el = this;     while (el) {         if (el.matches(selector)) {             return el;         }         el = el.parentElement;     } };
+							if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector; if (!Element.prototype.closest) Element.prototype.closest = function (selector) {	 var el = this;	 while (el) {		 if (el.matches(selector)) {			 return el;		 }		 el = el.parentElement;	 } };
 							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-filled]").length; i++) { if (document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]")) document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]").previousElementSibling.querySelector("input[type='radio']").click(); }
 
 							for (var i=0; i&lt;document.querySelectorAll("[type='range']").length; i++) {
@@ -281,106 +281,106 @@
 							}
 
 							var htmlToXML = function(root) {
-							    return "&lt;?xml version=\"1.0\"?&gt;".concat(getXML(root));
+								return "&lt;?xml version=\"1.0\"?&gt;".concat(getXML(root));
 							};
 							var getXML = function(parent, attributesOnly) {
-							    var xml = "";
-							    for (var i = 0; i &lt; parent.children.length; i++) {
-							        if (!parent.children[i].getAttribute("style")) {
-							            switch (parent.children[i].getAttribute("data-xsd2html2xml-type")) {
-							                case "element":
-							                    if (!attributesOnly) xml = xml.concat("&lt;").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat(getXML(parent.children[i], true)).concat("&gt;").concat(function() {
-							                        if (parent.children[i].nodeName.toLowerCase() === "label") {
-							                            return getContent(parent.children[i]);
-							                        } else return getXML(parent.children[i])
-							                    }()).concat("&lt;/").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat("&gt;");
-							                    break;
-							                case "attribute":
-							                    if (attributesOnly)
+								var xml = "";
+								for (var i = 0; i &lt; parent.children.length; i++) {
+									if (!parent.children[i].getAttribute("style")) {
+										switch (parent.children[i].getAttribute("data-xsd2html2xml-type")) {
+											case "element":
+												if (!attributesOnly) xml = xml.concat("&lt;").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat(getXML(parent.children[i], true)).concat("&gt;").concat(function() {
+													if (parent.children[i].nodeName.toLowerCase() === "label") {
+														return getContent(parent.children[i]);
+													} else return getXML(parent.children[i])
+												}()).concat("&lt;/").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat("&gt;");
+												break;
+											case "attribute":
+												if (attributesOnly)
 													if (getContent(parent.children[i]))
 														xml = xml.concat(" ").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat("=\"").concat(getContent(parent.children[i])).concat("\"");
-							                    break;
-							                case "cdata":
-							                    if (!attributesOnly) xml = xml.concat(getContent(parent.children[i]));
-							                    break;
-							                default:
-							                    if (!attributesOnly)
-							                        if (!parent.children[i].getAttribute("data-xsd2html2xml-choice") || (parent.children[i].getAttribute("data-xsd2html2xml-choice") &amp;&amp; parent.children[i].previousElementSibling.getElementsByTagName("input")[0].checked)) xml = xml.concat(getXML(parent.children[i]));
-							                    break;
-							            }
-							        }
-							    }
-							    return xml;
+												break;
+											case "cdata":
+												if (!attributesOnly) xml = xml.concat(getContent(parent.children[i]));
+												break;
+											default:
+												if (!attributesOnly)
+													if (!parent.children[i].getAttribute("data-xsd2html2xml-choice") || (parent.children[i].getAttribute("data-xsd2html2xml-choice") &amp;&amp; parent.children[i].previousElementSibling.getElementsByTagName("input")[0].checked)) xml = xml.concat(getXML(parent.children[i]));
+												break;
+										}
+									}
+								}
+								return xml;
 							};
 							var getContent = function(node) {
-							    if (node.getElementsByTagName("input").length > 0) {
-							        switch (node.getElementsByTagName("input")[0].getAttribute("type").toLowerCase()) {
-							            case "checkbox":
-							                return node.getElementsByTagName("input")[0].checked;
-							            case "file":
-							            case "range":
-							            case "date":
-							            case "time":
-							            case "datetime-local":
-							            	return node.getElementsByTagName("input")[0].getAttribute("value");
-							            default:
-							            	switch (node.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase()) {
-									            case "xs:gday":
-									            case "xs:gmonth":
-									            case "xs:gmonthday":
-									            case "xs:gyear":
-									            case "xs:gyearmonth":
-									            	return node.getElementsByTagName("input")[0].getAttribute("value");
-									            default:
-									            	return node.getElementsByTagName("input")[0].value;
-							            	}
-							        }
-							    } else if (node.getElementsByTagName("select").length > 0) {
-							        return node.getElementsByTagName("select")[0].value;
-							    } else if (node.getElementsByTagName("textarea").length > 0) {
-							    	return node.getElementsByTagName("textarea")[0].value;
-							    }
+								if (node.getElementsByTagName("input").length > 0) {
+									switch (node.getElementsByTagName("input")[0].getAttribute("type").toLowerCase()) {
+										case "checkbox":
+											return node.getElementsByTagName("input")[0].checked;
+										case "file":
+										case "range":
+										case "date":
+										case "time":
+										case "datetime-local":
+											return node.getElementsByTagName("input")[0].getAttribute("value");
+										default:
+											switch (node.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase()) {
+												case "xs:gday":
+												case "xs:gmonth":
+												case "xs:gmonthday":
+												case "xs:gyear":
+												case "xs:gyearmonth":
+													return node.getElementsByTagName("input")[0].getAttribute("value");
+												default:
+													return node.getElementsByTagName("input")[0].value;
+											}
+									}
+								} else if (node.getElementsByTagName("select").length > 0) {
+									return node.getElementsByTagName("select")[0].value;
+								} else if (node.getElementsByTagName("textarea").length > 0) {
+									return node.getElementsByTagName("textarea")[0].value;
+								}
 							}
-                            var clickRemoveButton(button) {
-                                if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-min"))
-                                    button.parentNode.parentNode.parentNode.lastElementChild.click();
+							var clickRemoveButton(button) {
+								if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-min"))
+									button.parentNode.parentNode.parentNode.lastElementChild.click();
 
-                                if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-max"))
-                                    button.parentNode.parentNode.parentNode.lastElementChild.removeAttribute("disabled");
+								if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-max"))
+									button.parentNode.parentNode.parentNode.lastElementChild.removeAttribute("disabled");
 
-                                button.parentNode.parentNode.parentNode.removeChild(
-                                    button.parentNode.parentNode
-                                );
-                            }
-                            var clickAddButton = function(button) {
-                                var newNode = button.previousElementSibling.cloneNode(true);
+								button.parentNode.parentNode.parentNode.removeChild(
+									button.parentNode.parentNode
+								);
+							}
+							var clickAddButton = function(button) {
+								var newNode = button.previousElementSibling.cloneNode(true);
 
-                                for (var i=0; i&lt;newNode.querySelectorAll("input, select").length; i++) {
-                                    newNode.querySelectorAll("input, select")[i].removeAttribute("disabled");
-                                }
+								for (var i=0; i&lt;newNode.querySelectorAll("input, select").length; i++) {
+									newNode.querySelectorAll("input, select")[i].removeAttribute("disabled");
+								}
 
-                                newNode.removeAttribute("style");
+								newNode.removeAttribute("style");
 
-                                button.parentNode.insertBefore(
-                                    newNode, button.previousElementSibling
-                                );
+								button.parentNode.insertBefore(
+									newNode, button.previousElementSibling
+								);
 
-                                if ((button.parentNode.children.length - 2) == button.getAttribute("data-xsd2html2xml-max"))
-                                    button.setAttribute("disabled", "disabled");
-                            }
-                            var clickRadioInput=function (input, name) {
-                                for (var i=0; i&lt;document.querySelectorAll("[name="+name+"]").length; i++) {
-                                    var e = document.querySelectorAll("[name="+name+"]")[i];
-                                    e.removeAttribute("checked");
-                                    for (var j=0; j&lt;e.parentElement.nextElementSibling.querySelectorAll("input, select").length; j++) {
-                                        if (input.parentElement.nextElementSibling.contains(e.parentElement.nextElementSibling.querySelectorAll("input, select")[j]))
-                                            e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].removeAttribute("disabled");
-                                        else
-                                            e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].setAttribute("disabled", "disabled");
-                                    }
-                                }
-                                input.setAttribute("checked","checked");
-                            }
+								if ((button.parentNode.children.length - 2) == button.getAttribute("data-xsd2html2xml-max"))
+									button.setAttribute("disabled", "disabled");
+							}
+							var clickRadioInput=function (input, name) {
+								for (var i=0; i&lt;document.querySelectorAll("[name="+name+"]").length; i++) {
+									var e = document.querySelectorAll("[name="+name+"]")[i];
+									e.removeAttribute("checked");
+									for (var j=0; j&lt;e.parentElement.nextElementSibling.querySelectorAll("input, select").length; j++) {
+										if (input.parentElement.nextElementSibling.contains(e.parentElement.nextElementSibling.querySelectorAll("input, select")[j]))
+											e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].removeAttribute("disabled");
+										else
+											e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].setAttribute("disabled", "disabled");
+									}
+								}
+								input.setAttribute("checked","checked");
+							}
 						</xsl:text>
 					</xsl:otherwise>
 				</xsl:choose>
