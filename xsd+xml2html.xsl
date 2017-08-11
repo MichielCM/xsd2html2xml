@@ -694,6 +694,11 @@
 					<xsl:with-param name="description">
 						<xsl:call-template name="get-description" />
 					</xsl:with-param>
+                    <xsl:with-param name="disabled">
+                        <xsl:call-template name="get-max-occurs-reached">
+                            <xsl:with-param name="tree" select="$tree" />
+                        </xsl:call-template>
+                    </xsl:with-param>
 				</xsl:call-template>
 			</xsl:if>
 		</xsl:element>
@@ -874,6 +879,11 @@
 					<xsl:with-param name="description">
 						<xsl:call-template name="get-description" />
 					</xsl:with-param>
+                    <xsl:with-param name="disabled">
+                        <xsl:call-template name="get-max-occurs-reached">
+                            <xsl:with-param name="tree" select="$tree" />
+                        </xsl:call-template>
+                    </xsl:with-param>
 				</xsl:call-template>
 			</xsl:if>
 		</xsl:element>
@@ -1682,6 +1692,43 @@
 		</xsl:if>
 	</xsl:template>
 
+    <xsl:template name="get-max-occurs-reached">
+        <xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
+        <xsl:param name="namespace-prefix" /> <!-- contains inherited namespace prefix -->
+        <xsl:param name="id" select="@name" /> <!-- contains node name, or references node name in case of groups -->
+
+        <xsl:variable name="current-namespace-prefix">
+			<xsl:call-template name="get-namespace-prefix" />
+		</xsl:variable>
+
+		<xsl:variable name="confirmed-namespace-prefix">
+			<xsl:choose>
+				<xsl:when test="not($current-namespace-prefix = '') and not($current-namespace-prefix = 'xs:')">
+					<xsl:value-of select="$current-namespace-prefix" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$namespace-prefix" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+        <xsl:choose>
+            <xsl:when test="(@maxOccurs)">
+                <xsl:choose>
+                    <xsl:when test="count(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'/*[name() = &quot;',$confirmed-namespace-prefix,$id,'&quot;]'))) &gt;= @maxOccurs">
+                        <xsl:text>true</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>false</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:text>false</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
 	<xsl:template name="add-remove-button">
 		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs)">
 			<xsl:element name="button">
@@ -1695,6 +1742,7 @@
 
 	<xsl:template name="add-add-button">
 		<xsl:param name="description" />
+        <xsl:param name="disabled" />
 
 		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs)">
 			<xsl:element name="button">
@@ -1712,7 +1760,12 @@
 						<xsl:otherwise>1</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
-				<xsl:attribute name="onclick">clickAddButton(this);</xsl:attribute>
+                <xsl:attribute name="onclick">clickAddButton(this);</xsl:attribute>
+                <xsl:choose>
+                    <xsl:when test="$disabled = 'true'">
+                        <xsl:attribute name="disabled">disabled</xsl:attribute>
+                    </xsl:when>
+                </xsl:choose>
 				<xsl:value-of select="$config-add-button-label" /><xsl:text> </xsl:text><xsl:value-of select="$description" />
 			</xsl:element>
 		</xsl:if>
