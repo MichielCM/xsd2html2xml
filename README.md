@@ -79,12 +79,12 @@
   <tr>
     <td rowspan="2"><a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/namespaces-sample.xsd">namespaces-sample.xsd</a> (<a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/import-doc1.xsd">import-doc1.xsd</a>, <a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/import-doc2.xsd">import-doc2.xsd</a>, <a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/include-doc.xsd">include-doc.xsd</a>)</td>
     <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/form.html">form.html</a></td>
-    <td rowspan="2"><a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/complex-sample/namespaces-sample.xml">namespaces-sample.xml</a></td>
+    <td rowspan="2"><a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/namespaces-sample.xml">namespaces-sample.xml</a></td>
     <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/form-filled.html">form-filled.html</a></td>
   </tr>
   <tr>
     <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/form.xhtml">form.xhtml</a></td>
-    <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/form-filled.xhtml">form-filled.xhtml*</a></td>
+    <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/form-filled.xhtml">form-filled.xhtml</a></td>
   </tr>
 </table>
 <p>*Please note that this example is not populated exactly right, because Github does not serve the XHTML with the correct mimetype.</p> 
@@ -92,4 +92,5 @@
 <ul>
 <li><strong>Will this work with any XML schema?</strong><br />Yes, as long as you don't use the more esoteric elements of XSD, such as field or keygen. See the full list of supported tags above.</li>
 <li><strong>Do I have to annotate my XML schema?</strong><br />No, but you can to override the default labels. By default, the name attribute of elements is used for labels. If you want a custom label, add an xs:annotation/xs:documentation containing your custom label to the element.</li>
+<li><strong>My namespaces do not seem to work!</strong><br />Please note that namespaces are only supported in xsd+xml2html.xsl, even for empty forms! The reason for this is that namespace support requires the same EXSLT-functions as populating a form does, and I want to keep xsd2html.xsl the compact, no-dependency version.</li>
 </ul>
