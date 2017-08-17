@@ -49,6 +49,13 @@
   <li>config-language: if you use annotation/documentation tags for labeling elements, you can optionally specify their language with the xml:lang attribute. To specify which language should be used by XSD2HTML, make sure this variable matches the xml:lang attribute's. For example, to use &lt;xs:documentation xml:lang='en'&gt;hello&lt;xs:documentation&gt;, also pass 'en' to this variable. Note that if no matching documentation tag is found, XSD2HTML will use any documentation element not specifying a language, or else resort to @name. Default is empty.</li>
   <li>config-add-button-label, config-remove-button-label, config-submit-button-label, config-seconds|minutes|hours|days|months|years.: The values of these variables are used for the labels of add, remove, submit buttons, and time intervals for xs:duration. Defaults are '+', '-', 'OK', and the English time intervals.</li>
 </ul>
+<p>If you want to use namespaces, please keep in mind the following requirements:</p>
+<ul>
+<li>Use xsd+xml2html.xsl, even if you want to generate an empty form!</li>
+<li>A type reference to another XSD must be accessible, or an element will not be generated. So, if you declare an element with a type in a different file, make sure there's an import or include tag that points to the corresponding XSD file.</li>
+<li>Recursivity in XSD files is supported; imported XSD files can include other XSD files.</li>
+<li>I highly recommend using a caching system for loading external documents. Since XSLT 1.0 does not support array-like data structures, documents cannot be stored in variables for future reference. So each external XSD is loaded every time it is referenced by an element!</li>
+</ul>
 <h2>How it works</h2>
 <p>Input elements are assigned based on an element's primitive type. Most types work just like you would expect (e.g. int becomes number, boolean becomes checkbox, date becomes date). Some have additional options or peculiarities:</p>
 <ul>
@@ -92,5 +99,6 @@
 <ul>
 <li><strong>Will this work with any XML schema?</strong><br />Yes, as long as you don't use the more esoteric elements of XSD, such as field or keygen. See the full list of supported tags above.</li>
 <li><strong>Do I have to annotate my XML schema?</strong><br />No, but you can to override the default labels. By default, the name attribute of elements is used for labels. If you want a custom label, add an xs:annotation/xs:documentation containing your custom label to the element.</li>
-<li><strong>My namespaces do not seem to work!</strong><br />Please note that namespaces are only supported in xsd+xml2html.xsl, even for empty forms! The reason for this is that namespace support requires the same EXSLT-functions as populating a form does, and I want to keep xsd2html.xsl the compact, no-dependency version.</li>
+<li><strong>My namespaces do not seem to work!</strong><br />- Please note that namespaces are only supported in xsd+xml2html.xsl, even for empty forms! The reason for this is that namespace support requires the same EXSLT-functions as populating a form does, and I want to keep xsd2html.xsl the compact, no-dependency version.<br />
+- Note that if you use namespaces to reference types, you MUST use an xs:import tag with the location of the XSD file. If the application cannot find a type declaration, an element won't be rendered in a form.</li>
 </ul>
