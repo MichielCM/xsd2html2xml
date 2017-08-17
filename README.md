@@ -6,6 +6,7 @@
   <li>Generates a plain HTML5 form from any XML schema (XSD);</li>
   <li>Extracts XML from filled-out forms; either through JavaScript or XSLT;</li>
   <li>Supports populating the generated form with data from an XML document;</li>
+  <li>Supports namespaces;</li>
   <li>Written in fast and widely supported XSLT 1.0;</li>
   <li>Has no dependencies (except for XSLT 1.0 and - for population of the form - EXSLT extensions);</li>
   <li>Generates pure HTML5 forms with (very little) vanilla JavaScript for interactive parts;</li>
@@ -20,11 +21,12 @@
 <h2>Features</h2>
 <p>Supported XSD features:</p>
 <ul>
-  <li>Simple and complex elements, attributes, exclusions, restrictions, groups, etc. The full list of supported XSD tags is as follows: all, attribute, attributeGroup, choice, complexContent, complexType, element, extension, group, restriction, schema, sequence, simpleContent, simpleType, union (partially).</li>
+  <li>Simple and complex elements, attributes, exclusions, restrictions, groups, etc. The full list of supported XSD tags is as follows: all, attribute, attributeGroup, choice, complexContent, complexType, element, extension, import, include, group, restriction, schema, sequence, simpleContent, simpleType, union (partially).</li>
   <li>minOccurs and maxOccurs, including tiny vanilla JavaScript snippets that handle inserting and deleting elements.</li>
   <li>Default and fixed values, required and optional attributes.</li>
   <li>All restrictions that can be supported by HTML5: enumeration, length, maxExclusive, maxInclusive, maxLength, minExclusive, minInclusive, pattern, totalDigits, fractionDigits, and whiteSpace.</li>
   <li>Practically all data types that can be supported by HTML5: string, normalizedString, token, language, byte, decimal, int, integer, long, short (including their positive, negative, and unsigned variants), date, time, dateTime, month, gDay, gMonth, gYearMonth, gYear, gYearDay, base64Binary, anyURI, double, float, boolean. Note that all other data types are rendered as input[type=text] boxes, which still makes them editable in most cases.</li>
+  <li>Namespaces: XSD files can reference other XSD's through include and import tags. Working with those is supported from version 2 onwards.
   <li>Custom labels for elements, using the xs:annotation/xs:documentation tags directly following it.</li>
 </ul>
 <p>Unsupported XSD features:</p>
@@ -33,14 +35,13 @@
   <li>Mixed content (i.e. elements that can contain plain content and elements intermittently) can-not be represented in an HTML5 interface with predetermined controls.</li>
   <li>Restrictions on union elements were omitted, because they can contain content originating from different base types.</li>
   <li>Components that do not specify content guidelines were ignored, such as any, anyAttribute, documentation, or appinfo.</li>
-  <li>Import and include components that compile documents out of multiple sources are not directly supported, because their implementation is application-dependent. The conjoined document can be transformed with our algorithms.</li>
 </ul>
 <h2>How to use</h2>
 <p>It's really quite simple: pick your XSD file, transform it with either xsd2html.xsl or with xsd+xml2html.xsl, and voila: a generated HTML5 form.</p>
 <p>Here's more detail: using xsd2html2xml.xsl is the easiest way to go. It's a shortcut file containing only the variables needed for configuration. If you want, you can also use xsd+xml2html.xsl or xsd2html.xsl directly.</p>
 <p>The configuration is as follows:</p>
 <ul>
-  <li>Import xsd+xml2html.xsl if you want to populate the generated form with data, or xsd2html.xsl if you want it empty.</li>
+  <li>Import xsd+xml2html.xsl if you want to populate the generated form with data, or xsd2html.xsl if you want it empty. Note: if you want to use namespaces, you must use xsd+xml2html.xsl, even if you want the form empty!</li>
   <li>xml-doc: this variable should point to the XML data file, if you selected xsd+xml2html.xsl. Otherwise, it is ignored.</li>
   <li>config-xml-generator: this variable should be either 'xslt' or 'js'. The XML generated from the form can be extracted through JavaScript (via a built-in script) or a separate XSL transformation, using html2xml.xsl. Default is 'js' (JavaScript).</li>
   <li>output-method: if you selected 'xslt' as config-xml-generator, the output method should be XHTML. Otherwise closing tags will be omitted, resulting in invalid XML that cannot be processed by an XSLT parser. Note that XHTML is unforgiving, and that the form should be included in documents with a valid doctype, served as application/xhtml+xml. Default is 'html'. Note that you should edit both the output-method variable and the xsl:output tag.</li>
@@ -74,6 +75,16 @@
   <tr>
     <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/complex-sample/form.xhtml">form.xhtml</a></td>
     <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/complex-sample/form-filled.xhtml">form-filled.xhtml*</a></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/namespaces-sample.xsd">namespaces-sample.xsd</a> (<a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/import-doc1.xsd">import-doc1.xsd</a>, <a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/import-doc2.xsd">import-doc2.xsd</a>, <a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/include-doc.xsd">include-doc.xsd</a>)</td>
+    <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/form.html">form.html</a></td>
+    <td rowspan="2"><a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/complex-sample/namespaces-sample.xml">namespaces-sample.xml</a></td>
+    <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/form-filled.html">form-filled.html</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/form.xhtml">form.xhtml</a></td>
+    <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/form-filled.xhtml">form-filled.xhtml*</a></td>
   </tr>
 </table>
 <p>*Please note that this example is not populated exactly right, because Github does not serve the XHTML with the correct mimetype.</p> 
