@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<root xmlns="https://github.com/MichielCM/xsd2html2xml/default" xmlns:imp="https://github.com/MichielCM/xsd2html2xml/import" xmlns:dblimp="https://github.com/MichielCM/xsd2html2xml/doubleImport">
+	<defaultType>true</defaultType>
+	<includedType>1</includedType>
+	<imp:importedType1>TRUE</imp:importedType1>
+	<imp:importedType2>1</imp:importedType2>
+	<imp:importedElement1>true</imp:importedElement1>
+	<imp:importedElement2>1</imp:importedElement2>
+	<imp:importedComplexParentElement>
+		<dblimp:doubleImportedType>TRUE</dblimp:doubleImportedType>
+	</imp:importedComplexParentElement>
+</root>

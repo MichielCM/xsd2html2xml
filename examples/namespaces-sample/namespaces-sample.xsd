@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<xs:schema
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:imp="https://github.com/MichielCM/xsd2html2xml/import"
+	xmlns="https://github.com/MichielCM/xsd2html2xml/default"
+	targetNamespace="https://github.com/MichielCM/xsd2html2xml/default">
+	<xs:import namespace="https://github.com/MichielCM/xsd2html2xml/import" schemaLocation="import-doc1.xsd" />
+	<xs:import namespace="https://github.com/MichielCM/xsd2html2xml/import" schemaLocation="import-doc2.xsd" />
+	<xs:include schemaLocation="include-doc.xsd" />
+	<xs:element name="root">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="defaultType" type="xs:boolean" />
+				<xs:element name="includedType" type="includedType" />
+				<xs:element name="importedType1" type="imp:importedType1" />
+				<xs:element name="importedType2" type="imp:importedType2" />
+				<xs:element ref="imp:importedElement1" />
+				<xs:element ref="imp:importedElement2" />
+				<xs:element ref="imp:importedComplexParentElement" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

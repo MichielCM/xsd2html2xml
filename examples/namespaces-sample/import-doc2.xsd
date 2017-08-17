@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="https://github.com/MichielCM/xsd2html2xml/import">
+	<xs:simpleType name="importedType2">
+		<xs:restriction base="xs:int">
+			<xs:enumeration value="0" />
+			<xs:enumeration value="1" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="importedElement2">
+		<xs:simpleType>
+			<xs:restriction base="xs:int">
+				<xs:minInclusive value="0" />
+				<xs:maxInclusive value="1" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+</xs:schema>
