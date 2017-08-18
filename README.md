@@ -4,12 +4,12 @@
 <p>In a nutshell:</p>
 <ul>
   <li>Generates a plain HTML5 form from any XML schema (XSD);</li>
-  <li>Extracts XML from filled-out forms; either through JavaScript or XSLT;</li>
+  <li>Extracts XML from filled-out forms, either through JavaScript or XSLT;</li>
   <li>Supports populating the generated form with data from an XML document;</li>
   <li>Supports namespaces (including combining schemas through xs:include and xs:import tags);</li>
   <li>Written in fast and widely supported XSLT 1.0;</li>
-  <li>Has no dependencies (except for XSLT 1.0 and - for population of the form - EXSLT extensions);</li>
-  <li>Generates pure HTML5 forms with (very little) vanilla JavaScript for interactive parts;</li>
+  <li>Has no dependencies (except for XSLT 1.0 and - for population of the form and namespace support - EXSLT extensions);</li>
+  <li>Generates pure HTML5 forms with (little) vanilla JavaScript for interactive parts;</li>
   <li>Is easily stylable with CSS, or extendable with any library or framework;</li>
   <li>Is free for any purpose.</li>
 </ul>
