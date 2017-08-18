@@ -32,9 +32,9 @@
 <p>Unsupported XSD features:</p>
 <ul>
   <li>any and anyAttribute, for obvious reasons.</li>
-  <li>Mixed content (i.e. elements that can contain plain content and elements intermittently) can-not be represented in an HTML5 interface with predetermined controls.</li>
-  <li>Restrictions on union elements were omitted, because they can contain content originating from different base types.</li>
-  <li>Components that do not specify content guidelines were ignored, such as any, anyAttribute, documentation, or appinfo.</li>
+  <li>Mixed content (i.e. elements that can contain plain content and elements intermittently) cannot be represented in an HTML5 interface with predetermined controls.</li>
+  <li>Restrictions on union elements, because they can contain content originating from different base types.</li>
+  <li>Components that do not specify content guidelines, such as any, anyAttribute, documentation, or appinfo.</li>
 </ul>
 <h2>How to use</h2>
 <p>It's really quite simple: pick your XSD file, transform it with either xsd2html.xsl or with xsd+xml2html.xsl, and voila: a generated HTML5 form.</p>
@@ -99,7 +99,7 @@
 <ul>
 <li><strong>Will this work with any XML schema?</strong><br />Yes, as long as you don't use the more esoteric elements of XSD, such as field or keygen. See the full list of supported tags above.</li>
 <li><strong>Do I have to annotate my XML schema?</strong><br />No, but you can to override the default labels. By default, the name attribute of elements is used for labels. If you want a custom label, add an xs:annotation/xs:documentation containing your custom label to the element.</li>
-<li><strong>Which namespaces can I use?<strong><br />Any, except for any namespace having 'xs' as prefix. In fact, the XSD schema MUST be bound to the prefix 'xs', like so: xmlns:xs="http://www.w3.org/2001/XMLSchema".
+<li><strong>Which namespaces can I use?</strong><br />Any, except for any namespace having 'xs' as prefix. In fact, the XSD schema MUST be bound to the prefix 'xs', like so: xmlns:xs="http://www.w3.org/2001/XMLSchema".
 <li><strong>My namespaces do not seem to work!</strong><br />- Please note that namespaces are only supported in xsd+xml2html.xsl, even for empty forms! The reason for this is that namespace support requires the same EXSLT-functions as populating a form does, and I want to keep xsd2html.xsl the compact, no-dependency version.<br />
 - Note that if you use namespaces to reference types, you MUST use an xs:import tag with the location of the XSD file. If the application cannot find a type declaration, an element won't be rendered in a form.</li>
 </ul>
