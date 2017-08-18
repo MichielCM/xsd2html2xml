@@ -65,7 +65,8 @@
   <li>xs:enumeration: any type with this restriction will become a select element. It's possible to define additional restrictions on input, but usually this doesn't make much sense because the input is restricted to predetermined items.</li>
 </ul>
 <h2>Examples</h2>
-<p>This example demonstrates a form generated from an XML schema, both as HTML and XHTML. The resulting XML is then used to populate the form again as a last step.</p>
+<p>These examples demonstrate a form generated from an XML schema, both as HTML and XHTML. The resulting XML is then used to populate the form again as a last step.</p>
+<p>The first example (complex-sample) demonstrates all supported data types. The second example (namespaces-sample) illustrates an XML schema importing two documents with another namespace, and including one with the same namespace.
 <table>
   <tr>
     <th>XML Schema (XSD)</th>
