@@ -29,7 +29,6 @@
 	it does not contain a valid XHTML doctype and if it is not served with content type application/xhtml+xml -->
 	<!-- <xsl:output method="xhtml" omit-xml-declaration="no" /> -->
 	<xsl:output method="html" omit-xml-declaration="yes" indent="no" />
-	<xsl:variable name="output-method">html</xsl:variable>
 	
 	<!-- choose the JavaScript (js) or XSLT (xslt) option for processing the form results -->
 	<!-- <xsl:variable name="config-to-xml">xslt</xsl:variable> -->
@@ -104,206 +103,221 @@
 			</xsl:if>
 			
 			<!-- add initial scripts that run after all elements have been generated -->
+			<!-- note that lt, gt, amp may not be used as operators, because of output escaping issues -->
 			<xsl:element name="script">
 				<xsl:attribute name="type">text/javascript</xsl:attribute>
-				<xsl:choose>
-					<xsl:when test="$output-method = 'html'">
-						<xsl:text disable-output-escaping="yes"> <!-- html requires no output escaping -->
-							if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector; if (!Element.prototype.closest) Element.prototype.closest = function (selector) {     var el = this;     while (el) {         if (el.matches(selector)) {             return el;         }         el = el.parentElement;     } };
-							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-filled]").length; i++) { if (document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]")) document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]").previousElementSibling.querySelector("input[type='radio']").click(); }
-							
-							for (var i=0; i&lt;document.querySelectorAll("[type='range']").length; i++) {
-								if (document.querySelectorAll("[type='range']")[i].getAttribute("value")) {
-									document.querySelectorAll("[type='range']")[i].value = document.querySelectorAll("[type='range']")[i].getAttribute("value").replace(/\D/g, "");
-								} else if (document.querySelectorAll("[type='range']")[i].getAttribute("min")) {
-									document.querySelectorAll("[type='range']")[i].value = document.querySelectorAll("[type='range']")[i].getAttribute("min");
-								} else if (document.querySelectorAll("[type='range']")[i].getAttribute("max")) {
-									document.querySelectorAll("[type='range']")[i].value = document.querySelectorAll("[type='range']")[i].getAttribute("max");
-								} else {
-									document.querySelectorAll("[type='range']")[i].value = 0; document.querySelectorAll("[type='range']")[i].onchange();
+					<xsl:text>
+					/* SUPPORT FUNCTIONS */
+					
+					/* add .matches function if not natively supported */
+					if (!Element.prototype.matches)
+						Element.prototype.matches = Element.prototype.msMatchesSelector;
+					
+					/* add .closest function if not natively supported */
+					if (!Element.prototype.closest) {
+						Element.prototype.closest = function (selector) {
+							var el = this;
+							while (el) {
+								if (el.matches(selector)) {
+									return el;
 								}
+								el = el.parentElement;
 							}
-							
-							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']").length; i++) {
-								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value")) {
-									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value").replace(/\D/g, "");
-								}
-							}
-							
-							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']").length; i++) {
-								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value")) {
-									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value").replace(/\D/g, "");
-								}
-							}
-							
-							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']").length; i++) {
-								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value")) {
-									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].value = new Date().getFullYear().toString().concat(document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value").substring(1));
-								}
-							}
-							
-							var htmlToXML = function(root) {
-							    return "&lt;?xml version=\"1.0\"?&gt;".concat(getXML(root));
-							};
-							var getXML = function(parent, attributesOnly) {
-							    var xml = "";
-							    for (var i = 0; i &lt; parent.children.length; i++) {
-							        if (!parent.children[i].getAttribute("style")) {
-							            switch (parent.children[i].getAttribute("data-xsd2html2xml-type")) {
-							                case "element":
-							                    if (!attributesOnly) xml = xml.concat("&lt;").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat(getXML(parent.children[i], true)).concat("&gt;").concat(function() {
-							                        if (parent.children[i].nodeName.toLowerCase() === "label") {
-							                            return getContent(parent.children[i]);
-							                        } else return getXML(parent.children[i])
-							                    }()).concat("&lt;/").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat("&gt;");
-							                    break;
-							                case "attribute":
-							                    if (attributesOnly)
-													if (getContent(parent.children[i]))
-														xml = xml.concat(" ").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat("=\"").concat(getContent(parent.children[i])).concat("\"");
-							                    break;
-							                case "cdata":
-							                    if (!attributesOnly) xml = xml.concat(getContent(parent.children[i]));
-							                    break;
-							                default:
-							                    if (!attributesOnly)
-							                        if (!parent.children[i].getAttribute("data-xsd2html2xml-choice") || (parent.children[i].getAttribute("data-xsd2html2xml-choice") &amp;&amp; parent.children[i].previousElementSibling.getElementsByTagName("input")[0].checked)) xml = xml.concat(getXML(parent.children[i]));
-							                    break;
-							            }
-							        }
-							    }
-							    return xml;
-							};
-							var getContent = function(node) {
-							    if (node.getElementsByTagName("input").length > 0) {
-							        switch (node.getElementsByTagName("input")[0].getAttribute("type").toLowerCase()) {
-							            case "checkbox":
-							                return node.getElementsByTagName("input")[0].checked;
-							            case "file":
-							            case "range":
-							            case "date":
-							            case "time":
-							            case "datetime-local":
+						}
+					};
+					
+					/* VALUE SETTERS */
+					
+					/* specifically set values on ranges */
+					document.querySelectorAll("[type='range']").forEach(function(o) {
+						if (o.getAttribute("value")) {
+							o.value = o.getAttribute("value").replace(/\D/g, "");
+						} else if (o.getAttribute("min")) {
+							o.value = o.getAttribute("min");
+						} else if (o.getAttribute("max")) {
+							o.value = o.getAttribute("max");
+						} else {
+							o.value = 0; o.onchange();
+						}
+					});
+					
+					/* specifically set values on datepickers */
+					document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']").forEach(function(o) {
+						if (o.getAttribute("value")) {
+							o.value = o.getAttribute("value").replace(/\D/g, "");
+						}
+					});
+					document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']").forEach(function(o) {
+						if (o.getAttribute("value")) {
+							o.value = o.getAttribute("value").replace(/\D/g, "");
+						}
+					});
+					document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']").forEach(function(o) {
+						if (o.getAttribute("value")) {
+							o.value = new Date().getFullYear().toString().concat(o.getAttribute("value").substring(1));
+						}
+					});
+					
+					/* EVENT HANDLERS */
+					
+					var clickAddButton = function(button) {
+						var newNode = button.previousElementSibling.cloneNode(true);
+						
+						newNode.querySelectorAll("input, select").forEach(function(o) {
+							o.removeAttribute("disabled");
+						});
+						
+						newNode.removeAttribute("style");
+						
+						button.parentNode.insertBefore(
+							newNode, button.previousElementSibling
+						);
+						
+						if ((button.parentNode.children.length - 2) == button.getAttribute("data-xsd2html2xml-max"))
+							button.setAttribute("disabled", "disabled");
+					}
+					
+					var clickRemoveButton = function(button) {
+						if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-min"))
+							button.parentNode.parentNode.parentNode.lastElementChild.click();
+						
+						if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-max"))
+							button.parentNode.parentNode.parentNode.lastElementChild.removeAttribute("disabled");
+						
+						button.parentNode.parentNode.parentNode.removeChild(
+							button.parentNode.parentNode
+						);
+					}
+					
+					var clickRadioInput = function(input, name) {
+						document.querySelectorAll("[name=" + name + "]").forEach(function(o) {
+							o.removeAttribute("checked");
+							o.parentElement.nextElementSibling.querySelectorAll("input, select").forEach(function(p) {
+								if (input.parentElement.nextElementSibling.contains(p))
+									p.removeAttribute("disabled");
+								else
+									p.setAttribute("disabled", "disabled");
+							});
+						});
+						input.setAttribute("checked","checked");
+					}
+					
+					/* XML GENERATORS */
+					
+					var htmlToXML = function(root) {
+					    var namespaces = [];
+					    var prefixes = [];
+					    
+					    document.querySelectorAll("[data-xsd2html2xml-namespace]:not([data-xsd2html2xml-namespace=''])").forEach(function(o) {
+					    	if (namespaces.indexOf(
+					    		o.getAttribute("data-xsd2html2xml-namespace")
+					    	) == -1) {
+						    	namespaces.push(
+						    		o.getAttribute("data-xsd2html2xml-namespace")
+						    	);
+						    	
+						    	prefixes.push(
+						    		o.getAttribute("data-xsd2html2xml-name").substring(
+					    				0, o.getAttribute("data-xsd2html2xml-name").indexOf(":")
+					    			)
+					    		);
+					    	}
+					    });
+					    
+					    var namespaceString = "";
+					    
+					    namespaces.forEach(function(o,i) {
+					    	namespaceString = namespaceString.concat(
+					    		"xmlns".concat(
+					    			(prefixes[i] == "" ? "=" : ":".concat(prefixes[i].concat("=")))
+					    		).concat(
+					    			"\"".concat(namespaces[i]).concat("\" ")
+					    		)
+					    	)
+					    });
+					    
+					    return String.fromCharCode(60).concat("?xml version=\"1.0\"?").concat(String.fromCharCode(62)).concat(getXML(root, false, namespaceString.trim()));
+					};
+					
+					var getXML = function(parent, attributesOnly, namespaceString) {
+					    var xml = "";
+					    var children = [].slice.call(parent.children);
+					    children.forEach(function(o) {
+					        if (!o.getAttribute("style")) {
+					            switch (o.getAttribute("data-xsd2html2xml-type")) {
+					                case "element":
+					                    if (!attributesOnly) xml = xml.concat(String.fromCharCode(60)).concat(o.getAttribute("data-xsd2html2xml-name")).concat(getXML(o, true)).concat(String.fromCharCode(62)).concat(function() {
+					                        if (o.nodeName.toLowerCase() === "label") {
+					                            return getContent(o);
+					                        } else return getXML(o)
+					                    }()).concat(String.fromCharCode(60)).concat("/").concat(o.getAttribute("data-xsd2html2xml-name")).concat(String.fromCharCode(62));
+					                    break;
+					                case "attribute":
+					                    if (attributesOnly)
+											if (getContent(o))
+												xml = xml.concat(" ").concat(o.getAttribute("data-xsd2html2xml-name")).concat("=\"").concat(getContent(o)).concat("\"");
+					                    break;
+					                case "cdata":
+					                    if (!attributesOnly) xml = xml.concat(getContent(o));
+					                    break;
+					                default:
+					                    if (!attributesOnly) {
+					                    	if (!o.getAttribute("data-xsd2html2xml-choice"))
+					                    		xml = xml.concat(getXML(o));
+					                    		
+					                    	if (o.getAttribute("data-xsd2html2xml-choice"))
+					                    		if (o.previousElementSibling.getElementsByTagName("input")[0].checked)
+					                    			xml = xml.concat(getXML(o));
+					                    }
+					                    break;
+					            }
+					        }
+					    });
+					    
+					    if (namespaceString) {
+					    	xml = xml.substring(0, xml.indexOf(String.fromCharCode(62))).concat(" ").concat(namespaceString).concat(xml.substring(xml.indexOf(String.fromCharCode(62))));
+					    }
+					    
+					    return xml;
+					};
+					
+					var getContent = function(node) {
+					    if (node.getElementsByTagName("input").length != 0) {
+					        switch (node.getElementsByTagName("input")[0].getAttribute("type").toLowerCase()) {
+					            case "checkbox":
+					                return node.getElementsByTagName("input")[0].checked;
+					            case "file":
+					            case "range":
+					            case "date":
+					            case "time":
+					            case "datetime-local":
+					            	return node.getElementsByTagName("input")[0].getAttribute("value");
+					            default:
+					            	switch (node.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase()) {
+							            case "xs:gday":
+							            case "xs:gmonth":
+							            case "xs:gmonthday":
+							            case "xs:gyear":
+							            case "xs:gyearmonth":
 							            	return node.getElementsByTagName("input")[0].getAttribute("value");
 							            default:
-							            	switch (node.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase()) {
-									            case "xs:gday":
-									            case "xs:gmonth":
-									            case "xs:gmonthday":
-									            case "xs:gyear":
-									            case "xs:gyearmonth":
-									            	return node.getElementsByTagName("input")[0].getAttribute("value");
-									            default:
-									            	return node.getElementsByTagName("input")[0].value;
-							            	}
-							        }
-							    } else if (node.getElementsByTagName("select").length > 0) {
-							        return node.getElementsByTagName("select")[0].value;
-							    } else if (node.getElementsByTagName("textarea").length > 0) {
-							    	return node.getElementsByTagName("textarea")[0].value;
-							    }
-							}
-						</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text disable-output-escaping="no"> <!-- xhtml requires output escaping -->
-							if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector; if (!Element.prototype.closest) Element.prototype.closest = function (selector) {     var el = this;     while (el) {         if (el.matches(selector)) {             return el;         }         el = el.parentElement;     } };
-							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-filled]").length; i++) { if (document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]")) document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]").previousElementSibling.querySelector("input[type='radio']").click(); }
-							
-							for (var i=0; i&lt;document.querySelectorAll("[type='range']").length; i++) {
-								if (document.querySelectorAll("[type='range']")[i].getAttribute("value")) {
-									document.querySelectorAll("[type='range']")[i].value = document.querySelectorAll("[type='range']")[i].getAttribute("value").replace(/\D/g, "");
-								} else if (document.querySelectorAll("[type='range']")[i].getAttribute("min")) {
-									document.querySelectorAll("[type='range']")[i].value = document.querySelectorAll("[type='range']")[i].getAttribute("min");
-								} else if (document.querySelectorAll("[type='range']")[i].getAttribute("max")) {
-									document.querySelectorAll("[type='range']")[i].value = document.querySelectorAll("[type='range']")[i].getAttribute("max");
-								} else {
-									document.querySelectorAll("[type='range']")[i].value = 0; document.querySelectorAll("[type='range']")[i].onchange();
-								}
-							}
-							
-							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']").length; i++) {
-								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value")) {
-									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value").replace(/\D/g, "");
-								}
-							}
-							
-							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']").length; i++) {
-								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value")) {
-									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value").replace(/\D/g, "");
-								}
-							}
-							
-							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']").length; i++) {
-								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value")) {
-									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].value = new Date().getFullYear().toString().concat(document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value").substring(1));
-								}
-							}
-							
-							var htmlToXML = function(root) {
-							    return "&lt;?xml version=\"1.0\"?&gt;".concat(getXML(root));
-							};
-							var getXML = function(parent, attributesOnly) {
-							    var xml = "";
-							    for (var i = 0; i &lt; parent.children.length; i++) {
-							        if (!parent.children[i].getAttribute("style")) {
-							            switch (parent.children[i].getAttribute("data-xsd2html2xml-type")) {
-							                case "element":
-							                    if (!attributesOnly) xml = xml.concat("&lt;").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat(getXML(parent.children[i], true)).concat("&gt;").concat(function() {
-							                        if (parent.children[i].nodeName.toLowerCase() === "label") {
-							                            return getContent(parent.children[i]);
-							                        } else return getXML(parent.children[i])
-							                    }()).concat("&lt;/").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat("&gt;");
-							                    break;
-							                case "attribute":
-							                    if (attributesOnly)
-													if (getContent(parent.children[i]))
-														xml = xml.concat(" ").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat("=\"").concat(getContent(parent.children[i])).concat("\"");
-							                    break;
-							                case "cdata":
-							                    if (!attributesOnly) xml = xml.concat(getContent(parent.children[i]));
-							                    break;
-							                default:
-							                    if (!attributesOnly)
-							                        if (!parent.children[i].getAttribute("data-xsd2html2xml-choice") || (parent.children[i].getAttribute("data-xsd2html2xml-choice") &amp;&amp; parent.children[i].previousElementSibling.getElementsByTagName("input")[0].checked)) xml = xml.concat(getXML(parent.children[i]));
-							                    break;
-							            }
-							        }
-							    }
-							    return xml;
-							};
-							var getContent = function(node) {
-							    if (node.getElementsByTagName("input").length > 0) {
-							        switch (node.getElementsByTagName("input")[0].getAttribute("type").toLowerCase()) {
-							            case "checkbox":
-							                return node.getElementsByTagName("input")[0].checked;
-							            case "file":
-							            case "range":
-							            case "date":
-							            case "time":
-							            case "datetime-local":
-							            	return node.getElementsByTagName("input")[0].getAttribute("value");
-							            default:
-							            	switch (node.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase()) {
-									            case "xs:gday":
-									            case "xs:gmonth":
-									            case "xs:gmonthday":
-									            case "xs:gyear":
-									            case "xs:gyearmonth":
-									            	return node.getElementsByTagName("input")[0].getAttribute("value");
-									            default:
-									            	return node.getElementsByTagName("input")[0].value;
-							            	}
-							        }
-							    } else if (node.getElementsByTagName("select").length > 0) {
-							        return node.getElementsByTagName("select")[0].value;
-							    } else if (node.getElementsByTagName("textarea").length > 0) {
-							    	return node.getElementsByTagName("textarea")[0].value;
-							    }
-							}
-						</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
+							            	return node.getElementsByTagName("input")[0].value;
+					            	}
+					        }
+					    } else if (node.getElementsByTagName("select").length != 0) {
+					        return node.getElementsByTagName("select")[0].value;
+					    } else if (node.getElementsByTagName("textarea").length != 0) {
+					    	return node.getElementsByTagName("textarea")[0].value;
+					    }
+					}
+					
+					/* INITIAL CALLS */
+					
+					document.querySelectorAll("[data-xsd2html2xml-filled]").forEach(function(o) {
+						if (o.closest("[data-xsd2html2xml-choice]"))
+							o.closest("[data-xsd2html2xml-choice]").previousElementSibling.querySelector("input[type='radio']").click();
+					});
+					</xsl:text>
 			</xsl:element>
 		</xsl:element>
 	</xsl:template>
@@ -1194,17 +1208,7 @@
 			<xsl:element name="button">
 				<xsl:attribute name="type">button</xsl:attribute>
 				<xsl:attribute name="class">remove</xsl:attribute>
-				<xsl:attribute name="onclick">
-					if ((this.parentNode.parentNode.parentNode.children.length - 2) == this.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-min"))
-						this.parentNode.parentNode.parentNode.lastElementChild.click();
-					
-					if ((this.parentNode.parentNode.parentNode.children.length - 2) == this.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-max"))
-						this.parentNode.parentNode.parentNode.lastElementChild.removeAttribute("disabled");
-					
-					this.parentNode.parentNode.parentNode.removeChild(
-						this.parentNode.parentNode
-					);
-				</xsl:attribute>
+				<xsl:attribute name="onclick">clickRemoveButton(this);</xsl:attribute>
 				<xsl:value-of select="$config-remove-button-label" />
 			</xsl:element>
 		</xsl:if>
@@ -1229,22 +1233,7 @@
 						<xsl:otherwise>1</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
-				<xsl:attribute name="onclick">
-					var newNode = this.previousElementSibling.cloneNode(true);
-					
-					for (var i=0; i&lt;newNode.querySelectorAll("input, select").length; i++) {
-						newNode.querySelectorAll("input, select")[i].removeAttribute("disabled");
-					}
-					
-					newNode.removeAttribute("style");
-					
-					this.parentNode.insertBefore(
-						newNode, this.previousElementSibling
-					);
-					
-					if ((this.parentNode.children.length - 2) == this.getAttribute("data-xsd2html2xml-max"))
-						this.setAttribute("disabled", "disabled");
-				</xsl:attribute>
+				<xsl:attribute name="onclick">clickAddButton(this);</xsl:attribute>
 				<xsl:value-of select="$config-add-button-label" /><xsl:text> </xsl:text><xsl:value-of select="$description" />
 			</xsl:element>
 		</xsl:if>
@@ -1266,18 +1255,7 @@
 				<xsl:attribute name="name">
 					<xsl:value-of select="$name"/>
 				</xsl:attribute>
-				<xsl:attribute name="onclick">
-					for (var i=0; i&lt;document.querySelectorAll("[name='<xsl:value-of select="$name" />']").length; i++) {
-						var e = document.querySelectorAll("[name='<xsl:value-of select="$name" />']")[i];
-						e.removeAttribute("checked");
-						for (var j=0; j&lt;e.parentElement.nextElementSibling.querySelectorAll("input, select").length; j++) {
-							if (this.parentElement.nextElementSibling.contains(e.parentElement.nextElementSibling.querySelectorAll("input, select")[j]))
-								e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].removeAttribute("disabled");
-							else
-								e.parentElement.nextElementSibling.querySelectorAll("input, select")[j].setAttribute("disabled", "disabled");
-						}
-					}
-					this.setAttribute("checked","checked");</xsl:attribute>
+				<xsl:attribute name="onclick">clickRadioInput(this, '<xsl:value-of select="$name" />');</xsl:attribute>
 			</xsl:element>
 			
 			<xsl:if test="$config-label-after-input = 'true'">

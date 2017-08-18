@@ -1,17 +1,15 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<!-- choose either xsd+xml2html.xsl if you want to populate your form,
+	<!-- choose either xsd+xml2html.xsl if you want to populate your form or if you need namespace support,
 	or xsd2html.xsl if you do not. The latter option does not require EXSLT plug-ins. -->
-	<xsl:import href="xsd2html.xsl" />
-	<!-- <xsl:import href="xsd2html.xsl" /> -->
+	<xsl:import href="xsd+xml2html.xsl" />
+	<!--<xsl:import href="xsd2html.xsl" />-->
 	
 	<!-- set method as either html or xhtml. Note: if you want to process the results
 	with html2xml.xsl, you need to use xhtml. Note 2: browsers won't display the form correctly if
 	it does not contain a valid XHTML doctype and if it is not served with content type application/xhtml+xml -->
 	<!-- <xsl:output method="xhtml" omit-xml-declaration="no" indent="no" /> -->
-	<!-- <xsl:variable name="output-method">xhtml</xsl:variable> -->
 	<xsl:output method="html" omit-xml-declaration="yes" indent="no" />
-	<xsl:variable name="output-method">html</xsl:variable>
 	
 	<!-- optionally specify the xml document to populate the form with -->
 	<xsl:variable name="xml-doc">
