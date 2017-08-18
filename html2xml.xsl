@@ -30,7 +30,7 @@
 	<xsl:template match="*[@data-xsd2html2xml-type='element' and not(@style)]">
 		<xsl:if test="not(ancestor::*[@style])">
 			<xsl:if test="not(ancestor::*[@data-xsd2html2xml-choice]) or ancestor::*[@data-xsd2html2xml-choice]/preceding-sibling::*[1]/xhtml:input[@checked]">
-				<xsl:element name="{@data-xsd2html2xml-name}">
+				<xsl:element name="{@data-xsd2html2xml-name}" namespace="{@data-xsd2html2xml-namespace}">
 					<xsl:for-each select="*[@data-xsd2html2xml-type='attribute']">
 						<xsl:choose>
 							<xsl:when test="xhtml:input[@type='checkbox']/@checked">
