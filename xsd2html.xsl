@@ -106,25 +106,17 @@
 			<!-- note that lt, gt, amp may not be used as operators, because of output escaping issues -->
 			<xsl:element name="script">
 				<xsl:attribute name="type">text/javascript</xsl:attribute>
-					<xsl:text>
-					/* SUPPORT FUNCTIONS */
-					
-					/* add .matches function if not natively supported */
-					if (!Element.prototype.matches)
-						Element.prototype.matches = Element.prototype.msMatchesSelector;
-					
-					/* add .closest function if not natively supported */
-					if (!Element.prototype.closest) {
-						Element.prototype.closest = function (selector) {
-							var el = this;
-							while (el) {
-								if (el.matches(selector)) {
-									return el;
-								}
-								el = el.parentElement;
+					<xsl:text disable-output-escaping="yes">
+					/* add .forEach is not natively supported */
+					if (!NodeList.prototype.forEach) {
+						NodeList.prototype.forEach = function(callback){
+							var i = 0;
+							while (i != this.length) {
+								callback.apply(this, [this[i], i, this]);
+								i++;
 							}
-						}
-					};
+						};
+					}
 					
 					/* VALUE SETTERS */
 					
@@ -137,19 +129,20 @@
 						} else if (o.getAttribute("max")) {
 							o.value = o.getAttribute("max");
 						} else {
-							o.value = 0; o.onchange();
+							o.value = 0;
+							o.onchange();
 						}
 					});
 					
 					/* specifically set values on datepickers */
 					document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']").forEach(function(o) {
 						if (o.getAttribute("value")) {
-							o.value = o.getAttribute("value").replace(/\D/g, "");
+							o.value = o.getAttribute("value").replace(/-+0?/g, "");
 						}
 					});
 					document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']").forEach(function(o) {
 						if (o.getAttribute("value")) {
-							o.value = o.getAttribute("value").replace(/\D/g, "");
+							o.value = o.getAttribute("value").replace(/-+0?/g, "");
 						}
 					});
 					document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']").forEach(function(o) {
@@ -313,7 +306,7 @@
 					
 					/* INITIAL CALLS */
 					
-					document.querySelectorAll("[data-xsd2html2xml-filled]").forEach(function(o) {
+					document.querySelectorAll("[data-xsd2html2xml-filled='true']").forEach(function(o) {
 						if (o.closest("[data-xsd2html2xml-choice]"))
 							o.closest("[data-xsd2html2xml-choice]").previousElementSibling.querySelector("input[type='radio']").click();
 					});
@@ -700,7 +693,7 @@
 					<xsl:when test="not($choice='')">
 						<xsl:element name="select">
 							<xsl:attribute name="onchange">
-								<xsl:text>for (var i=0; i&lt;this.children.length; i++) { this.children[i].removeAttribute("selected"); } this.children[this.selectedIndex].setAttribute("selected","selected");</xsl:text>
+								<xsl:text>this.childNodes.forEach(function(o) { o.removeAttribute("selected"); }); this.children[this.selectedIndex].setAttribute("selected","selected");</xsl:text>
 							</xsl:attribute>
 							
 							<!-- attribute can have optional use=required values; normal elements are always required -->
