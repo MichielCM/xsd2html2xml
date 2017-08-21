@@ -82,7 +82,7 @@
   </tr>
   <tr>
     <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/complex-sample/form.xhtml">form.xhtml</a></td>
-    <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/complex-sample/form-filled.xhtml">form-filled.xhtml*</a></td>
+    <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/complex-sample/form-filled.xhtml">form-filled.xhtml</a></td>
   </tr>
   <tr>
     <td rowspan="2"><a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/namespaces-sample.xsd">namespaces-sample.xsd</a> (<a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/import-doc1.xsd">import-doc1.xsd</a>, <a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/import-doc2.xsd">import-doc2.xsd</a>, <a href="https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/include-doc.xsd">include-doc.xsd</a>)</td>
@@ -95,7 +95,6 @@
     <td><a href="https://htmlpreview.github.io/?https://github.com/MichielCM/xsd2html2xml/blob/master/examples/namespaces-sample/form-filled.xhtml">form-filled.xhtml</a></td>
   </tr>
 </table>
-<p>*Please note that this example is not populated exactly right, because Github does not serve the XHTML with the correct mimetype.</p> 
 <h2>FAQ</h2>
 <ul>
 <li><strong>Will this work with any XML schema?</strong><br />Yes, as long as you don't use the more esoteric elements of XSD, such as field or keygen. See the full list of supported tags above.</li>
