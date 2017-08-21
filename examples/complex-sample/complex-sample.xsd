@@ -65,6 +65,30 @@
 							<xs:element type="xs:dateTime" name="dateTime" />
 							<xs:element type="xs:gDay" name="gDay" />
 							<xs:element type="xs:gMonth" name="gMonth" />
+							<xs:element name="gMonthEnum">
+								<xs:annotation>
+									<xs:documentation>gMonth as enumeration</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:gMonth">
+										<xs:enumeration value="--01">
+											<xs:annotation>
+												<xs:documentation>January</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+										<xs:enumeration value="--02">
+											<xs:annotation>
+												<xs:documentation>February</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+										<xs:enumeration value="--03">
+											<xs:annotation>
+												<xs:documentation>March</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
 							<xs:element type="xs:gMonthDay" name="gMonthDay"/>
 							<xs:element type="xs:gYear" name="gYear"/>
 							<xs:element type="xs:gYearMonth" name="gYearMonth"/>

@@ -21,8 +21,9 @@
         <date>2017-04-03</date>
         <time>02:03:04</time>
         <dateTime>2017-04-03T14:03:04</dateTime>
-        <gDay>---03</gDay>
-        <gMonth>--04</gMonth>
+        <gDay>---30</gDay>
+        <gMonth>--02</gMonth>
+        <gMonthEnum>--02</gMonthEnum>
         <gMonthDay>--04-05</gMonthDay>
         <gYear>2017</gYear>
         <gYearMonth>2017-04</gYearMonth>
