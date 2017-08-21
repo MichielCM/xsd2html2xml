@@ -16,7 +16,8 @@
 <h2>Versions</h2>
 <p>I strongly recommend using only <strong>released</strong> versions. Newer commits may contain new, experimental, features, but have not been thoroughly tested to perform well in a production environment.
 <ul>
-  <li>April 20, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v1.0">1.0: First release of XSD2HTML2XML.</a></li>
+  <li>August 21, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v2.0">Release 2.0: Namespaces and more!</a>
+  <li>April 20, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v1.0">Release 1.0: Original release</a></li>
 </ul>
 <h2>Features</h2>
 <p>Supported XSD features:</p>
