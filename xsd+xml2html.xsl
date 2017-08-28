@@ -164,7 +164,7 @@
 					var clickAddButton = function(button) {
 						var newNode = button.previousElementSibling.cloneNode(true);
 						
-						newNode.querySelectorAll("input, select").forEach(function(o) {
+						newNode.querySelectorAll("input, select, textarea").forEach(function(o) {
 							o.removeAttribute("disabled");
 						});
 						
@@ -193,7 +193,7 @@
 					var clickRadioInput = function(input, name) {
 						document.querySelectorAll("[name=" + name + "]").forEach(function(o) {
 							o.removeAttribute("checked");
-							o.parentElement.nextElementSibling.querySelectorAll("input, select").forEach(function(p) {
+							o.parentElement.nextElementSibling.querySelectorAll("input, select, textarea").forEach(function(p) {
 								if (input.parentElement.nextElementSibling.contains(p))
 									p.removeAttribute("disabled");
 								else
