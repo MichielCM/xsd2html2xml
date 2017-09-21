@@ -554,7 +554,8 @@
 					</xsl:with-param>
 					<xsl:with-param name="disabled">
 						<xsl:choose>
-							<xsl:when test="$nodes-count = @maxOccurs">true</xsl:when>
+							<xsl:when test="@maxOccurs and $nodes-count = @maxOccurs">true</xsl:when>
+							<xsl:when test="$nodes-count = 1">true</xsl:when>
 							<xsl:otherwise>false</xsl:otherwise>
 						</xsl:choose>
 					</xsl:with-param>
@@ -744,7 +745,8 @@
 					</xsl:with-param>
 					<xsl:with-param name="disabled">
 						<xsl:choose>
-							<xsl:when test="$nodes-count = @maxOccurs">true</xsl:when>
+							<xsl:when test="@maxOccurs and $nodes-count = @maxOccurs">true</xsl:when>
+							<xsl:when test="$nodes-count = 1">true</xsl:when>
 							<xsl:otherwise>false</xsl:otherwise>
 						</xsl:choose>
 					</xsl:with-param>
@@ -1626,7 +1628,7 @@
 	
 	<!-- adds a remove button for dynamic elements -->
 	<xsl:template name="add-remove-button">
-		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs)">
+		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs) and not(@minOccurs = '1' and not(@maxOccurs)) and not(@maxOccurs = '1' and not(@minOccurs))">
 			<xsl:element name="button">
 				<xsl:attribute name="type">button</xsl:attribute>
 				<xsl:attribute name="class">remove</xsl:attribute>
@@ -1641,7 +1643,7 @@
 		<xsl:param name="description" />
 		<xsl:param name="disabled" /> <!-- indicates if the button should be disabled by default; used when the max number of maxOccurs has been reached in xml-doc -->
 		
-		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs)">
+		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs) and not(@minOccurs = '1' and not(@maxOccurs)) and not(@maxOccurs = '1' and not(@minOccurs))">
 			<xsl:element name="button">
 				<xsl:attribute name="type">button</xsl:attribute>
 				<xsl:attribute name="class">add</xsl:attribute>

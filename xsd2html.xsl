@@ -1197,7 +1197,7 @@
 	</xsl:template>
 	
 	<xsl:template name="add-remove-button">
-		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs)">
+		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs) and not(@minOccurs = '1' and not(@maxOccurs)) and not(@maxOccurs = '1' and not(@minOccurs))">
 			<xsl:element name="button">
 				<xsl:attribute name="type">button</xsl:attribute>
 				<xsl:attribute name="class">remove</xsl:attribute>
@@ -1210,7 +1210,7 @@
 	<xsl:template name="add-add-button">
 		<xsl:param name="description" />
 		
-		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs)">
+		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs) and not(@minOccurs = '1' and not(@maxOccurs)) and not(@maxOccurs = '1' and not(@minOccurs))">
 			<xsl:element name="button">
 				<xsl:attribute name="type">button</xsl:attribute>
 				<xsl:attribute name="class">add</xsl:attribute>
