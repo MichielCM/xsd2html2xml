@@ -555,7 +555,7 @@
 					<xsl:with-param name="disabled">
 						<xsl:choose>
 							<xsl:when test="@maxOccurs and $nodes-count = @maxOccurs">true</xsl:when>
-							<xsl:when test="$nodes-count = 1">true</xsl:when>
+							<xsl:when test="not(@maxOccurs) and $nodes-count = 1">true</xsl:when>
 							<xsl:otherwise>false</xsl:otherwise>
 						</xsl:choose>
 					</xsl:with-param>
@@ -746,7 +746,7 @@
 					<xsl:with-param name="disabled">
 						<xsl:choose>
 							<xsl:when test="@maxOccurs and $nodes-count = @maxOccurs">true</xsl:when>
-							<xsl:when test="$nodes-count = 1">true</xsl:when>
+							<xsl:when test="not(@maxOccurs) and $nodes-count = 1">true</xsl:when>
 							<xsl:otherwise>false</xsl:otherwise>
 						</xsl:choose>
 					</xsl:with-param>
