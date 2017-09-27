@@ -529,7 +529,7 @@
 			</xsl:call-template>
 			
 			<!-- add another element to be used for dynamically inserted elements -->
-			<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs)">
+			<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs) and not(@minOccurs = '1' and not(@maxOccurs)) and not(@maxOccurs = '1' and not(@minOccurs))">
 				<xsl:call-template name="handle-complex-element">
 					<xsl:with-param name="id" select="$id"/>
 					<xsl:with-param name="namespace-prefix" select="$confirmed-namespace-prefix" />
@@ -720,7 +720,7 @@
 			</xsl:call-template>
 			
 			<!-- add another element to be used for dynamically inserted elements -->
-			<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs)">
+			<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs) and not(@minOccurs = '1' and not(@maxOccurs)) and not(@maxOccurs = '1' and not(@minOccurs))">
 				<xsl:call-template name="handle-simple-element">
 					<xsl:with-param name="id" select="$id"/>
 					<xsl:with-param name="namespace-prefix" select="$confirmed-namespace-prefix" />
@@ -1643,7 +1643,7 @@
 		<xsl:param name="description" />
 		<xsl:param name="disabled" /> <!-- indicates if the button should be disabled by default; used when the max number of maxOccurs has been reached in xml-doc -->
 		
-		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs) and not(@minOccurs = '1' and not(@maxOccurs)) and not(@maxOccurs = '1' and not(@minOccurs))">
+		<!--<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs) and not(@minOccurs = '1' and not(@maxOccurs)) and not(@maxOccurs = '1' and not(@minOccurs))">-->
 			<xsl:element name="button">
 				<xsl:attribute name="type">button</xsl:attribute>
 				<xsl:attribute name="class">add</xsl:attribute>
@@ -1665,7 +1665,7 @@
 				<xsl:attribute name="onclick">clickAddButton(this);</xsl:attribute>
 				<xsl:value-of select="$config-add-button-label" /><xsl:text> </xsl:text><xsl:value-of select="$description" />
 			</xsl:element>
-		</xsl:if>
+		<!--</xsl:if>-->
 	</xsl:template>
 	
 	<!-- adds a radio button for choice groups -->
