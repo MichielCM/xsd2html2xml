@@ -16,8 +16,7 @@
 <h2>Versions</h2>
 <p>I strongly recommend using only <strong>released</strong> versions. Newer commits may contain new, experimental, features, but have not been thoroughly tested to perform well in a production environment.
 <ul>
-  <li>August 28, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v2.1">Release 2.1: Bugfix for dynamic textarea elements</a></li>
-  <li>August 21, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v2.0">Release 2.0: Namespaces and more!</a></li>
+  <li>September 27, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v2.2">Release 2.2: Namespaces and more!</a></li>
   <li>April 20, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v1.0">Release 1.0: Original release</a></li>
 </ul>
 <h2>Features</h2>
