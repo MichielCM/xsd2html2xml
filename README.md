@@ -19,6 +19,7 @@
   <li>September 27, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v2.2">Release 2.2: Namespace support, JavaScript refactored, bugfixes for dynamic elements</a></li>
   <li>April 20, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v1.0">Release 1.0: Original release</a></li>
 </ul>
+<p>If you are looking for out-of-the-box software, check out the free <a href="https://chrome.google.com/webstore/detail/xml-schema-form-generator/bampmcipgicplmddohedjmenepjmdpoj">Google Chrome extension</a> or the full <a href="http://www.michielmeulendijk.nl/xml-schema-form-generator/">Windows application</a>. These products are pre-configured and automatically generate forms from within the browser or desktop.</p>
 <h2>Features</h2>
 <p>Supported XSD features:</p>
 <ul>
@@ -106,4 +107,5 @@
 <li><strong>Which browsers are supported?</strong><br />Modern browsers. HTML5 support has only been really available in browser versions over the past few years, so supporting old browsers doesn't make much sense. Note that because of this, the JavaScript snippets also use recently added functions (e.g. forEach, querySelector, closest). Recent versions of Chrome, Edge, and FireFox have been tested.</li>
 <li><strong>But gDay and gMonth don't work in Edge!</strong><br />They don't out of the box, because the format these types require (e.g. --03 for March) are not valid numbers and Edge refuses to set them as values. A workaround is to use an enumeration for these types, as shown in complex-sample (gMonthEnum).</li>
   <li><strong>What's the easiest way to test this?</strong><br />Check out the <a href="https://github.com/MichielCM/xsd2html2xml/tree/master/app">Java app</a>. It's a simple implementation of the Xalan XSLT engine. I don't recommend using it in production, though you are welcome to adapt it to your needs. Browser implementations of XSLT 1.0 with EXSLT are sketchy at best, so don't waste your time trying to perform the XSLT transformations in the browser. :)</li>
+  <li><strong>I don't want to write my own implementation! Is there out-of-the-box software available?</strong><br />Yes, there is! Check out the free <a href="https://chrome.google.com/webstore/detail/xml-schema-form-generator/bampmcipgicplmddohedjmenepjmdpoj">Google Chrome extension</a> or the full <a href="http://www.michielmeulendijk.nl/xml-schema-form-generator/">Windows application</a>.
 </ul>
