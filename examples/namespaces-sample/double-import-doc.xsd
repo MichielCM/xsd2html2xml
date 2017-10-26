@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://github.com/MichielCM/xsd2html2xml/doubleImport">
+	<xs:simpleType name="doubleImportedType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(TRUE|FALSE)" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
