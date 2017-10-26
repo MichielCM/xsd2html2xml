@@ -345,7 +345,7 @@
 		</xsl:variable>
 		
 		<xsl:choose>
-			<xsl:when test="//xs:complexType[@name=$type-suffix]/xs:simpleContent or exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]/xs:simpleContent">
+			<xsl:when test="exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]/xs:simpleContent">
 				<xsl:call-template name="handle-complex-elements">
 					<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
 					<xsl:with-param name="simple">true</xsl:with-param>
@@ -354,7 +354,7 @@
 					<xsl:with-param name="tree" select="$tree" />
 				</xsl:call-template>
 			</xsl:when>
-			<xsl:when test="//xs:complexType[@name=$type-suffix] or exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]">
+			<xsl:when test="exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]">
 				<xsl:call-template name="handle-complex-elements">
 					<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
 					<xsl:with-param name="simple">false</xsl:with-param>
@@ -363,7 +363,7 @@
 					<xsl:with-param name="tree" select="$tree" />
 				</xsl:call-template>
 			</xsl:when>
-			<xsl:when test="//xs:simpleType[@name=$type-suffix] or exsl:node-set($namespace-documents)//xs:simpleType[@name=$type-suffix]">
+			<xsl:when test="exsl:node-set($namespace-documents)//xs:simpleType[@name=$type-suffix]">
 				<xsl:call-template name="handle-simple-elements">
 					<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
 					<xsl:with-param name="choice" select="$choice"/>
@@ -410,13 +410,13 @@
 		
 		<xsl:variable name="ref" select="@ref" />
 		
-		<xsl:variable name="type-suffix">
+		<xsl:variable name="ref-suffix">
 			<xsl:call-template name="get-string-without-prefix">
 				<xsl:with-param name="string" select="$ref" />
 			</xsl:call-template>
 		</xsl:variable>
 		
-		<xsl:apply-templates select="//*[@name=$ref] | exsl:node-set($namespace-documents)//*[@name=$type-suffix]">
+		<xsl:apply-templates select="exsl:node-set($namespace-documents)//*[@name=$ref-suffix]">
 			<xsl:with-param name="namespace-prefix">
 				<xsl:call-template name="get-namespace-prefix" />
 			</xsl:with-param>
@@ -449,8 +449,19 @@
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		
+		<xsl:variable name="namespace-documents">
+			<xsl:call-template name="get-my-namespace-documents" />
+		</xsl:variable>
+		
 		<xsl:variable name="ref" select="@ref" />
-		<xsl:apply-templates select="//xs:attributeGroup[@name=$ref]/xs:attribute">
+		
+		<xsl:variable name="ref-suffix">
+			<xsl:call-template name="get-string-without-prefix">
+				<xsl:with-param name="string" select="$ref" />
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<xsl:apply-templates select="exsl:node-set($namespace-documents)//xs:attributeGroup[@name=$ref]/xs:attribute">
 			<xsl:with-param name="id" select="@ref" />
 			<xsl:with-param name="namespace-prefix">
 				<xsl:call-template name="get-namespace-prefix" />
@@ -577,6 +588,16 @@
 		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		
 		<xsl:if test="$count > 0">
+			<xsl:variable name="type">
+				<xsl:value-of select="@type"/>
+			</xsl:variable>
+			
+			<xsl:variable name="type-suffix">
+				<xsl:call-template name="get-string-without-prefix">
+					<xsl:with-param name="string" select="$type" />
+				</xsl:call-template>
+			</xsl:variable>
+			
 			<xsl:element name="fieldset">
 				<xsl:attribute name="data-xsd2html2xml-namespace">
 					<xsl:call-template name="get-namespace">
@@ -600,9 +621,23 @@
 					<xsl:call-template name="add-remove-button" />
 				</xsl:element>
 				
+				<xsl:variable name="namespace-documents">
+					<xsl:call-template name="get-my-namespace-documents" />
+				</xsl:variable>
+				
 				<!-- let child elements be handled by their own templates -->
 				<xsl:variable name="ref" select="@ref"/>
-				<xsl:apply-templates select="xs:complexType/xs:sequence|xs:complexType/xs:all|xs:complexType/xs:choice|xs:complexType/xs:attribute|xs:complexType/xs:attributeGroup|//xs:group[@name=$ref]/*">
+				<xsl:apply-templates select="xs:complexType/xs:sequence
+					|xs:complexType/xs:all
+					|xs:complexType/xs:choice
+					|xs:complexType/xs:attribute
+					|xs:complexType/xs:attributeGroup
+					|exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]/xs:sequence
+					|exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]/xs:all
+					|exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]/xs:choice
+					|exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]/xs:attribute
+					|exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]/xs:attributeGroup
+					|exsl:node-set($namespace-documents)//xs:group[@name=$ref]/*">
 					<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
 					<xsl:with-param name="disabled" select="$disabled" />
 					<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
@@ -629,12 +664,12 @@
 							<xsl:with-param name="disabled" select="$disabled" />
 							<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
 						</xsl:apply-templates>
-						<!-- add inherited extensions -->
+						<!-- add inherited extensions; superfluous: taken care of by apply-templates statement above
 						<xsl:call-template name="add-extensions-recursively">
 							<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
 							<xsl:with-param name="disabled" select="$disabled" />
 							<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
-						</xsl:call-template>
+						</xsl:call-template> -->
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:element>
@@ -1097,7 +1132,7 @@
 								<xsl:when test="not($invisible = 'true') and not(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']'))) = ''">
 									<xsl:attribute name="data-xsd2html2xml-filled">true</xsl:attribute>
 									<xsl:choose>
-										<xsl:when test="@type = 'xs:boolean'">
+										<xsl:when test="$type = 'xs:boolean'">
 											<xsl:if test="dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']')) = 'true'">
 												<xsl:attribute name="checked">
 													<xsl:text>checked</xsl:text>
@@ -1244,6 +1279,12 @@
 			<xsl:call-template name="get-type"/>
 		</xsl:variable>
 		
+		<xsl:variable name="type-suffix">
+			<xsl:call-template name="get-string-without-prefix">
+				<xsl:with-param name="string" select="$type" />
+			</xsl:call-template>
+		</xsl:variable>
+		
 		<xsl:variable name="namespace-documents">
 			<xsl:call-template name="get-my-namespace-documents" />
 		</xsl:variable>
@@ -1259,7 +1300,7 @@
 			</xsl:call-template>
 		</xsl:variable>
 		
-		<xsl:for-each select="//xs:simpleType[@name=$type] | exsl:node-set($namespace-documents)//xs:simpleType[@name=$type-suffix]">
+		<xsl:for-each select="exsl:node-set($namespace-documents)//xs:simpleType[@name=$type-suffix]">
 			<xsl:call-template name="handle-enumerations">
 				<xsl:with-param name="default" select="$default" />
 				<xsl:with-param name="disabled" select="$disabled" />
@@ -1356,7 +1397,7 @@
 					</xsl:call-template>
 				</xsl:variable>
 				
-				<xsl:for-each select="//xs:simpleType[@name=$type] | exsl:node-set($namespace-documents)//xs:simpleType[@name=$type-suffix]">
+				<xsl:for-each select="exsl:node-set($namespace-documents)//xs:simpleType[@name=$type-suffix]">
 					<xsl:call-template name="attr-value">
 						<xsl:with-param name="attr" select="$attr"/>
 					</xsl:call-template>
@@ -1425,7 +1466,8 @@
 					<xsl:call-template name="get-my-namespace-documents" />
 				</xsl:variable>
 				
-				<xsl:for-each select="//xs:simpleType[@name=$type] | //xs:complexType[@name=$type] | exsl:node-set($namespace-documents)//xs:simpleType[@name=$type-suffix] | exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]">
+				<xsl:for-each select="exsl:node-set($namespace-documents)//xs:simpleType[@name=$type-suffix]
+					|exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]">
 					<xsl:call-template name="get-primitive-type" />
 				</xsl:for-each>
 			</xsl:when>
@@ -1491,19 +1533,7 @@
 		</xsl:choose>
 	</xsl:template>
 	
-	<!-- Returns namespace document referenced by xs:import element's schemaLocation attribute corresponding to supplied namespace name -->
-	<xsl:template name="get-namespace-document">
-		<xsl:param name="namespace" /> <!-- namespace name whose document is returned -->
-		
-		<xsl:if test="//xs:import[@namespace = $namespace]">
-			<xsl:variable name="namespace-document">
-				<xsl:copy-of select="document(concat('',//xs:import[@namespace = $namespace]/@schemaLocation))/*"/>
-			</xsl:variable>
-			
-			<xsl:copy-of select="$namespace-document" />
-		</xsl:if>
-	</xsl:template>
-	
+	<!-- Returns an element's namespace documents -->
 	<xsl:template name="get-namespace-documents">
 		<xsl:param name="namespace" /> <!-- namespace name whose documents are returned -->
 		
@@ -1519,6 +1549,11 @@
 			</xsl:for-each>
 			
 			<xsl:if test="$namespace = $target-namespace">
+				<!-- add current document -->
+				<xsl:element name="document">
+					<xsl:copy-of select="//xs:schema" />
+				</xsl:element>
+				
 				<xsl:for-each select="//xs:include">
 					<xsl:element name="document">
 						<xsl:copy-of select="document(string(@schemaLocation))" />
@@ -1548,30 +1583,6 @@
 		</xsl:if>
 	</xsl:template>
 	
-	<!-- Returns the current element's namespace document -->
-	<!-- Shortcut method for getting prefix, getting namespace, and loading namespace document -->
-	<!--<xsl:template name="get-my-namespace-document">
-		<xsl:variable name="type">
-			<xsl:call-template name="get-type"/>
-		</xsl:variable>
-		
-		<xsl:variable name="namespace-document">
-			<xsl:if test="contains($type, ':') and substring-before($type, ':') != 'xs'">
-				<xsl:call-template name="get-namespace-document">
-					<xsl:with-param name="namespace">
-						<xsl:call-template name="get-namespace">
-							<xsl:with-param name="namespace-prefix">
-								<xsl:call-template name="get-namespace-prefix" />
-							</xsl:with-param>
-						</xsl:call-template>
-					</xsl:with-param>
-				</xsl:call-template>
-			</xsl:if>
-		</xsl:variable>
-		
-		<xsl:copy-of select="$namespace-document" />
-	</xsl:template>-->
-	
 	<!-- Applies templates recursively, overwriting lower-level options -->
 	<xsl:template name="set-type-specifics-recursively">
 		<xsl:variable name="type">
@@ -1589,7 +1600,8 @@
 				</xsl:call-template>
 			</xsl:variable>
 			
-			<xsl:for-each select="//xs:simpleType[@name=$type] | //xs:complexType[@name=$type] | exsl:node-set($namespace-documents)//xs:simpleType[@name=$type-suffix] | exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]">
+			<xsl:for-each select="exsl:node-set($namespace-documents)//xs:simpleType[@name=$type-suffix]
+				|exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]">
 				<xsl:call-template name="set-type-specifics-recursively" />
 			</xsl:for-each>
 		</xsl:if>
@@ -1615,8 +1627,13 @@
 			<xsl:call-template name="get-type"/>
 		</xsl:variable>
 		
+		<xsl:variable name="namespace-documents">
+			<xsl:call-template name="get-my-namespace-documents" />
+		</xsl:variable>
+		
 		<xsl:if test="not(starts-with($type, 'xs:'))">
-			<xsl:for-each select="//xs:simpleType[@name=$type]|//xs:complexType[@name=$type]">
+			<xsl:for-each select="exsl:node-set($namespace-documents)//xs:simpleType[@name=$type]
+				|exsl:node-set($namespace-documents)//xs:complexType[@name=$type]">
 				<xsl:apply-templates select=".//xs:element|.//xs:attribute">
 					<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
 					<xsl:with-param name="disabled" select="$disabled" />
