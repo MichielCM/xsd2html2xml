@@ -17,7 +17,7 @@
 <h3>Source Code</h3>
 <p>I strongly recommend using only <strong>released</strong> versions. Newer commits may contain new, experimental, features, but have not been thoroughly tested to perform well in a production environment.</p>
 <ul>
-	<li>September 27, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v2.3">Release 2.3: Namespace support, JavaScript refactored, bugfixes</a></li>
+	<li>October 31, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v2.3">Release 2.3: Namespace support, JavaScript refactored, bugfixes</a></li>
 	<li>April 20, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v1.0">Release 1.0: Original release</a>
 	</li>
 </ul>
@@ -156,5 +156,5 @@
 		<br />If you want to get a quick glimpse of what the code is capable of, try installing the <a href="https://chrome.google.com/webstore/detail/xml-schema-form-generator/bampmcipgicplmddohedjmenepjmdpoj">Google Chrome extension</a>. If you want to get your hands dirty, you can use the rudimentary <a href="https://github.com/MichielCM/xsd2html2xml/tree/master/app">Java app</a> as a springboard. If you want supported software that just works out of the box, install the <a href="http://www.michielmeulendijk.nl/xml-schema-form-generator/">XML Schema Form Generator</a> trial.</li>
 	<li>
 		<strong>I don't want to write my own implementation! Is there out-of-the-box software available?</strong>
-		<br />Yes, there is! Check out the free <a href="https://chrome.google.com/webstore/detail/xml-schema-form-generator/bampmcipgicplmddohedjmenepjmdpoj">Google Chrome extension</a> or the full <a href="http://www.michielmeulendijk.nl/xml-schema-form-generator/">Windows application</a>.</li>
+		<br />Yes, there is! Check out the free <a href="https://chrome.google.com/webstore/detail/xml-schema-form-generator/bampmcipgicplmddohedjmenepjmdpoj">Google Chrome extension</a> or the full <a href="http://www.michielmeulendijk.nl/xml-schema-form-generator/">Windows application</a>. The latter comes with a developer-friendly command line interface for integration in other software.</li>
 </ul>
