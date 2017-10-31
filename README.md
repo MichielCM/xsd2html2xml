@@ -24,8 +24,8 @@
 <h3>Software</h3>
 <p>If you are looking for out-of-the-box software that pre-configures the XSL/XSD/XML files, check out these options:</p>
 <ul>
-	<li><a href="http://www.michielmeulendijk.nl/xml-schema-form-generator/">XML Schema Form Generator</a>: full-fledged Java implementation of xsd+xml2html.xsl. Complete with GUI, command line, and Chrome extension. Supports namespaces, multi-file schemas, and more. Free trial download available.</li>
-	<li><a href="https://chrome.google.com/webstore/detail/xml-schema-form-generator/bampmcipgicplmddohedjmenepjmdpoj">Google Chrome extension</a>: a JavaScript implementation of xsd2html.xsl. Limited to generating empty forms without namespaces.</li>
+	<li><a href="http://www.michielmeulendijk.nl/xml-schema-form-generator/">XML Schema Form Generator</a>: full-fledged Java implementation of xsd+xml2html.xsl. Complete with GUI, command line, and Chrome extension. Supports namespaces, multi-file schemas, and more. Available for Windows (32-/64-bit), Mac OS, and Linux. Free trial download available.</li>
+	<li><a href="https://chrome.google.com/webstore/detail/xml-schema-form-generator/bampmcipgicplmddohedjmenepjmdpoj">Google Chrome extension</a>: a JavaScript implementation of xsd2html.xsl. Limited to generating empty forms without namespaces, but highly suitable for a sneak peek.</li>
 </ul>
 <h2>Features</h2>
 <p>Supported XSD features:</p>
@@ -137,7 +137,7 @@
 		<br />No, but you can to override the default labels. By default, the name attribute of elements is used for labels. If you want a custom label, add an xs:annotation/xs:documentation containing your custom label to the element.</li>
 	<li>
 		<strong>Which namespaces can I use?</strong>
-		<br />Any, except for any namespace having 'xs' as prefix. In fact, the XSD schema MUST be bound to the prefix 'xs', like so: xmlns:xs="http://www.w3.org/2001/XMLSchema".</li>
+		<br />Any, except for any namespace having 'xs' as prefix. In fact, the XSD schema MUST be bound to the prefix 'xs', like so: xmlns:xs="http://www.w3.org/2001/XMLSchema". Note that the products listed under <em>Software</em> auto-configure this.</li>
 	<li>
 		<strong>My namespaces do not seem to work!</strong>
 		<br />- Please note that namespaces are only supported in xsd+xml2html.xsl, even for empty forms! The reason for this is that namespace support requires the same EXSLT-functions as populating a form does, and I want to keep xsd2html.xsl the compact, no-dependency version.<br />
