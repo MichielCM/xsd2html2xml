@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:dyn="http://exslt.org/dynamic" xmlns:date="http://exslt.org/dates-and-times">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:dyn="http://exslt.org/dynamic">
 	<!-- MIT License
 
 	Copyright (c) 2017 Michiel Meulendijk
@@ -658,13 +658,25 @@
 						</xsl:call-template>
 					</xsl:when>
 					<xsl:otherwise>
-						<!-- add direct extensions of the element -->
-						<xsl:apply-templates select="*/*/xs:extension/*">
+						<!-- add extensions to the element -->
+						<xsl:variable name="base">
+							<xsl:value-of select="*/*/xs:extension/@base
+							|exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]/*/xs:extension/@base" />
+						</xsl:variable>
+						<!-- extension base elements -->
+						<xsl:apply-templates select="exsl:node-set($namespace-documents)//*[@name=$base]/*">
 							<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
 							<xsl:with-param name="disabled" select="$disabled" />
 							<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
 						</xsl:apply-templates>
-						<!-- add inherited extensions; superfluous: taken care of by apply-templates statement above
+						<!-- extension added elements -->
+						<xsl:apply-templates select="*/*/xs:extension/*
+							|exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]/*/xs:extension/*">
+							<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
+							<xsl:with-param name="disabled" select="$disabled" />
+							<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
+						</xsl:apply-templates>
+						<!-- add inherited extensions; superfluous: taken care of by statements above
 						<xsl:call-template name="add-extensions-recursively">
 							<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
 							<xsl:with-param name="disabled" select="$disabled" />
@@ -1212,12 +1224,12 @@
 				<xsl:with-param name="disabled" select="$disabled" />
 			</xsl:apply-templates>
 			
-			<!-- add inherited extensions -->
+			<!-- add inherited extensions; superfluous
 			<xsl:call-template name="add-extensions-recursively">
 				<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
 				<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
 				<xsl:with-param name="disabled" select="$disabled" />
-			</xsl:call-template>
+			</xsl:call-template> -->
 			
 			<!-- call self recursively, to account for occurrences -->
 			<xsl:call-template name="handle-simple-element">
@@ -1293,12 +1305,6 @@
 			<xsl:with-param name="default" select="$default" />
 			<xsl:with-param name="disabled" select="$disabled" />
 		</xsl:apply-templates>
-		
-		<xsl:variable name="type-suffix">
-			<xsl:call-template name="get-string-without-prefix">
-				<xsl:with-param name="string" select="$type" />
-			</xsl:call-template>
-		</xsl:variable>
 		
 		<xsl:for-each select="exsl:node-set($namespace-documents)//xs:simpleType[@name=$type-suffix]">
 			<xsl:call-template name="handle-enumerations">
@@ -1618,10 +1624,10 @@
 	</xsl:template>
 	
 	<!-- Adds elements and attributes in extension recursively -->
-	<xsl:template name="add-extensions-recursively">
-		<xsl:param name="namespace-prefix" /> <!-- contains inherited namespace prefix -->
-		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
-		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
+	<!-- <xsl:template name="add-extensions-recursively">
+		<xsl:param name="namespace-prefix" />
+		<xsl:param name="tree" />
+		<xsl:param name="disabled">false</xsl:param>
 		
 		<xsl:variable name="type">
 			<xsl:call-template name="get-type"/>
@@ -1641,7 +1647,7 @@
 				</xsl:apply-templates>
 			</xsl:for-each>
 		</xsl:if>
-	</xsl:template>
+	</xsl:template>-->
 	
 	<!-- adds a remove button for dynamic elements -->
 	<xsl:template name="add-remove-button">
@@ -1904,6 +1910,11 @@
 			<xsl:when test="$type = 'xs:duration'">
 				<xsl:attribute name="step">1</xsl:attribute>
 			</xsl:when>
+			<xsl:when test="$type = 'xs:language'">
+				<xsl:call-template name="set-pattern">
+					<xsl:with-param name="prefix">([a-zA-Z]{2}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*</xsl:with-param>
+				</xsl:call-template>
+			</xsl:when>
 			<xsl:otherwise>
 				<xsl:call-template name="set-pattern" />
 			</xsl:otherwise>
@@ -2012,6 +2023,10 @@
 					</xsl:when>
 					<xsl:when test="not($length='')">
 						<xsl:value-of select="concat($prefix,'{',$length,'}')" />
+					</xsl:when>
+					<!-- override lengths if pattern already ends with a number indicator -->
+					<xsl:when test="substring($prefix, string-length($prefix)) = '*'">
+						<xsl:value-of select="$prefix" />
 					</xsl:when>
 					<xsl:when test="$minLength=''">
 						<xsl:value-of select="concat($prefix,'{0,',$maxLength,'}')" />

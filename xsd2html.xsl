@@ -45,7 +45,7 @@
 	<!-- optionally specify whether you want the span element before or after the input / select element within the label tag -->
 	<!-- entering 'true' enables you to use the CSS next-sibling selector '+' to style the span based on the input's attributes -->
 	<!-- use 'float: left' or something similar on the span to still make it appear before the input element -->
-	<xsl:variable name="config-label-after-input">true</xsl:variable>
+	<xsl:variable name="config-label-after-input">false</xsl:variable>
 	
 	<!-- optionally specify which annotation/documentation language (determined by xml:lang) should be used -->
 	<xsl:variable name="config-language" />
@@ -461,6 +461,10 @@
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		
 		<xsl:if test="$count > 0">
+			<xsl:variable name="type">
+				<xsl:value-of select="@type"/>
+			</xsl:variable>
+			
 			<xsl:element name="fieldset">
 				<xsl:attribute name="data-xsd2html2xml-type">
 					<xsl:value-of select="local-name()" />
@@ -480,7 +484,12 @@
 				
 				<!-- let child elements be handled by their own templates -->
 				<xsl:variable name="ref" select="@ref"/>
-				<xsl:apply-templates select="xs:complexType/xs:sequence|xs:complexType/xs:all|xs:complexType/xs:choice|xs:complexType/xs:attribute|xs:complexType/xs:attributeGroup|//xs:group[@name=$ref]/*">
+				<xsl:apply-templates select="xs:complexType/xs:sequence
+					|xs:complexType/xs:all
+					|xs:complexType/xs:choice
+					|xs:complexType/xs:attribute
+					|xs:complexType/xs:attributeGroup
+					|//xs:group[@name=$ref]/*">
 					<xsl:with-param name="disabled" select="$disabled" />
 					</xsl:apply-templates>
 				
@@ -496,14 +505,24 @@
 						</xsl:call-template>
 					</xsl:when>
 					<xsl:otherwise>
-						<!-- add direct extensions of the element -->
-						<xsl:apply-templates select="*/*/xs:extension/*">
+						<!-- add extensions to the element -->
+						<xsl:variable name="base">
+							<xsl:value-of select="*/*/xs:extension/@base
+							|//xs:complexType[@name=$type]/*/xs:extension/@base" />
+						</xsl:variable>
+						<!-- extension base elements -->
+						<xsl:apply-templates select="//*[@name=$base]/*">
 							<xsl:with-param name="disabled" select="$disabled" />
 						</xsl:apply-templates>
-						<!-- add inherited extensions -->
+						<!-- extension added elements -->
+						<xsl:apply-templates select="*/*/xs:extension/*
+							|//xs:complexType[@name=$type]/*/xs:extension/*">
+							<xsl:with-param name="disabled" select="$disabled" />
+						</xsl:apply-templates>
+						<!-- add inherited extensions; superfluous: taken care of by statements above
 						<xsl:call-template name="add-extensions-recursively">
 							<xsl:with-param name="disabled" select="$disabled" />
-						</xsl:call-template>
+						</xsl:call-template> -->
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:element>
@@ -949,10 +968,10 @@
 				<xsl:with-param name="disabled" select="$disabled" />
 			</xsl:apply-templates>
 			
-			<!-- add inherited extensions -->
+			<!-- add inherited extensions; superfluous
 			<xsl:call-template name="add-extensions-recursively">
 				<xsl:with-param name="disabled" select="$disabled" />
-			</xsl:call-template>
+			</xsl:call-template> -->
 			
 			<xsl:call-template name="handle-simple-element">
 				<xsl:with-param name="id" select="$id" />
@@ -1180,8 +1199,8 @@
 	</xsl:template>
 	
 	<!-- Adds elements and attributes in extension recursively -->
-	<xsl:template name="add-extensions-recursively">
-		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
+	<!--<xsl:template name="add-extensions-recursively">
+		<xsl:param name="disabled">false</xsl:param>
 		
 		<xsl:variable name="type">
 			<xsl:call-template name="get-type"/>
@@ -1194,7 +1213,7 @@
 				</xsl:apply-templates>
 			</xsl:for-each>
 		</xsl:if>
-	</xsl:template>
+	</xsl:template>-->
 	
 	<xsl:template name="add-remove-button">
 		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs) and not(@minOccurs = '1' and not(@maxOccurs)) and not(@maxOccurs = '1' and not(@minOccurs))">
@@ -1450,6 +1469,11 @@
 			<xsl:when test="$type = 'xs:duration'">
 				<xsl:attribute name="step">1</xsl:attribute>
 			</xsl:when>
+			<xsl:when test="$type = 'xs:language'">
+				<xsl:call-template name="set-pattern">
+					<xsl:with-param name="prefix">([a-zA-Z]{2}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*</xsl:with-param>
+				</xsl:call-template>
+			</xsl:when>
 			<xsl:otherwise>
 				<xsl:call-template name="set-pattern" />
 			</xsl:otherwise>
@@ -1558,6 +1582,10 @@
 					</xsl:when>
 					<xsl:when test="not($length='')">
 						<xsl:value-of select="concat($prefix,'{',$length,'}')" />
+					</xsl:when>
+					<!-- override lengths if pattern already ends with a number indicator -->
+					<xsl:when test="substring($prefix, string-length($prefix)) = '*'">
+						<xsl:value-of select="$prefix" />
 					</xsl:when>
 					<xsl:when test="$minLength=''">
 						<xsl:value-of select="concat($prefix,'{0,',$maxLength,'}')" />
