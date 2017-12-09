@@ -195,6 +195,44 @@
 						input.setAttribute("checked","checked");
 					}
 					
+					var pickFile = function(input, file, type) {
+						var resetFilePicker = function(input) {
+							input.removeAttribute("value");
+							input.removeAttribute("type");
+							input.setAttribute("type", "file");
+						}
+						
+						var fileReader = new FileReader();
+						
+						fileReader.onloadend = function() {
+							if (fileReader.error) {
+								alert(fileReader.error);
+								resetFilePicker(input);
+							} else {
+								input.setAttribute("value",
+									(type === "xs:base64binary")
+									? fileReader.result.substring(fileReader.result.indexOf(",") + 1)
+									//convert base64 to base16 (hexBinary)
+									: atob(fileReader.result.substring(fileReader.result.indexOf(",") + 1))
+								    	.split('')
+								    	.map(function (aChar) {
+								    		return ('0' + aChar.charCodeAt(0).toString(16)).slice(-2);
+								    	})
+										.join('')
+										.toUpperCase()
+								);
+							};
+						};
+						
+						if(file) {
+							fileReader.readAsDataURL(file);
+						} else {
+							resetFilePicker(input);
+						}
+						
+						if (input.getAttribute("data-xsd2html2xml-required")) input.setAttribute("required", "required");
+					}
+					
 					/* XML GENERATORS */
 					
 					var htmlToXML = function(root) {
@@ -246,8 +284,12 @@
 					                    }()).concat(String.fromCharCode(60)).concat("/").concat(o.getAttribute("data-xsd2html2xml-name")).concat(String.fromCharCode(62));
 					                    break;
 					                case "attribute":
-					                    if (attributesOnly)
-											if (getContent(o))
+					                	if (attributesOnly)
+											if (getContent(o)
+												|| (o.getElementsByTagName("input").length > 0
+													? o.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase() === "xs:boolean"
+													: false
+												))
 												xml = xml.concat(" ").concat(o.getAttribute("data-xsd2html2xml-name")).concat("=\"").concat(getContent(o)).concat("\"");
 					                    break;
 					                case "cdata":
@@ -817,7 +859,7 @@
 									<xsl:when test="$type = 'xs:anyuri'">
 										<xsl:text>url</xsl:text>
 									</xsl:when>
-									<xsl:when test="$type = 'xs:base64binary'">
+									<xsl:when test="$type = 'xs:base64binary' or $type = 'xs:hexbinary'">
 										<xsl:text>file</xsl:text>
 									</xsl:when>
 									<xsl:when test="$type = 'xs:duration'">
@@ -835,8 +877,10 @@
 									<xsl:when test="$type = 'xs:boolean'"> <!-- Use the checked value of checkboxes -->
 										<xsl:text>if (this.checked) { this.setAttribute("checked","checked") } else { this.removeAttribute("checked") }</xsl:text>
 									</xsl:when>
-									<xsl:when test="$type = 'xs:base64binary'"> <!-- Use the FileReader API to set the value of file inputs -->
-										<xsl:text>var fileReader = new FileReader(); var o = this; fileReader.onloadend = function () { o.setAttribute("value", fileReader.result.substring(fileReader.result.indexOf("base64,") + 7)); }; if(arguments[0].target.files[0]) { fileReader.readAsDataURL(arguments[0].target.files[0]); } else { this.removeAttribute("value"); }; if (this.getAttribute("data-xsd2html2xml-required")) this.setAttribute("required", "required");</xsl:text>
+									<xsl:when test="$type = 'xs:base64binary' or $type = 'xs:hexbinary'"> <!-- Use the FileReader API to set the value of file inputs -->
+										<xsl:text>pickFile(this, arguments[0].target.files[0], "</xsl:text>
+										<xsl:value-of select="$type" />
+										<xsl:text>");</xsl:text>
 									</xsl:when>
 									<xsl:when test="$type = 'xs:datetime' or $type = 'xs:time'"> 
 										<xsl:text>if (this.value) { this.setAttribute("value", (this.value.match(/.*\d\d:\d\d:\d\d/) ? this.value : this.value.concat(":00"))); } else { this.removeAttribute("value"); };</xsl:text>
@@ -863,24 +907,24 @@
 							<xsl:choose>
 								<xsl:when test="$attribute = 'true'">
 									<xsl:if test="@use = 'required'">
-										<xsl:choose><!-- in case of xs:base64binary, default values cannot be set to an input[type=file] element; because of this, a required attribute on these elements is omitted when fixed, default, or data is found -->
-											<xsl:when test="$type = 'xs:base64binary' and (@fixed or @default)">
+										<xsl:choose><!-- in case of xs:base64binary or xs:hexbinary, default values cannot be set to an input[type=file] element; because of this, a required attribute on these elements is omitted when fixed, default, or data is found -->
+											<xsl:when test="($type = 'xs:base64binary' or $type = 'xs:hexbinary') and (@fixed or @default)">
 												<xsl:attribute name="data-xsd2html2xml-required">true</xsl:attribute>
 											</xsl:when>
-											<xsl:otherwise>
+											<xsl:when test="not($type = 'xs:boolean')">
 												<xsl:attribute name="required">required</xsl:attribute>
-											</xsl:otherwise>
+											</xsl:when>
 										</xsl:choose>
 									</xsl:if>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:choose><!-- in case of xs:base64binary, default values cannot be set to an input[type=file] element; because of this, a required attribute on these elements is omitted when fixed, default, or data is found -->
-										<xsl:when test="$type = 'xs:base64binary' and (@fixed or @default)">
+									<xsl:choose><!-- in case of xs:base64binary or xs:hexbinary, default values cannot be set to an input[type=file] element; because of this, a required attribute on these elements is omitted when fixed, default, or data is found -->
+										<xsl:when test="($type = 'xs:base64binary' or $type = 'xs:hexbinary') and (@fixed or @default)">
 											<xsl:attribute name="data-xsd2html2xml-required">true</xsl:attribute>
 										</xsl:when>
-										<xsl:otherwise>
+										<xsl:when test="not($type = 'xs:boolean')">
 											<xsl:attribute name="required">required</xsl:attribute>
-										</xsl:otherwise>
+										</xsl:when>
 									</xsl:choose>
 								</xsl:otherwise>
 							</xsl:choose>
