@@ -17,14 +17,21 @@
 <h3>Source Code</h3>
 <p>I strongly recommend using only <strong>released</strong> versions. Newer commits may contain new, experimental, features, but have not been thoroughly tested to perform well in a production environment.</p>
 <ul>
-	<li>October 31, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v2.3">Release 2.3: Namespace support, JavaScript refactored, bugfixes</a></li>
+	<li>December 21, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v2.4">Release 2.4: Namespace support, JavaScript refactored, improved support for extensions, various bugfixes</a></li>
 	<li>April 20, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v1.0">Release 1.0: Original release</a>
 	</li>
 </ul>
 <h3>Software</h3>
 <p>If you are looking for out-of-the-box software that pre-configures the XSL/XSD/XML files, check out these options:</p>
 <ul>
-	<li><a href="http://www.michielmeulendijk.nl/xml-schema-form-generator/">XML Schema Form Generator</a>: full-fledged Java implementation of xsd+xml2html.xsl. Complete with GUI, command line, and Chrome extension. Supports namespaces, multi-file schemas, and more. Available for Windows (32-/64-bit), Mac OS, and Linux. Free trial download available.</li>
+	<li><a href="http://www.michielmeulendijk.nl/xml-schema-form-generator/">XML Schema Form Generator</a>: full-fledged Java implementation of xsd+xml2html.xsl:
+		<ul>
+			<li>Complete with GUI, command line interface, and Chrome extension;</li>
+			<li>Preconfigured for any XSD (including schemas not bound to xs:...);</li>
+			<li>Supports includes / imports from multi-file schemas (both local and online files);</li>
+			<li>GUI supports autocompletion, spellcheck, placeholder text, and custom styling and scripting;</li>
+			<li>Works for Windows (32-/64-bit). Mac OS and Linux versions available on request.</li>
+		</ul></li>
 	<li><a href="https://chrome.google.com/webstore/detail/xml-schema-form-generator/bampmcipgicplmddohedjmenepjmdpoj">Google Chrome extension</a>: a JavaScript implementation of xsd2html.xsl. Limited to generating empty forms without namespaces, but highly suitable for a sneak peek.</li>
 </ul>
 <h2>Features</h2>
@@ -153,7 +160,7 @@
 		<br />The upper and lower bounds of long values are too high for Chrome to work with. Either use another browser or comment out the bounds in the set-type-specifics function for the xs:long type.</li>
 	<li>
 		<strong>What's the easiest way to test this?</strong>
-		<br />If you want to get a quick glimpse of what the code is capable of, try installing the <a href="https://chrome.google.com/webstore/detail/xml-schema-form-generator/bampmcipgicplmddohedjmenepjmdpoj">Google Chrome extension</a>. If you want to get your hands dirty, you can use the rudimentary <a href="https://github.com/MichielCM/xsd2html2xml/tree/master/app">Java app</a> as a springboard. If you want supported software that just works out of the box, install the <a href="http://www.michielmeulendijk.nl/xml-schema-form-generator/">XML Schema Form Generator</a> trial.</li>
+		<br />If you want to get a quick glimpse of what the code is capable of, try installing the <a href="https://chrome.google.com/webstore/detail/xml-schema-form-generator/bampmcipgicplmddohedjmenepjmdpoj">Google Chrome extension</a>. If you want to get your hands dirty, build your own implementation with an XSLT processor; processors that support EXSLT include <a href="https://xalan.apache.org/">Xalan</a>, <a href="https://github.com/GNOME/libxslt">libxslt</a>, and <a href="https://www.saxonica.com/products/feature-matrix-9-8.xml">Saxon</a>. If you want supported software that just works out of the box, install the <a href="http://www.michielmeulendijk.nl/xml-schema-form-generator/">XML Schema Form Generator</a> trial.</li>
 	<li>
 		<strong>I don't want to write my own implementation! Is there out-of-the-box software available?</strong>
 		<br />Yes, there is! Check out the free <a href="https://chrome.google.com/webstore/detail/xml-schema-form-generator/bampmcipgicplmddohedjmenepjmdpoj">Google Chrome extension</a> or the full <a href="http://www.michielmeulendijk.nl/xml-schema-form-generator/">Windows application</a>. The latter comes with a developer-friendly command line interface for integration in other software.</li>
