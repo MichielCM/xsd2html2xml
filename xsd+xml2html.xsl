@@ -377,7 +377,7 @@
 		</xsl:variable>
 		
 		<xsl:variable name="type-suffix">
-			<xsl:call-template name="get-string-without-prefix">
+			<xsl:call-template name="get-suffix">
 				<xsl:with-param name="string" select="$type" />
 			</xsl:call-template>
 		</xsl:variable>
@@ -453,14 +453,16 @@
 		<xsl:variable name="ref" select="@ref" />
 		
 		<xsl:variable name="ref-suffix">
-			<xsl:call-template name="get-string-without-prefix">
+			<xsl:call-template name="get-suffix">
 				<xsl:with-param name="string" select="$ref" />
 			</xsl:call-template>
 		</xsl:variable>
 		
 		<xsl:apply-templates select="exsl:node-set($namespace-documents)//*[@name=$ref-suffix]">
 			<xsl:with-param name="namespace-prefix">
-				<xsl:call-template name="get-namespace-prefix" />
+				<xsl:call-template name="get-prefix">
+					<xsl:with-param name="include-colon">true</xsl:with-param>
+				</xsl:call-template>
 			</xsl:with-param>
 			<xsl:with-param name="choice" select="$choice"/>
 			<xsl:with-param name="disabled" select="$disabled" />
@@ -477,7 +479,9 @@
 		<xsl:call-template name="handle-complex-elements">
 			<xsl:with-param name="id" select="@ref" />
 			<xsl:with-param name="namespace-prefix">
-				<xsl:call-template name="get-namespace-prefix" />
+				<xsl:call-template name="get-prefix">
+					<xsl:with-param name="include-colon">true</xsl:with-param>
+				</xsl:call-template>
 			</xsl:with-param>
 			<xsl:with-param name="simple" select="false" />
 			<xsl:with-param name="choice" select="$choice"/>
@@ -498,7 +502,7 @@
 		<xsl:variable name="ref" select="@ref" />
 		
 		<xsl:variable name="ref-suffix">
-			<xsl:call-template name="get-string-without-prefix">
+			<xsl:call-template name="get-suffix">
 				<xsl:with-param name="string" select="$ref" />
 			</xsl:call-template>
 		</xsl:variable>
@@ -506,7 +510,9 @@
 		<xsl:apply-templates select="exsl:node-set($namespace-documents)//xs:attributeGroup[@name=$ref]/xs:attribute">
 			<xsl:with-param name="id" select="@ref" />
 			<xsl:with-param name="namespace-prefix">
-				<xsl:call-template name="get-namespace-prefix" />
+				<xsl:call-template name="get-prefix">
+					<xsl:with-param name="include-colon">true</xsl:with-param>
+				</xsl:call-template>
 			</xsl:with-param>
 			<xsl:with-param name="disabled" select="$disabled" />
 			<xsl:with-param name="tree" select="$tree" />
@@ -534,7 +540,9 @@
 		</xsl:if>
 		
 		<xsl:variable name="current-namespace-prefix">
-			<xsl:call-template name="get-namespace-prefix" />
+			<xsl:call-template name="get-prefix">
+				<xsl:with-param name="include-colon">true</xsl:with-param>
+			</xsl:call-template>
 		</xsl:variable>
 		
 		<xsl:variable name="confirmed-namespace-prefix">
@@ -635,7 +643,7 @@
 			</xsl:variable>
 			
 			<xsl:variable name="type-suffix">
-				<xsl:call-template name="get-string-without-prefix">
+				<xsl:call-template name="get-suffix">
 					<xsl:with-param name="string" select="$type" />
 				</xsl:call-template>
 			</xsl:variable>
@@ -685,47 +693,38 @@
 					<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
 				</xsl:apply-templates>
 				
-				<xsl:choose>
-					<!-- add simple element if the element allows simpleContent -->
-					<xsl:when test="$simple = 'true'">
-						<xsl:call-template name="handle-simple-element">
-							<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
-							<xsl:with-param name="description" select="$description" />
-							<xsl:with-param name="static">true</xsl:with-param>
-							<xsl:with-param name="count">1</xsl:with-param>
-							<xsl:with-param name="index">1</xsl:with-param>
-							<xsl:with-param name="html-type">cdata</xsl:with-param>
-							<xsl:with-param name="disabled" select="$disabled" />
-							<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
-						</xsl:call-template>
-					</xsl:when>
-					<xsl:otherwise>
-						<!-- add extensions to the element -->
-						<xsl:variable name="base">
-							<xsl:value-of select="*/*/xs:extension/@base
+				<!-- add simple element if the element allows simpleContent -->
+				<xsl:if test="$simple = 'true'">
+					<xsl:call-template name="handle-simple-element">
+						<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
+						<xsl:with-param name="description" select="$description" />
+						<xsl:with-param name="static">true</xsl:with-param>
+						<xsl:with-param name="count">1</xsl:with-param>
+						<xsl:with-param name="index">1</xsl:with-param>
+						<xsl:with-param name="html-type">cdata</xsl:with-param>
+						<xsl:with-param name="disabled" select="$disabled" />
+						<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
+					</xsl:call-template>
+				</xsl:if>
+				
+				<!-- add inherited extensions to the element -->
+				<xsl:call-template name="handle-extensions">
+					<xsl:with-param name="base">
+						<xsl:value-of select="*/*/xs:extension/@base
 							|exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]/*/xs:extension/@base" />
-						</xsl:variable>
-						<!-- extension base elements -->
-						<xsl:apply-templates select="exsl:node-set($namespace-documents)//*[@name=$base]/*">
-							<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
-							<xsl:with-param name="disabled" select="$disabled" />
-							<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
-						</xsl:apply-templates>
-						<!-- extension added elements -->
-						<xsl:apply-templates select="*/*/xs:extension/*
-							|exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]/*/xs:extension/*">
-							<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
-							<xsl:with-param name="disabled" select="$disabled" />
-							<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
-						</xsl:apply-templates>
-						<!-- add inherited extensions; superfluous: taken care of by statements above
-						<xsl:call-template name="add-extensions-recursively">
-							<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
-							<xsl:with-param name="disabled" select="$disabled" />
-							<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
-						</xsl:call-template> -->
-					</xsl:otherwise>
-				</xsl:choose>
+					</xsl:with-param>
+					<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
+					<xsl:with-param name="disabled" select="$disabled" />
+					<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
+				</xsl:call-template>
+				
+				<!-- add added elements -->
+				<xsl:apply-templates select="*/*/xs:extension/*
+					|exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]/*/xs:extension/*">
+					<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
+					<xsl:with-param name="disabled" select="$disabled" />
+					<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
+				</xsl:apply-templates>
 			</xsl:element>
 			
 			<!-- call itself with count - 1 and index + 1 to account for multiple occurrences -->
@@ -741,7 +740,63 @@
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
-
+	
+	<!-- adds extensions recursively -->
+	<xsl:template name="handle-extensions">
+		<xsl:param name="base" />
+		<xsl:param name="namespace-prefix" /> <!-- contains inherited namespace prefix -->
+		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
+		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
+		
+		<!--<xsl:message>
+			<xsl:value-of select="$base" />
+		</xsl:message>-->
+		
+		<xsl:variable name="base-prefix">
+			<xsl:call-template name="get-prefix">
+				<xsl:with-param name="string" select="$base" />
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<xsl:variable name="base-suffix">
+			<xsl:call-template name="get-suffix">
+				<xsl:with-param name="string" select="$base" />
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<xsl:variable name="base-namespace-documents">
+			<xsl:call-template name="get-namespace-documents">
+				<xsl:with-param name="namespace">
+					<xsl:call-template name="get-namespace">
+						<xsl:with-param name="namespace-prefix" select="$base-prefix" />
+					</xsl:call-template>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:variable>
+		
+		<!-- add inherited extensions -->
+		<xsl:for-each select="exsl:node-set($base-namespace-documents)//*[@name=$base-suffix]/*/xs:extension">
+			<!--<xsl:message>
+				<xsl:value-of select="@base" />
+			</xsl:message>-->
+			
+			<xsl:call-template name="handle-extensions">
+				<xsl:with-param name="base" select="@base" />
+				<xsl:with-param name="namespace-prefix" select="concat($base-prefix,':')" />
+				<xsl:with-param name="disabled" select="$disabled" />
+				<xsl:with-param name="tree" select="$tree" />
+			</xsl:call-template>
+		</xsl:for-each>
+		
+		<!-- add added elements -->
+		<xsl:apply-templates select="exsl:node-set($base-namespace-documents)//*[@name=$base-suffix]/*
+			|exsl:node-set($base-namespace-documents)//*[@name=$base-suffix]/*/*/*">
+			<xsl:with-param name="namespace-prefix" select="concat($base-prefix,':')" />
+			<xsl:with-param name="disabled" select="$disabled" />
+			<xsl:with-param name="tree" select="$tree" />
+		</xsl:apply-templates>
+	</xsl:template>
+	
 	<!-- handle simple elements -->
 	<!-- handle minOccurs and maxOccurs, calls handle-simple-element for further processing -->
 	<xsl:template name="handle-simple-elements" match="xs:element[xs:simpleType]">
@@ -761,7 +816,9 @@
 		</xsl:if>
 		
 		<xsl:variable name="current-namespace-prefix">
-			<xsl:call-template name="get-namespace-prefix" />
+			<xsl:call-template name="get-prefix">
+				<xsl:with-param name="include-colon">true</xsl:with-param>
+			</xsl:call-template>
 		</xsl:variable>
 		
 		<xsl:variable name="confirmed-namespace-prefix">
@@ -860,7 +917,7 @@
 			<xsl:with-param name="index">1</xsl:with-param>
 			<xsl:with-param name="attribute">true</xsl:with-param>
 			<xsl:with-param name="disabled" select="$disabled" />
-			<xsl:with-param name="tree" select="concat($tree,'/@',$namespace-prefix,@name)" />
+			<xsl:with-param name="tree" select="concat($tree,'/@*[name() = &quot;',$namespace-prefix,@name,'&quot;]')" />
 		</xsl:call-template>
 	</xsl:template>
 	
@@ -1183,6 +1240,10 @@
 								<xsl:value-of select="$type" />
 							</xsl:attribute>
 							
+							<xsl:if test="@fixed">
+								<xsl:attribute name="readonly">readonly</xsl:attribute>
+							</xsl:if>
+							
 							<xsl:choose>
 								<!-- populate the element if there is corresponding data -->
 								<xsl:when test="not($invisible = 'true') and not(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'[',$index,']'))) = ''">
@@ -1204,7 +1265,7 @@
 								</xsl:when>
 								<!-- use fixed attribute as data if specified -->
 								<xsl:when test="@fixed">
-									<xsl:attribute name="readonly">readonly</xsl:attribute>
+									<!--<xsl:attribute name="readonly">readonly</xsl:attribute>-->
 									<xsl:choose>
 										<xsl:when test="$type = 'xs:boolean'">
 											<xsl:if test="@fixed = 'true'">
@@ -1260,20 +1321,6 @@
 					</xsl:element>
 				</xsl:if>
 			</xsl:element>
-			
-			<!-- add descending extensions -->
-			<xsl:apply-templates select="*/*/xs:extension/*">
-				<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
-				<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
-				<xsl:with-param name="disabled" select="$disabled" />
-			</xsl:apply-templates>
-			
-			<!-- add inherited extensions; superfluous
-			<xsl:call-template name="add-extensions-recursively">
-				<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
-				<xsl:with-param name="tree" select="concat($tree,'[',$index,']')" />
-				<xsl:with-param name="disabled" select="$disabled" />
-			</xsl:call-template> -->
 			
 			<!-- call self recursively, to account for occurrences -->
 			<xsl:call-template name="handle-simple-element">
@@ -1336,7 +1383,7 @@
 		</xsl:variable>
 		
 		<xsl:variable name="type-suffix">
-			<xsl:call-template name="get-string-without-prefix">
+			<xsl:call-template name="get-suffix">
 				<xsl:with-param name="string" select="$type" />
 			</xsl:call-template>
 		</xsl:variable>
@@ -1409,6 +1456,9 @@
 			<xsl:when test="not($config-language = '') and xs:annotation/xs:documentation[not(@xml:lang)]">
 				<xsl:value-of select="xs:annotation/xs:documentation[not(@xml:lang)]/text()" />
 			</xsl:when>
+			<xsl:when test="$config-language = '' and xs:annotation/xs:documentation[not(@xml:lang)]">
+				<xsl:value-of select="xs:annotation/xs:documentation[not(@xml:lang)]/text()" />
+			</xsl:when>
 			<xsl:when test="$config-language = '' and xs:annotation/xs:documentation">
 				<xsl:value-of select="xs:annotation/xs:documentation/text()" />
 			</xsl:when>
@@ -1442,7 +1492,7 @@
 				</xsl:variable>
 				
 				<xsl:variable name="type-suffix">
-					<xsl:call-template name="get-string-without-prefix">
+					<xsl:call-template name="get-suffix">
 						<xsl:with-param name="string" select="$type" />
 					</xsl:call-template>
 				</xsl:variable>
@@ -1505,7 +1555,7 @@
 		</xsl:variable>
 		
 		<xsl:variable name="type-suffix">
-			<xsl:call-template name="get-string-without-prefix">
+			<xsl:call-template name="get-suffix">
 				<xsl:with-param name="string" select="$type" />
 			</xsl:call-template>
 		</xsl:variable>
@@ -1527,7 +1577,7 @@
 		</xsl:choose>
 	</xsl:template>
 	
-	<!-- Returns current element's namespace prefix -->
+	<!-- Returns current element's namespace prefix
 	<xsl:template name="get-namespace-prefix">
 		<xsl:variable name="type">
 			<xsl:call-template name="get-type"/>
@@ -1542,11 +1592,42 @@
 				<xsl:value-of select="concat($prefix,':')" />
 			</xsl:if>
 		</xsl:if>
+	</xsl:template> -->
+	
+	<!-- Returns the prefix of a string -->
+	<!-- Useful for extracting namespace prefixes -->
+	<xsl:template name="get-prefix">
+		<xsl:param name="default-empty">true</xsl:param>
+		<xsl:param name="exclude-xs">true</xsl:param>
+		<xsl:param name="include-colon">false</xsl:param>
+		<xsl:param name="string">
+			<xsl:call-template name="get-type"/>
+		</xsl:param>
+		
+		<xsl:choose>
+			<xsl:when test="contains($string, ':')">
+				<xsl:if test="not($exclude-xs = 'true' and substring-before($string, ':') = 'xs')">
+					<xsl:choose>
+						<xsl:when test="$include-colon = 'true'">
+							<xsl:value-of select="substring-before($string, ':')" /><xsl:text>:</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="substring-before($string, ':')" />
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:if test="not($default-empty = 'true')">
+					<xsl:value-of select="$string" />
+				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 	<!-- Returns the substring of a string after its prefix -->
 	<!-- Useful for stripping names off their namespace prefixes -->
-	<xsl:template name="get-string-without-prefix">
+	<xsl:template name="get-suffix">
 		<xsl:param name="string" />
 		
 		<xsl:choose>
@@ -1567,9 +1648,18 @@
 		
 		<xsl:variable name="namespace">
 			<xsl:for-each select="namespace::*">
-				<xsl:if test="name() = substring-before($namespace-prefix,':')">
-					<xsl:value-of select="." />
-				</xsl:if>
+				<xsl:choose>
+					<xsl:when test="contains($namespace-prefix, ':')">
+						<xsl:if test="name() = substring-before($namespace-prefix,':')">
+							<xsl:value-of select="." />
+						</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:if test="name() = $namespace-prefix">
+							<xsl:value-of select="." />
+						</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:for-each>
 		</xsl:variable>
 		
@@ -1625,7 +1715,9 @@
 				<xsl:with-param name="namespace">
 					<xsl:call-template name="get-namespace">
 						<xsl:with-param name="namespace-prefix">
-							<xsl:call-template name="get-namespace-prefix" />
+							<xsl:call-template name="get-prefix">
+								<xsl:with-param name="include-colon">true</xsl:with-param>
+							</xsl:call-template>
 						</xsl:with-param>
 					</xsl:call-template>
 				</xsl:with-param>
@@ -1645,7 +1737,7 @@
 			</xsl:variable>
 			
 			<xsl:variable name="type-suffix">
-				<xsl:call-template name="get-string-without-prefix">
+				<xsl:call-template name="get-suffix">
 					<xsl:with-param name="string" select="$type" />
 				</xsl:call-template>
 			</xsl:variable>
