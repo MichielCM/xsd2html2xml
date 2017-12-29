@@ -748,10 +748,6 @@
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		
-		<!--<xsl:message>
-			<xsl:value-of select="$base" />
-		</xsl:message>-->
-		
 		<xsl:variable name="base-prefix">
 			<xsl:call-template name="get-prefix">
 				<xsl:with-param name="string" select="$base" />
@@ -776,10 +772,6 @@
 		
 		<!-- add inherited extensions -->
 		<xsl:for-each select="exsl:node-set($base-namespace-documents)//*[@name=$base-suffix]/*/xs:extension">
-			<!--<xsl:message>
-				<xsl:value-of select="@base" />
-			</xsl:message>-->
-			
 			<xsl:call-template name="handle-extensions">
 				<xsl:with-param name="base" select="@base" />
 				<xsl:with-param name="namespace-prefix" select="concat($base-prefix,':')" />
@@ -1476,7 +1468,7 @@
 		<xsl:param name="attr"/>
 		
 		<xsl:variable name="type">
-			<xsl:call-template name="get-type"/>
+			<xsl:call-template name="get-base-type" />
 		</xsl:variable>
 		
 		<xsl:choose>
@@ -1508,6 +1500,15 @@
 	
 	<!-- Returns the type directly specified by the calling node -->
 	<xsl:template name="get-type">
+		<xsl:choose>
+			<xsl:when test="@type">
+				<xsl:value-of select="@type"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
+	<!-- Returns the base type (e.g. @type, extensions' @base, restrictions' @base) of the calling node -->
+	<xsl:template name="get-base-type">
 		<xsl:choose>
 			<xsl:when test="@type">
 				<xsl:value-of select="@type"/>
@@ -1551,7 +1552,7 @@
 	<!-- Returns the original xs:* type specified by the calling node, in lower case -->
 	<xsl:template name="get-primitive-type">
 		<xsl:variable name="type">
-			<xsl:call-template name="get-type"/>
+			<xsl:call-template name="get-base-type" />
 		</xsl:variable>
 		
 		<xsl:variable name="type-suffix">
@@ -1576,23 +1577,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
-	<!-- Returns current element's namespace prefix
-	<xsl:template name="get-namespace-prefix">
-		<xsl:variable name="type">
-			<xsl:call-template name="get-type"/>
-		</xsl:variable>
-		
-		<xsl:if test="contains($type, ':')">
-			<xsl:variable name="prefix">
-				<xsl:value-of select="substring-before($type, ':')" />
-			</xsl:variable>
-			
-			<xsl:if test="not($prefix = 'xs')">
-				<xsl:value-of select="concat($prefix,':')" />
-			</xsl:if>
-		</xsl:if>
-	</xsl:template> -->
 	
 	<!-- Returns the prefix of a string -->
 	<!-- Useful for extracting namespace prefixes -->
@@ -1728,7 +1712,7 @@
 	<!-- Applies templates recursively, overwriting lower-level options -->
 	<xsl:template name="set-type-specifics-recursively">
 		<xsl:variable name="type">
-			<xsl:call-template name="get-type"/>
+			<xsl:call-template name="get-base-type" />
 		</xsl:variable>
 		
 		<xsl:if test="not(starts-with($type, 'xs:'))">
@@ -1758,32 +1742,6 @@
 		<xsl:apply-templates select=".//xs:restriction/xs:length" mode="input"/>
 		<xsl:apply-templates select=".//xs:restriction/xs:maxLength" mode="input"/>
 	</xsl:template>
-	
-	<!-- Adds elements and attributes in extension recursively -->
-	<!-- <xsl:template name="add-extensions-recursively">
-		<xsl:param name="namespace-prefix" />
-		<xsl:param name="tree" />
-		<xsl:param name="disabled">false</xsl:param>
-		
-		<xsl:variable name="type">
-			<xsl:call-template name="get-type"/>
-		</xsl:variable>
-		
-		<xsl:variable name="namespace-documents">
-			<xsl:call-template name="get-my-namespace-documents" />
-		</xsl:variable>
-		
-		<xsl:if test="not(starts-with($type, 'xs:'))">
-			<xsl:for-each select="exsl:node-set($namespace-documents)//xs:simpleType[@name=$type]
-				|exsl:node-set($namespace-documents)//xs:complexType[@name=$type]">
-				<xsl:apply-templates select=".//xs:element|.//xs:attribute">
-					<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
-					<xsl:with-param name="disabled" select="$disabled" />
-					<xsl:with-param name="tree" select="$tree" />
-				</xsl:apply-templates>
-			</xsl:for-each>
-		</xsl:if>
-	</xsl:template>-->
 	
 	<!-- adds a remove button for dynamic elements -->
 	<xsl:template name="add-remove-button">
