@@ -156,11 +156,12 @@
 					var clickAddButton = function(button) {
 						var newNode = button.previousElementSibling.cloneNode(true);
 						
-						newNode.querySelectorAll("input, select, textarea").forEach(function(o) {
-							o.removeAttribute("disabled");
-						});
-						
 						newNode.removeAttribute("style");
+						
+						newNode.querySelectorAll("input, select, textarea").forEach(function(o) {
+							if (o.closest("[style]") == null)
+								o.removeAttribute("disabled");
+						});
 						
 						button.parentNode.insertBefore(
 							newNode, button.previousElementSibling
