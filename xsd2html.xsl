@@ -107,7 +107,26 @@
 			<xsl:element name="script">
 				<xsl:attribute name="type">text/javascript</xsl:attribute>
 					<xsl:text disable-output-escaping="yes">
-					/* add .forEach is not natively supported */
+					/* POLYFILLS */
+					
+					/* add .matches if not natively supported */
+					if (!Element.prototype.matches)
+						Element.prototype.matches = Element.prototype.msMatchesSelector || 
+													Element.prototype.webkitMatchesSelector;
+													
+					/* add .closest if not natively supported */
+					if (!Element.prototype.closest)
+						Element.prototype.closest = function(s) {
+							var el = this;
+							do {
+								if (el.nodeType !== 1) return null;
+								if (el.matches(s)) return el;
+								el = el.parentElement || el.parentNode;
+							} while (el !== null);
+							return null;
+						};
+					
+					/* add .forEach if not natively supported */
 					if (!NodeList.prototype.forEach) {
 						NodeList.prototype.forEach = function(callback){
 							var i = 0;

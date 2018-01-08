@@ -115,7 +115,26 @@
 			<xsl:element name="script">
 				<xsl:attribute name="type">text/javascript</xsl:attribute>
 					<xsl:text disable-output-escaping="yes">
-					/* add .forEach is not natively supported */
+					/* POLYFILLS */
+					
+					/* add .matches if not natively supported */
+					if (!Element.prototype.matches)
+						Element.prototype.matches = Element.prototype.msMatchesSelector || 
+													Element.prototype.webkitMatchesSelector;
+													
+					/* add .closest if not natively supported */
+					if (!Element.prototype.closest)
+						Element.prototype.closest = function(s) {
+							var el = this;
+							do {
+								if (el.nodeType !== 1) return null;
+								if (el.matches(s)) return el;
+								el = el.parentElement || el.parentNode;
+							} while (el !== null);
+							return null;
+						};
+					
+					/* add .forEach if not natively supported */
 					if (!NodeList.prototype.forEach) {
 						NodeList.prototype.forEach = function(callback){
 							var i = 0;
@@ -180,14 +199,14 @@
 					}
 					
 					var clickRemoveButton = function(button) {
-						if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-min"))
-							button.parentNode.parentNode.parentNode.lastElementChild.click();
+						if ((button.closest("section").children.length - 2) == button.closest("section").lastElementChild.getAttribute("data-xsd2html2xml-min"))
+							button.closest("section").lastElementChild.click();
 						
-						if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-max"))
-							button.parentNode.parentNode.parentNode.lastElementChild.removeAttribute("disabled");
+						if ((button.closest("section").children.length - 2) == button.closest("section").lastElementChild.getAttribute("data-xsd2html2xml-max"))
+							button.closest("section").lastElementChild.removeAttribute("disabled");
 						
-						button.parentNode.parentNode.parentNode.removeChild(
-							button.parentNode.parentNode
+						button.closest("section").removeChild(
+							button.closest("fieldset, label")
 						);
 					}
 					
