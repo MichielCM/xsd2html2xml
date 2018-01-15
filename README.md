@@ -17,7 +17,7 @@
 <h3>Source Code</h3>
 <p>I strongly recommend using only <strong>released</strong> versions. Newer commits may contain new, experimental, features, but have not been thoroughly tested to perform well in a production environment.</p>
 <ul>
-	<li>December 21, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v2.4">Release 2.4: Namespace support, JavaScript refactored, improved support for extensions, various bugfixes</a></li>
+	<li>January 15, 2018: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v2.5">Release 2.5: Namespace support, optimized (polyfilled) JavaScript, improved support for extensions</a></li>
 	<li>April 20, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v1.0">Release 1.0: Original release</a>
 	</li>
 </ul>
@@ -151,7 +151,7 @@
 - Note that if you use namespaces to reference types, you MUST use an xs:import tag with the location of the XSD file. If the application cannot find a type declaration, an element won't be rendered in a form.</li>
 	<li>
 		<strong>Which browsers are supported?</strong>
-		<br />Modern browsers. HTML5 support has only been really available in browser versions over the past few years, so supporting old browsers doesn't make much sense. Note that because of this, the JavaScript snippets also use recently added functions (e.g. forEach, querySelector, closest). Recent versions of Chrome, Edge, and FireFox have been tested.</li>
+		<br />HTML5 support is steadily increasing with every browser release, so the more modern the browser, the better. However, generated forms have been confirmed to work in IE9, IE10, IE11, Edge, Chrome, Firefox, and Safari.</li>
 	<li>
 		<strong>But gDay and gMonth don't work in Edge!</strong>
 		<br />They don't out of the box, because the format these types require (e.g. --03 for March) are not valid numbers and Edge refuses to set them as values. A workaround is to use an enumeration for these types, as shown in complex-sample (gMonthEnum).</li>
