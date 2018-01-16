@@ -1353,7 +1353,7 @@
 		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		
-		<xsl:apply-templates select="xs:element|xs:attribute|xs:group">
+		<xsl:apply-templates select="xs:element|xs:attribute|xs:group|xs:choice|xs:sequence">
 			<xsl:with-param name="namespace-prefix" select="$namespace-prefix" />
 			<xsl:with-param name="disabled" select="$disabled" />
 			<xsl:with-param name="tree" select="$tree" />
