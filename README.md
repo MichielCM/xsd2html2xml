@@ -53,7 +53,6 @@
 	<li>A type reference to another XSD must be accessible, or an element will not be generated. So, if you declare an element with a type in a different file,
 	make sure there's an <em>import</em> or <em>include</em> tag that points to the corresponding XSD file. Multiple XSD references in a xsi:namespaceLocation attribute
 	are not supported.</li>
-	<li>References to other documents can be absolute or relative, but in the latter case must always be relative to the original XSD.</li>
 	<li>Namespaces loaded from external documents must have a declared prefix in the original XSD.</li>
 	<li>Unprefixed XSD files (with a namespace xmlns="http://www.w3.org/2001/XMLSchema" or without a namespace at all) may yield unstable results.</li>
 	<li><em>elementFormDefault</em> and <em>form</em> are ignored. All elements are supposed to be in the namespaces indicated by their hierarchical position in the
