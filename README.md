@@ -8,7 +8,7 @@
 	<li>Supports populating the generated form with data from an XML document;</li>
 	<li>Supports namespaces (including combining schemas through xs:include and xs:import tags);</li>
 	<li>Written in fast and widely supported XSLT 1.0;</li>
-	<li>Has no dependencies (except for XSLT 1.0 and - for population of the form and namespace support - EXSLT extensions);</li>
+	<li>Has no dependencies (except for some EXSLT extensions for population of the form and namespace support);</li>
 	<li>Generates pure HTML5 forms with (little) vanilla JavaScript for interactive parts;</li>
 	<li>Is easily stylable with CSS, or extendable with any library or framework;</li>
 	<li>Is free for any purpose.</li>
@@ -17,8 +17,8 @@
 <h3>Source Code</h3>
 <p>I strongly recommend using only <strong>released</strong> versions. Newer commits may contain new, experimental, features, but have not been thoroughly tested to perform well in a production environment.</p>
 <ul>
-	<li>January 15, 2018: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v2.5">Release 2.5: Namespace support, optimized (polyfilled) JavaScript, improved support for extensions</a></li>
-	<li>April 20, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v1.0">Release 1.0: Original release</a>
+	<li>February 19, 2018: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v2.6">Release 2.6: Namespace support, optimized (polyfilled) JavaScript, improved support for extensions</a></li>
+	<li>April 20, 2017: <a href="https://github.com/MichielCM/xsd2html2xml/releases/tag/v1.0">Release 1.0 (deprecated): Original release</a>
 	</li>
 </ul>
 <h3>Software</h3>
@@ -30,12 +30,12 @@
 			<li>Preconfigured for any XSD (including schemas not bound to xs:...);</li>
 			<li>Supports includes / imports from multi-file schemas (both local and online files);</li>
 			<li>GUI supports autocompletion, spellcheck, placeholder text, and custom styling and scripting;</li>
-			<li>Works for Windows (32-/64-bit). Mac OS and Linux versions available on request.</li>
+			<li>Works for Windows (32-/64-bit). Stand-alone JAR available on request.</li>
 		</ul></li>
 	<li><a href="https://chrome.google.com/webstore/detail/xml-schema-form-generator/bampmcipgicplmddohedjmenepjmdpoj">Google Chrome extension</a>: a JavaScript implementation of xsd2html.xsl. Limited to generating empty forms without namespaces, but highly suitable for a sneak peek.</li>
 </ul>
 <h2>Features</h2>
-<p>Supported XSD features:</p>
+<h3>Supported XSD Structures &amp; Datatypes</h3>
 <ul>
 	<li>Simple and complex elements, attributes, exclusions, restrictions, groups, etc. The full list of supported XSD tags is as follows: all, attribute, attributeGroup, choice, complexContent, complexType, element, extension, import, include, group, restriction, schema, sequence, simpleContent, simpleType, union (partially).</li>
 	<li>minOccurs and maxOccurs, including tiny vanilla JavaScript snippets that handle inserting and deleting elements.</li>
@@ -43,19 +43,28 @@
 	<li>All restrictions that can be supported by HTML5: enumeration, length, maxExclusive, maxInclusive, maxLength, minExclusive, minInclusive, pattern, totalDigits, fractionDigits, and whiteSpace.</li>
 	<li>Practically all data types that can be supported by HTML5: string, normalizedString, token, language, byte, decimal, int, integer, long, short (including their positive, negative, and unsigned variants), date, time, dateTime, month, gDay, gMonth, gYearMonth, gYear, gYearDay, hexBinary, base64Binary, anyURI, double, float, boolean. Note that all other data types are rendered as input[type=text] boxes, which still makes them editable in most cases.</li>
 	<li>Namespaces: XSD files can reference other XSD's through include and import tags. Working with those is supported from version 2 onwards.</li>
-	<li>Custom labels for elements, using the xs:annotation/xs:documentation tags directly following it.</li>
+	<li>Custom (multi-language) labels for elements, using the xs:annotation/xs:documentation tags directly following it.</li>
 </ul>
-<p>Unsupported XSD features:</p>
+<h3>Limitations on XSDs</h3>
 <ul>
-	<li>any and anyAttribute, for obvious reasons.</li>
-	<li>Mixed content (i.e. elements that can contain plain content and elements intermittently) cannot be represented in an HTML5 interface with predetermined controls.</li>
-	<li>Restrictions on union elements, because they can contain content originating from different base types.</li>
-	<li>Components that do not specify content guidelines, such as any, anyAttribute, documentation, or appinfo.</li>
-</ul>
-<h2>How to use</h2>
-<p>It's really quite simple: pick your XSD file, transform it with either xsd2html.xsl or with xsd+xml2html.xsl, and voila: a generated HTML5 form.</p>
-<p>Here's more detail: using xsd2html2xml.xsl is the easiest way to go. It's a shortcut file containing only the variables needed for configuration. If you want, you can also use xsd+xml2html.xsl or xsd2html.xsl directly.</p>
-<p>The configuration is as follows:</p>
+	<li><em>any</em> and <em>anyAttribute</em> are ignored.</li>
+	<li>Mixed content (i.e. elements that can contain plain content and elements intermittently, designated by mixed="true") is not supported.</li>
+	<li>Restrictions on <em>union</em> elements, because they can contain content originating from different base types.</li>
+	<li>A type reference to another XSD must be accessible, or an element will not be generated. So, if you declare an element with a type in a different file,
+	make sure there's an <em>import</em> or <em>include</em> tag that points to the corresponding XSD file. Multiple XSD references in a xsi:namespaceLocation attribute
+	are not supported.</li>
+	<li>References to other documents can be absolute or relative, but in the latter case must always be relative to the original XSD.</li>
+	<li>Namespaces loaded from external documents must have a declared prefix in the original XSD.</li>
+	<li>Unprefixed XSD files (with a namespace xmlns="http://www.w3.org/2001/XMLSchema" or without a namespace at all) may yield unstable results.</li>
+	<li><em>elementFormDefault</em> and <em>form</em> are ignored. All elements are supposed to be in the namespaces indicated by their hierarchical position in the
+	document (i.e. <em>elementFormDefault="qualified"</em> is assumed). <em>attributeFormDefault</em> is supported.</li>
+			</ul>
+<h2>Implementing XSD2HTML2XML</h2>
+<p>At heart it's really simple: pick your XSD file, transform it with either xsd2html.xsl or with xsd+xml2html.xsl, and voila: a generated HTML5 form.</p>
+<p>Here's more detail: using xsd2html2xml.xsl is the easiest way to go. It's a shortcut file containing only the variables needed for configuration (see below for more info). If you want, you can also use xsd+xml2html.xsl or xsd2html.xsl directly.</p>
+<p>A list of XSLT processors that have been tested to work include <a href="https://xalan.apache.org/">Xalan</a>, <a href="https://github.com/GNOME/libxslt">libxslt</a>, and <a href="https://www.saxonica.com/products/feature-matrix-9-8.xml">Saxon</a>.
+<h3>Configuring XSLs<h3>
+<p>The XSL files allow for the following configuration options:</p>
 <ul>
 	<li>Import xsd+xml2html.xsl if you want to populate the generated form with data, or xsd2html.xsl if you want it empty. Note: if you want to use namespaces, you must use xsd+xml2html.xsl, even if you want the form empty!</li>
 	<li>xml-doc: this variable should point to the XML data file, if you selected xsd+xml2html.xsl. Otherwise, it is ignored.</li>
@@ -65,20 +74,21 @@
 	<li>config-language: if you use annotation/documentation tags for labeling elements, you can optionally specify their language with the xml:lang attribute. To specify which language should be used by XSD2HTML, make sure this variable matches the xml:lang attribute's. For example, to use &lt;xs:documentation xml:lang='en'&gt;hello&lt;xs:documentation&gt;, also pass 'en' to this variable. Note that if no matching documentation tag is found, XSD2HTML will use any documentation element not specifying a language, or else resort to @name. Default is empty.</li>
 	<li>config-add-button-label, config-remove-button-label, config-submit-button-label, config-seconds|minutes|hours|days|months|years.: The values of these variables are used for the labels of add, remove, submit buttons, and time intervals for xs:duration. Defaults are '+', '-', 'OK', and the English time intervals.</li>
 </ul>
-<p>If you want to use namespaces, please keep in mind the following requirements:</p>
-<ul>
-	<li>Use xsd+xml2html.xsl, even if you want to generate an empty form!</li>
-	<li>A type reference to another XSD must be accessible, or an element will not be generated. So, if you declare an element with a type in a different file, make sure there's an import or include tag that points to the corresponding XSD file.</li>
-	<li>Recursivity in XSD files is supported; imported XSD files can include other XSD files.</li>
-	<li>I highly recommend using a caching system for loading external documents. Since XSLT 1.0 does not support array-like data structures, documents cannot be stored in variables for future reference. So each external XSD is loaded every time it is referenced by an element!</li>
-</ul>
-<h2>How it works</h2>
+<h3>Configuring XSDs</h3>
 <p>Input elements are assigned based on an element's primitive type. Most types work just like you would expect (e.g. int becomes number, boolean becomes checkbox, date becomes date). Some have additional options or peculiarities:</p>
 <ul>
 	<li>xs:string: by default, this is rendered as an input[type=text] element. If you would like to support multiline and render a textarea instead, you have to specify allowance of line breaks specifically in the pattern by including '\n'. Note that the pattern can be anything, as long as it contains a '\n'. The simplest way to do this is by adding '(\n)?' after a pattern. A multiline pattern with no further restrictions could look like this: '.*(\n)?'.</li>
 	<li>xs:duration: durations are rendered as input[type=range] elements, which look like sliders in most browser implementations. Durations have to follow a specific format according to W3C's specification. This format can be (partially) included in a pattern restriction. This pattern is used by xsd2html to determine the smallest unit that needs to be supported. For example, to use a duration that supports hours and minutes, add this pattern: 'PT\d{2}H\d{2}M'. The rendered range will be scaled in minutes (following the last M). To further restrict this duration to a maximum of 1 day, specify maxInclusive following W3C's notation in the smallest scale (i.e. minutes): 'PT1440M' (=60 minutes * 24). Note that in order to generate a valid value, the pattern of an xs:duration type must be specified explicitly.</li>
 	<li>xs:hexBinary & xs:base64Binary: these types are rendered as input[type=file] elements. For security reasons, browsers do not allow these elements to have default values. That means that, if an input[type=file] element has a default, fixed, or populated value, this is not shown to the user. If such an element is required, it could never be submitted with the default value. To solve this, the required attribute of input[type=file] elements is added only after the user has changed the populated value.</li>
 	<li>xs:enumeration: any type with this restriction will become a select element. It's possible to define additional restrictions on input, but usually this doesn't make much sense because the input is restricted to predetermined items.</li>
+</ul>
+<h3>Using Namespaces</h3>
+<p>If you want to use namespaces, please keep in mind the following requirements:</p>
+<ul>
+	<li>Use xsd+xml2html.xsl, even if you want to generate an empty form!</li>
+	<li>A type reference to another XSD must be accessible, or an element will not be generated. So, if you declare an element with a type in a different file, make sure there's an import or include tag that points to the corresponding XSD file.</li>
+	<li>Recursivity in XSD files is supported; imported XSD files can include other XSD files.</li>
+	<li>I highly recommend using a caching system for loading external documents. Since XSLT 1.0 does not support array-like data structures, documents cannot be stored in variables for future reference. So each external XSD is loaded every time it is referenced by an element!</li>
 </ul>
 <h2>Examples</h2>
 <p>These examples demonstrate a form generated from an XML schema, both as HTML and XHTML. The resulting XML is then used to populate the form again as a last step.</p>
