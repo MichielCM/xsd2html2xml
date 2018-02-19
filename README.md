@@ -63,7 +63,7 @@
 <p>At heart it's really simple: pick your XSD file, transform it with either xsd2html.xsl or with xsd+xml2html.xsl, and voila: a generated HTML5 form.</p>
 <p>Here's more detail: using xsd2html2xml.xsl is the easiest way to go. It's a shortcut file containing only the variables needed for configuration (see below for more info). If you want, you can also use xsd+xml2html.xsl or xsd2html.xsl directly.</p>
 <p>A list of XSLT processors that have been tested to work include <a href="https://xalan.apache.org/">Xalan</a>, <a href="https://github.com/GNOME/libxslt">libxslt</a>, and <a href="https://www.saxonica.com/products/feature-matrix-9-8.xml">Saxon</a>.
-<h3>Configuring XSLs<h3>
+<h3>Configuring XSLs</h3>
 <p>The XSL files allow for the following configuration options:</p>
 <ul>
 	<li>Import xsd+xml2html.xsl if you want to populate the generated form with data, or xsd2html.xsl if you want it empty. Note: if you want to use namespaces, you must use xsd+xml2html.xsl, even if you want the form empty!</li>
