@@ -1,70 +1,69 @@
 <?xml version="1.0"?>
-<rootElement>
-    <simpleTypes>
-        <string>abc</string>
-        <multiline-string>hello world</multiline-string>
-        <byte>1</byte>
-        <short>2</short>
-        <int>3</int>
-        <long>0</long>
-        <decimal>0.5</decimal>
-        <float>1.1</float>
-        <double>2.2</double>
-        <boolean>true</boolean>
-        <date>2017-03-14</date>
-        <time>02:02:00</time>
-        <dateTime>2017-03-14T14:02:03</dateTime>
-        <anyURI>http://www.github.com</anyURI>
-        <base64Binary>YmxhYXQ=</base64Binary>
-    </simpleTypes>
-    <dates>
-        <date>2017-04-03</date>
-        <time>02:03:04</time>
-        <dateTime>2017-04-03T14:03:04</dateTime>
-        <gDay>---30</gDay>
-        <gMonth>--02</gMonth>
-        <gMonthEnum>--02</gMonthEnum>
-        <gMonthDay>--04-05</gMonthDay>
-        <gYear>2017</gYear>
-        <gYearMonth>2017-04</gYearMonth>
-    </dates>
-    <durations>
-        <dateDuration>P0D</dateDuration>
-        <timeDuration>PT5M</timeDuration>
-    </durations>
-    <defaults>
-        <defaultString>this is no longer the default value</defaultString>
-        <fixedString>this is a fixed value</fixedString>
-    </defaults>
-    <positiveIntegers>
-        <positiveInteger>10</positiveInteger>
-        <negativeInteger>10</negativeInteger>
-        <unsignedInt>10</unsignedInt>
-        <integer>10</integer>
-    </positiveIntegers>
-    <restrictions>
-        <enumeration>Option 2</enumeration>
-        <fixed-enumeration>Option 3</fixed-enumeration>
-    </restrictions>
-    <extensions>
-        <nestedString>nestedString Option 2</nestedString>
-        <nestedByte>0</nestedByte>
-        <doubleNestedByte>10</doubleNestedByte>
-    </extensions>
-    <occurrencesSimple>a</occurrencesSimple>
-    <occurrencesSimple>b</occurrencesSimple>
-    <occurrencesSimple>c</occurrencesSimple>
-    <occurrencesComplex>
-        <child attribute="1"/>
-    </occurrencesComplex>
-    <occurrencesComplex>
-        <child attribute="2"/>
-    </occurrencesComplex>
-    <occurrencesComplex>
-        <child attribute="3"/>
-    </occurrencesComplex>
-    <complexSimpleContent attribute="attribute">simple content</complexSimpleContent>
-    <choice>
-        <byte>1</byte>
-    </choice>
+<rootElement xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="D:\Michiel\Desktop\app\complex-sample.xsd">
+	<simpleTypes>
+		<string>abcdefghijklmnopqr</string>
+		<multiline-string>hello world</multiline-string>
+		<byte>1</byte>
+		<short>2</short>
+		<int>3</int>
+		<long>0</long>
+		<decimal>0.5</decimal>
+		<float>1.1</float>
+		<double>2.2</double>
+		<boolean>true</boolean>
+		<date>2017-03-14</date>
+		<time>02:02:00</time>
+		<dateTime>2017-03-14T14:02:03</dateTime>
+		<anyURI>http://www.github.com</anyURI>
+		<hexBinary>76657273696F6E3D312E31310D0A6465736372697074696F6E3D76312E313120666978657320736F6D65206E616D657370616365732069737375657320696E20584D4C206F75747075742E0D0A73697A653D31340D0A75726C2E36343D68747470733A2F2F7777772E6D69636869656C6D65756C656E64696A6B2E6E6C2F77702D636F6E74656E742F75706C6F6164732F786D6C7366672D7570646174652D76312E31312D36342E6578650D0A75726C2E33323D68747470733A2F2F7777772E6D69636869656C6D65756C656E64696A6B2E6E6C2F77702D636F6E74656E742F75706C6F6164732F786D6C7366672D7570646174652D76312E31312D33322E657865</hexBinary>
+		<base64Binary>dmVyc2lvbj0xLjExDQpkZXNjcmlwdGlvbj12MS4xMSBmaXhlcyBzb21lIG5hbWVzcGFjZXMgaXNzdWVzIGluIFhNTCBvdXRwdXQuDQpzaXplPTE0DQp1cmwuNjQ9aHR0cHM6Ly93d3cubWljaGllbG1ldWxlbmRpamsubmwvd3AtY29udGVudC91cGxvYWRzL3htbHNmZy11cGRhdGUtdjEuMTEtNjQuZXhlDQp1cmwuMzI9aHR0cHM6Ly93d3cubWljaGllbG1ldWxlbmRpamsubmwvd3AtY29udGVudC91cGxvYWRzL3htbHNmZy11cGRhdGUtdjEuMTEtMzIuZXhl</base64Binary>
+	</simpleTypes>
+	<dates>
+		<date>2017-04-03</date>
+		<time>02:03:04</time>
+		<dateTime>2017-04-03T14:03:04</dateTime>
+		<gDay>---30</gDay>
+		<gMonth>--02</gMonth>
+		<gMonthEnum>--02</gMonthEnum>
+		<gMonthDay>--04-05</gMonthDay>
+		<gYear>2017</gYear>
+		<gYearMonth>2017-04</gYearMonth>
+	</dates>
+	<durations>
+		<dateDuration>P0D</dateDuration>
+		<timeDuration>PT5M</timeDuration>
+	</durations>
+	<defaults>
+		<defaultString>this is no longer the default value</defaultString>
+		<fixedString>this is a fixed value</fixedString>
+	</defaults>
+	<positiveIntegers>
+		<positiveInteger>10</positiveInteger>
+		<negativeInteger>10</negativeInteger>
+		<unsignedInt>10</unsignedInt>
+		<integer>10</integer>
+	</positiveIntegers>
+	<restrictions>
+		<enumeration>Option 2</enumeration>
+		<fixed-enumeration>Option 3</fixed-enumeration>
+	</restrictions>
+	<extensions>
+		<nestedString>nestedString Option 2</nestedString>
+		<nestedByte>0</nestedByte>
+		<doubleNestedByte>10</doubleNestedByte>
+	</extensions>
+	<occurrencesSimple>a</occurrencesSimple>
+	<occurrencesComplex>
+		<child attribute="1"/>
+	</occurrencesComplex>
+	<occurrencesComplex>
+		<child attribute="2"/>
+	</occurrencesComplex>
+	<occurrencesComplex>
+		<child attribute="3"/>
+	</occurrencesComplex>
+	<complexSimpleContent attribute="attribute">simple content</complexSimpleContent>
+	<choice>
+		<byte>1</byte>
+	</choice>
 </rootElement>

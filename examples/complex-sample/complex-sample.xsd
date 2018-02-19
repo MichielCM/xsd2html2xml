@@ -29,7 +29,7 @@
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element type="xs:string" name="string" />
-							<xs:element name="multiline-string" default="hello">
+							<xs:element name="multiline-string" default="multiline sample">
 								<xs:simpleType>
 									<xs:restriction base="xs:string">
 										<xs:pattern value=".*(\n)?.*"></xs:pattern>
@@ -53,6 +53,7 @@
 							<xs:element type="xs:time" name="time" />
 							<xs:element type="xs:dateTime" name="dateTime" />
 							<xs:element type="xs:anyURI" name="anyURI" />
+							<xs:element type="xs:hexBinary" name="hexBinary" />
 							<xs:element type="xs:base64Binary" name="base64Binary" />
 						</xs:sequence>
 					</xs:complexType>
