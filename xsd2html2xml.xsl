@@ -5,15 +5,15 @@
 	<xsl:import href="xsd+xml2html.xsl" />
 	<!--<xsl:import href="xsd2html.xsl" />-->
 	
-	<!-- set method as either html or xhtml. Note: if you want to process the results
+	<!-- set method as either html or xhtml (xml). Note: if you want to process the results
 	with html2xml.xsl, you need to use xhtml. Note 2: browsers won't display the form correctly if
 	it does not contain a valid XHTML doctype and if it is not served with content type application/xhtml+xml -->
-	<!-- <xsl:output method="xhtml" omit-xml-declaration="no" indent="no" /> -->
+	<!-- <xsl:output method="xml" omit-xml-declaration="no" indent="no" /> -->
 	<xsl:output method="html" omit-xml-declaration="yes" indent="no" />
 	
 	<!-- optionally specify the xml document to populate the form with -->
 	<xsl:variable name="xml-doc">
-		<xsl:copy-of select="document('complex-sample.xml')/*"/>
+		<xsl:copy-of select="document('{XMLDOC}')/*"/>
 	</xsl:variable>
 	
 	<!-- choose the JavaScript (js) or XSLT (xslt) option for processing the form results -->
@@ -34,7 +34,7 @@
 	<xsl:variable name="config-label-after-input">true</xsl:variable>
 	
 	<!-- optionally specify which annotation/documentation language (determined by xml:lang) should be used -->
-	<xsl:variable name="config-language">nl</xsl:variable>
+	<xsl:variable name="config-language">en</xsl:variable>
 	
 	<!-- optionally specify text for interactive elements -->
 	<xsl:variable name="config-add-button-label">+</xsl:variable>

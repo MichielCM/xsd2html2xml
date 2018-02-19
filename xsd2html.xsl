@@ -24,10 +24,10 @@
 	
 	<xsl:strip-space elements="*"/>
 	
-	<!-- set method as either html or xhtml. Note: if you want to process the results
+	<!-- set method as either html or xhtml (xml). Note: if you want to process the results
 	with html2xml.xsl, you need to use xhtml. Note 2: browsers won't display the form correctly if
 	it does not contain a valid XHTML doctype and if it is not served with content type application/xhtml+xml -->
-	<!-- <xsl:output method="xhtml" omit-xml-declaration="no" /> -->
+	<!-- <xsl:output method="xml" omit-xml-declaration="no" /> -->
 	<xsl:output method="html" omit-xml-declaration="yes" indent="no" />
 	
 	<!-- choose the JavaScript (js) or XSLT (xslt) option for processing the form results -->
@@ -191,24 +191,31 @@
 					}
 					
 					var clickRemoveButton = function(button) {
-						if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-min"))
-							button.parentNode.parentNode.parentNode.lastElementChild.click();
+						if ((button.closest("section").children.length - 2) == button.closest("section").lastElementChild.getAttribute("data-xsd2html2xml-min"))
+							button.closest("section").lastElementChild.click();
 						
-						if ((button.parentNode.parentNode.parentNode.children.length - 2) == button.parentNode.parentNode.parentNode.lastElementChild.getAttribute("data-xsd2html2xml-max"))
-							button.parentNode.parentNode.parentNode.lastElementChild.removeAttribute("disabled");
+						if ((button.closest("section").children.length - 2) == button.closest("section").lastElementChild.getAttribute("data-xsd2html2xml-max"))
+							button.closest("section").lastElementChild.removeAttribute("disabled");
 						
-						button.parentNode.parentNode.parentNode.removeChild(
-							button.parentNode.parentNode
+						button.closest("section").removeChild(
+							button.closest("fieldset, label")
 						);
 					}
 					
 					var clickRadioInput = function(input, name) {
-						document.querySelectorAll("[name=" + name + "]").forEach(function(o) {
+						document.querySelectorAll("[name=".concat(name).concat("]")).forEach(function(o) {
 							o.removeAttribute("checked");
-							o.parentElement.nextElementSibling.querySelectorAll("input, select, textarea").forEach(function(p) {
-								if (input.parentElement.nextElementSibling.contains(p))
-									p.removeAttribute("disabled");
-								else
+							var section = o.parentElement.nextElementSibling;
+							
+							section.querySelectorAll("input, select, textarea").forEach(function(p) {
+								if (input.parentElement.nextElementSibling.contains(p)) {
+									if (p.closest("[data-xsd2html2xml-choice]") === section) {
+										if (p.closest("*[style]") === null)
+											p.removeAttribute("disabled");
+										else
+											p.setAttribute("disabled", "disabled");
+									}
+								} else
 									p.setAttribute("disabled", "disabled");
 							});
 						});
@@ -407,7 +414,7 @@
 					<xsl:with-param name="disabled" select="$disabled" />
 				</xsl:call-template>
 			</xsl:when>
-			<xsl:when test="starts-with($type, 'xs:')">
+			<xsl:when test="substring-before($type, ':') = 'xs'">
 				<xsl:call-template name="handle-simple-elements">
 					<xsl:with-param name="choice" select="$choice"/>
 					<xsl:with-param name="disabled" select="$disabled" />
@@ -428,6 +435,19 @@
 		</xsl:call-template>
 	</xsl:template>
 	
+	<!-- handles elements referencing other elements -->
+	<xsl:template match="xs:element[@ref]|xs:attribute[@ref]">
+		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
+		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
+		
+		<xsl:variable name="ref" select="@ref" />
+		
+		<xsl:apply-templates select="//*[@name=$ref]">
+			<xsl:with-param name="choice" select="$choice"/>
+			<xsl:with-param name="disabled" select="$disabled" />
+		</xsl:apply-templates>
+	</xsl:template>
+	
 	<!-- handles groups existing of other elements; note that 'ref' is used as id overriding local-name() -->
 	<xsl:template match="xs:group[@ref]">
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
@@ -435,7 +455,7 @@
 		
 		<xsl:call-template name="handle-complex-elements">
 			<xsl:with-param name="id" select="@ref" />
-			<xsl:with-param name="simple" select="false" />
+			<xsl:with-param name="simple">false</xsl:with-param>
 			<xsl:with-param name="choice" select="$choice"/>
 			<xsl:with-param name="disabled" select="$disabled" />
 		</xsl:call-template>
@@ -446,6 +466,7 @@
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		
 		<xsl:variable name="ref" select="@ref" />
+		
 		<xsl:apply-templates select="//xs:attributeGroup[@name=$ref]/xs:attribute">
 			<xsl:with-param name="id" select="@ref" />
 			<xsl:with-param name="disabled" select="$disabled" />
@@ -467,6 +488,7 @@
 				<xsl:with-param name="description">
 					<xsl:call-template name="get-description" />
 				</xsl:with-param>
+				<xsl:with-param name="disabled" select="$disabled" />
 			</xsl:call-template>
 		</xsl:if>
 		
@@ -551,6 +573,13 @@
 					|xs:complexType/xs:choice
 					|xs:complexType/xs:attribute
 					|xs:complexType/xs:attributeGroup
+					|xs:complexType/xs:complexContent/xs:restriction/xs:sequence
+					|xs:complexType/xs:complexContent/xs:restriction/xs:all
+					|xs:complexType/xs:complexContent/xs:restriction/xs:choice
+					|xs:complexType/xs:complexContent/xs:restriction/xs:attribute
+					|xs:complexType/xs:complexContent/xs:restriction/xs:attributeGroup
+					|xs:complexType/xs:simpleContent/xs:restriction/xs:attribute
+					|xs:complexType/xs:simpleContent/xs:restriction/xs:attributeGroup
 					|//xs:group[@name=$ref]/*">
 					<xsl:with-param name="disabled" select="$disabled" />
 					</xsl:apply-templates>
@@ -613,6 +642,7 @@
 				<xsl:with-param name="description">
 					<xsl:call-template name="get-description" />
 				</xsl:with-param>
+				<xsl:with-param name="disabled" select="$disabled" />
 			</xsl:call-template>
 		</xsl:if>
 		
@@ -647,7 +677,7 @@
 					</xsl:with-param>
 					<xsl:with-param name="static">false</xsl:with-param>
 					<xsl:with-param name="count">1</xsl:with-param>
-					<xsl:with-param name="invisible" select="'true'" />
+					<xsl:with-param name="invisible">true</xsl:with-param>
 					<xsl:with-param name="disabled">true</xsl:with-param>
 				</xsl:call-template>
 				
@@ -788,6 +818,11 @@
 									<xsl:attribute name="required">required</xsl:attribute>
 								</xsl:otherwise>
 							</xsl:choose>
+							
+							<!-- disabled elements are used to omit invisible placeholders from inclusion in the validation and generated xml data -->
+							<xsl:if test="$disabled = 'true'">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+							</xsl:if>
 							
 							<!-- add options for each value; populate the element if there is corresponding data, or fill it with a fixed or default value -->
 							<xsl:call-template name="handle-enumerations">
@@ -971,10 +1006,13 @@
 								<xsl:value-of select="$type" />
 							</xsl:attribute>
 							
+							<xsl:if test="@fixed">
+								<xsl:attribute name="readonly">readonly</xsl:attribute>
+							</xsl:if>
+							
 							<xsl:choose>
 								<!-- use fixed attribute as data if specified -->
 								<xsl:when test="@fixed">
-									<xsl:attribute name="readonly">readonly</xsl:attribute>
 									<xsl:choose>
 										<xsl:when test="$type = 'xs:boolean'">
 											<xsl:if test="@fixed = 'true'">
@@ -1138,6 +1176,29 @@
 	
 	<!-- Returns an element's description from xs:annotation/xs:documentation if it exists, @value in the case of enumerations, or @name otherwise -->
 	<xsl:template name="get-description">
+		<xsl:variable name="documentation">
+			<xsl:call-template name="get-documentation" />
+		</xsl:variable>
+		
+		<xsl:choose>
+			<xsl:when test="$documentation = ''">
+				<xsl:choose>
+					<xsl:when test="@name">
+						<xsl:value-of select="@name" />
+					</xsl:when>
+					<xsl:when test="@value">
+						<xsl:value-of select="@value" />
+					</xsl:when>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$documentation" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<!-- Returns an element's description from xs:annotation/xs:documentation if it exists, taking into account the specified preferred language -->
+	<xsl:template name="get-documentation">
 		<xsl:choose>
 			<xsl:when test="not($config-language = '') and xs:annotation/xs:documentation[@xml:lang=$config-language]">
 				<xsl:value-of select="xs:annotation/xs:documentation[@xml:lang=$config-language]/text()" />
@@ -1145,14 +1206,11 @@
 			<xsl:when test="not($config-language = '') and xs:annotation/xs:documentation[not(@xml:lang)]">
 				<xsl:value-of select="xs:annotation/xs:documentation[not(@xml:lang)]/text()" />
 			</xsl:when>
+			<xsl:when test="$config-language = '' and xs:annotation/xs:documentation[not(@xml:lang)]">
+				<xsl:value-of select="xs:annotation/xs:documentation[not(@xml:lang)]/text()" />
+			</xsl:when>
 			<xsl:when test="$config-language = '' and xs:annotation/xs:documentation">
 				<xsl:value-of select="xs:annotation/xs:documentation/text()" />
-			</xsl:when>
-			<xsl:when test="@name">
-				<xsl:value-of select="@name" />
-			</xsl:when>
-			<xsl:when test="@value">
-				<xsl:value-of select="@value" />
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
@@ -1217,6 +1275,9 @@
 			</xsl:when>
 			<xsl:when test="xs:union/@memberTypes">
 				<xsl:value-of select="xs:simpleType/xs:union/@memberTypes"/>
+			</xsl:when>
+			<xsl:when test="@ref">
+				<xsl:value-of select="@ref"/> <!-- a @ref attribute does not contain a type but an element reference. It does contain the prefix of the namespace where the element's type is declared, so it is required to look up the element specification -->
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
@@ -1318,6 +1379,7 @@
 	<xsl:template name="add-choice-button">
 		<xsl:param name="name" />
 		<xsl:param name="description" />
+		<xsl:param name="disabled">false</xsl:param>
 		
 		<xsl:element name="label">
 			<xsl:if test="not($config-label-after-input = 'true')">
@@ -1331,6 +1393,10 @@
 				<xsl:attribute name="name">
 					<xsl:value-of select="$name"/>
 				</xsl:attribute>
+				<xsl:attribute name="required">required</xsl:attribute>
+				<xsl:if test="$disabled = 'true'">
+					<xsl:attribute name="disabled">disabled</xsl:attribute>
+				</xsl:if>
 				<xsl:attribute name="onclick">clickRadioInput(this, '<xsl:value-of select="$name" />');</xsl:attribute>
 			</xsl:element>
 			

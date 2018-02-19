@@ -24,10 +24,10 @@
 	
 	<xsl:strip-space elements="*"/>
 	
-	<!-- set method as either html or xhtml. Note: if you want to process the results
+	<!-- set method as either html or xhtml (xml). Note: if you want to process the results
 	with html2xml.xsl, you need to use xhtml. Note 2: browsers won't display the form correctly if
 	it does not contain a valid XHTML doctype and if it is not served with content type application/xhtml+xml -->
-	<!-- <xsl:output method="xhtml" omit-xml-declaration="no" indent="no" /> -->
+	<!-- <xsl:output method="xml" omit-xml-declaration="no" indent="no" /> -->
 	<xsl:output method="html" omit-xml-declaration="yes" indent="no" />
 	
 	<!-- choose the JavaScript (js) or XSLT (xslt) option for processing the form results -->
@@ -500,8 +500,6 @@
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
 		
-		<xsl:variable name="ref" select="@ref" />
-		
 		<xsl:variable name="namespace-documents">
 			<!-- <xsl:call-template name="get-my-namespace-documents" /> -->
 			<xsl:call-template name="get-namespace-documents">
@@ -519,7 +517,7 @@
 		
 		<xsl:variable name="ref-suffix">
 			<xsl:call-template name="get-suffix">
-				<xsl:with-param name="string" select="$ref" />
+				<xsl:with-param name="string" select="@ref" />
 			</xsl:call-template>
 		</xsl:variable>
 		
@@ -551,7 +549,7 @@
 					<xsl:with-param name="include-colon">true</xsl:with-param>
 				</xsl:call-template>
 			</xsl:with-param>
-			<xsl:with-param name="simple" select="false" />
+			<xsl:with-param name="simple">false</xsl:with-param>
 			<xsl:with-param name="choice" select="$choice"/>
 			<xsl:with-param name="disabled" select="$disabled" />
 			<xsl:with-param name="tree" select="$tree" />
@@ -583,7 +581,7 @@
 		
 		<xsl:variable name="ref-suffix">
 			<xsl:call-template name="get-suffix">
-				<xsl:with-param name="string" select="$ref" />
+				<xsl:with-param name="string" select="@ref" />
 			</xsl:call-template>
 		</xsl:variable>
 		
@@ -1485,7 +1483,6 @@
 								</xsl:when>
 								<!-- use fixed attribute as data if specified -->
 								<xsl:when test="@fixed">
-									<!--<xsl:attribute name="readonly">readonly</xsl:attribute>-->
 									<xsl:choose>
 										<xsl:when test="$type = 'xs:boolean'">
 											<xsl:if test="@fixed = 'true'">
