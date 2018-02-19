@@ -1,12 +1,21 @@
 <?xml version="1.0"?>
-<root xmlns="https://github.com/MichielCM/xsd2html2xml/default" xmlns:imp="https://github.com/MichielCM/xsd2html2xml/import" xmlns:dblimp="https://github.com/MichielCM/xsd2html2xml/doubleImport">
+<root xmlns="https://github.com/MichielCM/xsd2html2xml/default" xmlns:dblimp="https://github.com/MichielCM/xsd2html2xml/doubleImport" xmlns:imp="https://github.com/MichielCM/xsd2html2xml/import" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://github.com/MichielCM/xsd2html2xml/default namespaces-sample.xsd">
+	<test1>TRUE</test1>
+	<test2>true</test2>
 	<defaultType>true</defaultType>
 	<includedType>1</includedType>
-	<imp:importedType1>TRUE</imp:importedType1>
-	<imp:importedType2>1</imp:importedType2>
+	<importedType1>TRUE</importedType1>
+	<importedType2>1</importedType2>
+	<importedComplexType>
+		<imp:importedComplexElement1>1</imp:importedComplexElement1>
+		<imp:importedComplexElement2>TRUE</imp:importedComplexElement2>
+		<imp:importedComplexElement3>true</imp:importedComplexElement3>
+	</importedComplexType>
 	<imp:importedElement1>true</imp:importedElement1>
 	<imp:importedElement2>1</imp:importedElement2>
 	<imp:importedComplexParentElement>
-		<dblimp:doubleImportedType>TRUE</dblimp:doubleImportedType>
+		<imp:importedSimpleElement>TRUE</imp:importedSimpleElement>
+		<imp:doubleImportedType>TRUE</imp:doubleImportedType>
+		<dblimp:doubleImportedElement>true</dblimp:doubleImportedElement>
 	</imp:importedComplexParentElement>
 </root>

@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="https://github.com/MichielCM/xsd2html2xml/default">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="https://github.com/MichielCM/xsd2html2xml/default" targetNamespace="https://github.com/MichielCM/xsd2html2xml/default" elementFormDefault="qualified">
 	<xs:simpleType name="includedType">
 		<xs:restriction base="xs:int">
-			<xs:minInclusive value="0" />
-			<xs:maxInclusive value="1" />
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="1"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>

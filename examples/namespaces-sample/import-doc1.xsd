@@ -1,19 +1,32 @@
 <?xml version="1.0"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:dblimp="https://github.com/MichielCM/xsd2html2xml/doubleImport"
-	targetNamespace="https://github.com/MichielCM/xsd2html2xml/import">
-	<xs:import namespace="https://github.com/MichielCM/xsd2html2xml/doubleImport" schemaLocation="double-import-doc.xsd" />
-	<xs:simpleType name="importedType1">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dblimp="https://github.com/MichielCM/xsd2html2xml/doubleImport" xmlns="https://github.com/MichielCM/xsd2html2xml/import" targetNamespace="https://github.com/MichielCM/xsd2html2xml/import" elementFormDefault="qualified">
+	<xs:import namespace="https://github.com/MichielCM/xsd2html2xml/doubleImport" schemaLocation="double-import-doc.xsd"/>
+	<xs:simpleType name="testType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="FALSE" />
-			<xs:enumeration value="TRUE" />
+			<xs:enumeration value="FALSE"/>
+			<xs:enumeration value="TRUE"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:element name="importedElement1" type="xs:boolean" />
+	<xs:simpleType name="importedType1">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FALSE"/>
+			<xs:enumeration value="TRUE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="importedComplexType">
+		<xs:sequence>
+			<xs:element name="importedComplexElement1" type="xs:byte"/>
+			<xs:element name="importedComplexElement2" type="importedType1"/>
+			<xs:element name="importedComplexElement3" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="importedElement1" type="xs:boolean"/>
 	<xs:element name="importedComplexParentElement">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="doubleImportedType" type="dblimp:doubleImportedType" />
+				<xs:element name="importedSimpleElement" type="xs:string"/>
+				<xs:element name="doubleImportedType" type="dblimp:doubleImportedType"/>
+				<xs:element ref="dblimp:doubleImportedElement"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

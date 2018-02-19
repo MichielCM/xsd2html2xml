@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="https://github.com/MichielCM/xsd2html2xml/doubleImport">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="https://github.com/MichielCM/xsd2html2xml/doubleImport" targetNamespace="https://github.com/MichielCM/xsd2html2xml/doubleImport" elementFormDefault="qualified">
 	<xs:simpleType name="doubleImportedType">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="(TRUE|FALSE)" />
+			<xs:pattern value="(TRUE|FALSE)"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:element name="doubleImportedElement" type="xs:boolean"/>
 </xs:schema>

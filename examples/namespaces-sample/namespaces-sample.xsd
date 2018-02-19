@@ -1,22 +1,28 @@
 <?xml version="1.0"?>
-<xs:schema
-	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:imp="https://github.com/MichielCM/xsd2html2xml/import"
+	xmlns:dblimp="https://github.com/MichielCM/xsd2html2xml/doubleImport"
 	xmlns="https://github.com/MichielCM/xsd2html2xml/default"
-	targetNamespace="https://github.com/MichielCM/xsd2html2xml/default">
-	<xs:import namespace="https://github.com/MichielCM/xsd2html2xml/import" schemaLocation="import-doc1.xsd" />
-	<xs:import namespace="https://github.com/MichielCM/xsd2html2xml/import" schemaLocation="import-doc2.xsd" />
-	<xs:include schemaLocation="include-doc.xsd" />
+	targetNamespace="https://github.com/MichielCM/xsd2html2xml/default" elementFormDefault="qualified">
+	<xs:import namespace="https://github.com/MichielCM/xsd2html2xml/import" schemaLocation="import-doc1.xsd"/>
+	<xs:import namespace="https://github.com/MichielCM/xsd2html2xml/import" schemaLocation="import-doc2.xsd"/>
+	<xs:include schemaLocation="include-doc.xsd"/>
+	<xs:simpleType name="testType">
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
 	<xs:element name="root">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="defaultType" type="xs:boolean" />
-				<xs:element name="includedType" type="includedType" />
-				<xs:element name="importedType1" type="imp:importedType1" />
-				<xs:element name="importedType2" type="imp:importedType2" />
-				<xs:element ref="imp:importedElement1" />
-				<xs:element ref="imp:importedElement2" />
-				<xs:element ref="imp:importedComplexParentElement" />
+				<xs:element name="test1" type="imp:testType"/>
+				<xs:element name="test2" type="testType"/>
+				<xs:element name="defaultType" type="xs:boolean"/>
+				<xs:element name="includedType" type="includedType"/>
+				<xs:element name="importedType1" type="imp:importedType1"/>
+				<xs:element name="importedType2" type="imp:importedType2"/>
+				<xs:element name="importedComplexType" type="imp:importedComplexType"/>
+				<xs:element ref="imp:importedElement1"/>
+				<xs:element ref="imp:importedElement2"/>
+				<xs:element ref="imp:importedComplexParentElement"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

@@ -1,151 +1,274 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
-<head><style type="text/css">
-form fieldset {
-	margin-bottom: 10px;
-}
-form label { 
-	display: block;
-}
-form label > span {
-	float: left;
-	min-width: 200px;
-}
-form label > input[required] + span:after, form label > textarea[required] + span:after, form label > select[required] + span:after {
-	content: "*:";
-}
-form button.add {
-	margin-bottom: 10px;
-}
-</style></head>
-<body><form action="javascript:void(0);" onsubmit="console.log(htmlToXML(this));&#10;&#9;&#9;&#9;&#9;"><section><fieldset data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/default" data-xsd2html2xml-type="element" data-xsd2html2xml-name="root"><legend>root</legend><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/default" data-xsd2html2xml-type="element" data-xsd2html2xml-name="defaultType"><input type="checkbox" onchange="if (this.checked) { this.setAttribute(&quot;checked&quot;,&quot;checked&quot;) } else { this.removeAttribute(&quot;checked&quot;) }" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="xs:boolean" data-xsd2html2xml-filled="true" checked="checked"/><span>defaultType</span></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/default" data-xsd2html2xml-type="element" data-xsd2html2xml-name="includedType"><input type="number" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" min="0" max="1" pattern="[-]?{0,}" data-xsd2html2xml-primitive="xs:int" data-xsd2html2xml-filled="true" value="1"/><span>includedType</span></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/import" data-xsd2html2xml-type="element" data-xsd2html2xml-name="imp:importedType1"><select onchange="for (var i=0; i&lt;this.children.length; i++) { this.children[i].removeAttribute(&quot;selected&quot;); } this.children[this.selectedIndex].setAttribute(&quot;selected&quot;,&quot;selected&quot;);" required="required" data-xsd2html2xml-filled="true"><option value="FALSE">FALSE</option><option selected="selected" value="TRUE">TRUE</option></select><span>importedType1</span></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/import" data-xsd2html2xml-type="element" data-xsd2html2xml-name="imp:importedType2"><select onchange="for (var i=0; i&lt;this.children.length; i++) { this.children[i].removeAttribute(&quot;selected&quot;); } this.children[this.selectedIndex].setAttribute(&quot;selected&quot;,&quot;selected&quot;);" required="required" data-xsd2html2xml-filled="true"><option value="0">0</option><option selected="selected" value="1">1</option></select><span>importedType2</span></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/import" data-xsd2html2xml-type="element" data-xsd2html2xml-name="imp:importedElement1"><input type="checkbox" onchange="if (this.checked) { this.setAttribute(&quot;checked&quot;,&quot;checked&quot;) } else { this.removeAttribute(&quot;checked&quot;) }" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="xs:boolean" data-xsd2html2xml-filled="true" checked="checked"/><span>importedElement1</span></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/import" data-xsd2html2xml-type="element" data-xsd2html2xml-name="imp:importedElement2"><input type="number" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" min="0" max="1" pattern="[-]?{0,}" data-xsd2html2xml-primitive="xs:int" data-xsd2html2xml-filled="true" value="1"/><span>importedElement2</span></label></section><section><fieldset data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/import" data-xsd2html2xml-type="element" data-xsd2html2xml-name="imp:importedComplexParentElement"><legend>importedComplexParentElement</legend><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/doubleImport" data-xsd2html2xml-type="element" data-xsd2html2xml-name="dblimp:doubleImportedType"><input type="text" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="(TRUE|FALSE)" data-xsd2html2xml-primitive="xs:string" data-xsd2html2xml-filled="true" value="TRUE"/><span>doubleImportedType</span></label></section></fieldset></section></fieldset></section><input type="submit" value="OK"/><link rel="stylesheet" type="text/css" href="style.css"/><script type="text/javascript"> 
-							if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector; if (!Element.prototype.closest) Element.prototype.closest = function (selector) {     var el = this;     while (el) {         if (el.matches(selector)) {             return el;         }         el = el.parentElement;     } };
-							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-filled]").length; i++) { if (document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]")) document.querySelectorAll("[data-xsd2html2xml-filled]")[i].closest("[data-xsd2html2xml-choice]").previousElementSibling.querySelector("input[type='radio']").click(); }
-							
-							for (var i=0; i&lt;document.querySelectorAll("[type='range']").length; i++) {
-								if (document.querySelectorAll("[type='range']")[i].getAttribute("value")) {
-									document.querySelectorAll("[type='range']")[i].value = document.querySelectorAll("[type='range']")[i].getAttribute("value").replace(/\D/g, "");
-								} else if (document.querySelectorAll("[type='range']")[i].getAttribute("min")) {
-									document.querySelectorAll("[type='range']")[i].value = document.querySelectorAll("[type='range']")[i].getAttribute("min");
-								} else if (document.querySelectorAll("[type='range']")[i].getAttribute("max")) {
-									document.querySelectorAll("[type='range']")[i].value = document.querySelectorAll("[type='range']")[i].getAttribute("max");
-								} else {
-									document.querySelectorAll("[type='range']")[i].value = 0; document.querySelectorAll("[type='range']")[i].onchange();
-								}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><body><form action="javascript:void(0);" onsubmit="console.log(htmlToXML(this));&#10;&#9;&#9;&#9;&#9;"><section><fieldset data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/default" data-xsd2html2xml-type="element" data-xsd2html2xml-name="root"><legend>root</legend><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/default" data-xsd2html2xml-type="element" data-xsd2html2xml-name="test1"><span>test1</span><select onchange="this.childNodes.forEach(function(o) { o.removeAttribute(&quot;selected&quot;); }); this.children[this.selectedIndex].setAttribute(&quot;selected&quot;,&quot;selected&quot;);" required="required" data-xsd2html2xml-filled="true"><option value="FALSE">FALSE</option><option selected="selected" value="TRUE">TRUE</option></select></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/default" data-xsd2html2xml-type="element" data-xsd2html2xml-name="test2"><span>test2</span><input type="checkbox" onchange="if (this.checked) { this.setAttribute(&quot;checked&quot;,&quot;checked&quot;) } else { this.removeAttribute(&quot;checked&quot;) }" pattern=".{0,}" data-xsd2html2xml-primitive="xs:boolean" data-xsd2html2xml-filled="true" checked="checked"/></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/default" data-xsd2html2xml-type="element" data-xsd2html2xml-name="defaultType"><span>defaultType</span><input type="checkbox" onchange="if (this.checked) { this.setAttribute(&quot;checked&quot;,&quot;checked&quot;) } else { this.removeAttribute(&quot;checked&quot;) }" pattern=".{0,}" data-xsd2html2xml-primitive="xs:boolean" data-xsd2html2xml-filled="true" checked="checked"/></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/default" data-xsd2html2xml-type="element" data-xsd2html2xml-name="includedType"><span>includedType</span><input type="number" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" min="0" max="1" pattern="[-]?{0,}" data-xsd2html2xml-primitive="xs:int" data-xsd2html2xml-filled="true" value="1"/></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/default" data-xsd2html2xml-type="element" data-xsd2html2xml-name="importedType1"><span>importedType1</span><select onchange="this.childNodes.forEach(function(o) { o.removeAttribute(&quot;selected&quot;); }); this.children[this.selectedIndex].setAttribute(&quot;selected&quot;,&quot;selected&quot;);" required="required" data-xsd2html2xml-filled="true"><option value="FALSE">FALSE</option><option selected="selected" value="TRUE">TRUE</option></select></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/default" data-xsd2html2xml-type="element" data-xsd2html2xml-name="importedType2"><span>importedType2</span><select onchange="this.childNodes.forEach(function(o) { o.removeAttribute(&quot;selected&quot;); }); this.children[this.selectedIndex].setAttribute(&quot;selected&quot;,&quot;selected&quot;);" required="required" data-xsd2html2xml-filled="true"><option value="0">0</option><option selected="selected" value="1">1</option></select></label></section><section><fieldset data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/default" data-xsd2html2xml-type="element" data-xsd2html2xml-name="importedComplexType"><legend>importedComplexType</legend><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/import" data-xsd2html2xml-type="element" data-xsd2html2xml-name="imp:importedComplexElement1"><span>importedComplexElement1</span><input type="number" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" min="-128" max="127" pattern="[-]?{0,}" data-xsd2html2xml-primitive="xs:byte" data-xsd2html2xml-filled="true" value="1"/></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/import" data-xsd2html2xml-type="element" data-xsd2html2xml-name="imp:importedComplexElement2"><span>importedComplexElement2</span><select onchange="this.childNodes.forEach(function(o) { o.removeAttribute(&quot;selected&quot;); }); this.children[this.selectedIndex].setAttribute(&quot;selected&quot;,&quot;selected&quot;);" required="required" data-xsd2html2xml-filled="true"><option value="FALSE">FALSE</option><option selected="selected" value="TRUE">TRUE</option></select></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/import" data-xsd2html2xml-type="element" data-xsd2html2xml-name="imp:importedComplexElement3"><span>importedComplexElement3</span><input type="checkbox" onchange="if (this.checked) { this.setAttribute(&quot;checked&quot;,&quot;checked&quot;) } else { this.removeAttribute(&quot;checked&quot;) }" pattern=".{0,}" data-xsd2html2xml-primitive="xs:boolean" data-xsd2html2xml-filled="true" checked="checked"/></label></section></fieldset></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/import" data-xsd2html2xml-type="element" data-xsd2html2xml-name="imp:importedElement1"><span>importedElement1</span><input type="checkbox" onchange="if (this.checked) { this.setAttribute(&quot;checked&quot;,&quot;checked&quot;) } else { this.removeAttribute(&quot;checked&quot;) }" pattern=".{0,}" data-xsd2html2xml-primitive="xs:boolean" data-xsd2html2xml-filled="true" checked="checked"/></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/import" data-xsd2html2xml-type="element" data-xsd2html2xml-name="imp:importedElement2"><span>importedElement2</span><input type="number" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value.replace(/\s+/g, &quot; &quot;).trim()); } else { this.removeAttribute(&quot;value&quot;); };" required="required" min="0" max="1" pattern="[-]?{0,}" data-xsd2html2xml-primitive="xs:int" data-xsd2html2xml-filled="true" value="1"/></label></section><section><fieldset data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/import" data-xsd2html2xml-type="element" data-xsd2html2xml-name="imp:importedComplexParentElement"><legend>importedComplexParentElement</legend><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/import" data-xsd2html2xml-type="element" data-xsd2html2xml-name="imp:importedSimpleElement"><span>importedSimpleElement</span><input type="text" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern=".{0,}" data-xsd2html2xml-primitive="xs:string" data-xsd2html2xml-filled="true" value="TRUE"/></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/import" data-xsd2html2xml-type="element" data-xsd2html2xml-name="imp:doubleImportedType"><span>doubleImportedType</span><input type="text" onchange="if (this.value) { this.setAttribute(&quot;value&quot;, this.value); } else { this.removeAttribute(&quot;value&quot;); };" required="required" pattern="(TRUE|FALSE)" data-xsd2html2xml-primitive="xs:string" data-xsd2html2xml-filled="true" value="TRUE"/></label></section><section><label data-xsd2html2xml-namespace="https://github.com/MichielCM/xsd2html2xml/doubleImport" data-xsd2html2xml-type="element" data-xsd2html2xml-name="dblimp:doubleImportedElement"><span>doubleImportedElement</span><input type="checkbox" onchange="if (this.checked) { this.setAttribute(&quot;checked&quot;,&quot;checked&quot;) } else { this.removeAttribute(&quot;checked&quot;) }" pattern=".{0,}" data-xsd2html2xml-primitive="xs:boolean" data-xsd2html2xml-filled="true" checked="checked"/></label></section></fieldset></section></fieldset></section><input type="submit" value="OK"/><link rel="stylesheet" type="text/css" href="style.css"/><script type="text/javascript">
+					/* POLYFILLS */
+					
+					/* add .matches if not natively supported */
+					if (!Element.prototype.matches)
+						Element.prototype.matches = Element.prototype.msMatchesSelector || 
+													Element.prototype.webkitMatchesSelector;
+													
+					/* add .closest if not natively supported */
+					if (!Element.prototype.closest)
+						Element.prototype.closest = function(s) {
+							var el = this;
+							do {
+								if (el.nodeType !== 1) return null;
+								if (el.matches(s)) return el;
+								el = el.parentElement || el.parentNode;
+							} while (el !== null);
+							return null;
+						};
+					
+					/* add .forEach if not natively supported */
+					if (!NodeList.prototype.forEach) {
+						NodeList.prototype.forEach = function(callback){
+							var i = 0;
+							while (i != this.length) {
+								callback.apply(this, [this[i], i, this]);
+								i++;
 							}
+						};
+					}
+					
+					/* VALUE SETTERS */
+					
+					/* specifically set values on ranges */
+					document.querySelectorAll("[type='range']").forEach(function(o) {
+						if (o.getAttribute("value")) {
+							o.value = o.getAttribute("value").replace(/\D/g, "");
+						} else if (o.getAttribute("min")) {
+							o.value = o.getAttribute("min");
+						} else if (o.getAttribute("max")) {
+							o.value = o.getAttribute("max");
+						} else {
+							o.value = 0;
+							o.onchange();
+						}
+					});
+					
+					/* specifically set values on datepickers */
+					document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']").forEach(function(o) {
+						if (o.getAttribute("value")) {
+							o.value = o.getAttribute("value").replace(/-+0?/g, "");
+						}
+					});
+					document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']").forEach(function(o) {
+						if (o.getAttribute("value")) {
+							o.value = o.getAttribute("value").replace(/-+0?/g, "");
+						}
+					});
+					document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']").forEach(function(o) {
+						if (o.getAttribute("value")) {
+							o.value = new Date().getFullYear().toString().concat(o.getAttribute("value").substring(1));
+						}
+					});
+					
+					/* EVENT HANDLERS */
+					
+					var clickAddButton = function(button) {
+						var newNode = button.previousElementSibling.cloneNode(true);
+						
+						newNode.removeAttribute("style");
+						
+						newNode.querySelectorAll("input, select, textarea").forEach(function(o) {
+							if (o.closest("[style]") == null)
+								o.removeAttribute("disabled");
+						});
+						
+						button.parentNode.insertBefore(
+							newNode, button.previousElementSibling
+						);
+						
+						if ((button.parentNode.children.length - 2) == button.getAttribute("data-xsd2html2xml-max"))
+							button.setAttribute("disabled", "disabled");
+					}
+					
+					var clickRemoveButton = function(button) {
+						if ((button.closest("section").children.length - 2) == button.closest("section").lastElementChild.getAttribute("data-xsd2html2xml-min"))
+							button.closest("section").lastElementChild.click();
+						
+						if ((button.closest("section").children.length - 2) == button.closest("section").lastElementChild.getAttribute("data-xsd2html2xml-max"))
+							button.closest("section").lastElementChild.removeAttribute("disabled");
+						
+						button.closest("section").removeChild(
+							button.closest("fieldset, label")
+						);
+					}
+					
+					var clickRadioInput = function(input, name) {
+						document.querySelectorAll("[name=".concat(name).concat("]")).forEach(function(o) {
+							o.removeAttribute("checked");
+							var section = o.parentElement.nextElementSibling;
 							
-							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']").length; i++) {
-								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value")) {
-									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gday']")[i].getAttribute("value").replace(/\D/g, "");
-								}
-							}
-							
-							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']").length; i++) {
-								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value")) {
-									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].value = document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonth']")[i].getAttribute("value").replace(/\D/g, "");
-								}
-							}
-							
-							for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']").length; i++) {
-								if (document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value")) {
-									document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].value = new Date().getFullYear().toString().concat(document.querySelectorAll("[data-xsd2html2xml-primitive='xs:gmonthday']")[i].getAttribute("value").substring(1));
-								}
-							}
-							
-							var htmlToXML = function(root) {
-							    var namespaces = [];
-							    var prefixes = [];
-							    
-							    for (var i=0; i&lt;document.querySelectorAll("[data-xsd2html2xml-namespace]:not([data-xsd2html2xml-namespace=''])").length; i++) {
-							    	if (namespaces.indexOf(
-							    		document.querySelectorAll("[data-xsd2html2xml-namespace]:not([data-xsd2html2xml-namespace=''])")[i].getAttribute("data-xsd2html2xml-namespace")
-							    	) == -1) {
-								    	namespaces.push(
-								    		document.querySelectorAll("[data-xsd2html2xml-namespace]:not([data-xsd2html2xml-namespace=''])")[i].getAttribute("data-xsd2html2xml-namespace")
-								    	);
-								    	
-								    	prefixes.push(
-								    		document.querySelectorAll("[data-xsd2html2xml-namespace]:not([data-xsd2html2xml-namespace=''])")[i].getAttribute("data-xsd2html2xml-name").substring(
-							    				0, document.querySelectorAll("[data-xsd2html2xml-namespace]:not([data-xsd2html2xml-namespace=''])")[i].getAttribute("data-xsd2html2xml-name").indexOf(":")
-							    			)
-							    		);
-							    	}
-							    }
-							    
-							    var namespaceString = "";
-							    
-							    for (var i=0; i&lt;namespaces.length; i++) {
-							    	namespaceString = namespaceString.concat(
-							    		"xmlns".concat(
-							    			(prefixes[i] == "" ? "=" : ":".concat(prefixes[i].concat("=")))
-							    		).concat(
-							    			"\"".concat(namespaces[i]).concat("\" ")
-							    		)
-							    	)
-							    }
-							    
-							    return "&lt;?xml version=\"1.0\"?&gt;".concat(getXML(root, false, namespaceString.trim()));
+							section.querySelectorAll("input, select, textarea").forEach(function(p) {
+								if (input.parentElement.nextElementSibling.contains(p)) {
+									if (p.closest("[data-xsd2html2xml-choice]") === section) {
+										if (p.closest("*[style]") === null)
+											p.removeAttribute("disabled");
+										else
+											p.setAttribute("disabled", "disabled");
+									}
+								} else
+									p.setAttribute("disabled", "disabled");
+							});
+						});
+						input.setAttribute("checked","checked");
+					}
+					
+					var pickFile = function(input, file, type) {
+						var resetFilePicker = function(input) {
+							input.removeAttribute("value");
+							input.removeAttribute("type");
+							input.setAttribute("type", "file");
+						}
+						
+						var fileReader = new FileReader();
+						
+						fileReader.onloadend = function() {
+							if (fileReader.error) {
+								alert(fileReader.error);
+								resetFilePicker(input);
+							} else {
+								input.setAttribute("value",
+									(type === "xs:base64binary")
+									? fileReader.result.substring(fileReader.result.indexOf(",") + 1)
+									//convert base64 to base16 (hexBinary)
+									: atob(fileReader.result.substring(fileReader.result.indexOf(",") + 1))
+								    	.split('')
+								    	.map(function (aChar) {
+								    		return ('0' + aChar.charCodeAt(0).toString(16)).slice(-2);
+								    	})
+										.join('')
+										.toUpperCase()
+								);
 							};
-							var getXML = function(parent, attributesOnly, namespaceString) {
-							    var xml = "";
-							    for (var i = 0; i &lt; parent.children.length; i++) {
-							        if (!parent.children[i].getAttribute("style")) {
-							            switch (parent.children[i].getAttribute("data-xsd2html2xml-type")) {
-							                case "element":
-							                    if (!attributesOnly) xml = xml.concat("&lt;").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat(getXML(parent.children[i], true)).concat("&gt;").concat(function() {
-							                        if (parent.children[i].nodeName.toLowerCase() === "label") {
-							                            return getContent(parent.children[i]);
-							                        } else return getXML(parent.children[i])
-							                    }()).concat("&lt;/").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat("&gt;");
-							                    break;
-							                case "attribute":
-							                    if (attributesOnly)
-													if (getContent(parent.children[i]))
-														xml = xml.concat(" ").concat(parent.children[i].getAttribute("data-xsd2html2xml-name")).concat("=\"").concat(getContent(parent.children[i])).concat("\"");
-							                    break;
-							                case "cdata":
-							                    if (!attributesOnly) xml = xml.concat(getContent(parent.children[i]));
-							                    break;
-							                default:
-							                    if (!attributesOnly)
-							                        if (!parent.children[i].getAttribute("data-xsd2html2xml-choice") || (parent.children[i].getAttribute("data-xsd2html2xml-choice") &amp;&amp; parent.children[i].previousElementSibling.getElementsByTagName("input")[0].checked)) xml = xml.concat(getXML(parent.children[i]));
-							                    break;
-							            }
-							        }
-							    }
-							    
-							    if (namespaceString) {
-							    	xml = xml.substring(0, xml.indexOf("&gt;")).concat(" ").concat(namespaceString).concat(xml.substring(xml.indexOf("&gt;")));
-							    }
-							    
-							    return xml;
-							};
-							var getContent = function(node) {
-							    if (node.getElementsByTagName("input").length &gt; 0) {
-							        switch (node.getElementsByTagName("input")[0].getAttribute("type").toLowerCase()) {
-							            case "checkbox":
-							                return node.getElementsByTagName("input")[0].checked;
-							            case "file":
-							            case "range":
-							            case "date":
-							            case "time":
-							            case "datetime-local":
+						};
+						
+						if(file) {
+							fileReader.readAsDataURL(file);
+						} else {
+							resetFilePicker(input);
+						}
+						
+						if (input.getAttribute("data-xsd2html2xml-required")) input.setAttribute("required", "required");
+					}
+					
+					/* XML GENERATORS */
+					
+					var htmlToXML = function(root) {
+					    var namespaces = [];
+					    var prefixes = [];
+					    
+					    document.querySelectorAll("[data-xsd2html2xml-namespace]:not([data-xsd2html2xml-namespace=''])").forEach(function(o) {
+					    	if (namespaces.indexOf(
+					    		o.getAttribute("data-xsd2html2xml-namespace")
+					    	) == -1) {
+						    	namespaces.push(
+						    		o.getAttribute("data-xsd2html2xml-namespace")
+						    	);
+						    	
+						    	prefixes.push(
+						    		o.getAttribute("data-xsd2html2xml-name").substring(
+					    				0, o.getAttribute("data-xsd2html2xml-name").indexOf(":")
+					    			)
+					    		);
+					    	}
+					    });
+					    
+					    var namespaceString = "";
+					    
+					    namespaces.forEach(function(o,i) {
+					    	namespaceString = namespaceString.concat(
+					    		"xmlns".concat(
+					    			(prefixes[i] == "" ? "=" : ":".concat(prefixes[i].concat("=")))
+					    		).concat(
+					    			"\"".concat(namespaces[i]).concat("\" ")
+					    		)
+					    	)
+					    });
+					    
+					    return String.fromCharCode(60).concat("?xml version=\"1.0\"?").concat(String.fromCharCode(62)).concat(getXML(root, false, namespaceString.trim()));
+					};
+					
+					var getXML = function(parent, attributesOnly, namespaceString) {
+					    var xml = "";
+					    var children = [].slice.call(parent.children);
+					    children.forEach(function(o) {
+					        if (!o.getAttribute("style")) {
+					            switch (o.getAttribute("data-xsd2html2xml-type")) {
+					                case "element":
+					                    if (!attributesOnly) xml = xml.concat(String.fromCharCode(60)).concat(o.getAttribute("data-xsd2html2xml-name")).concat(getXML(o, true)).concat(String.fromCharCode(62)).concat(function() {
+					                        if (o.nodeName.toLowerCase() === "label") {
+					                            return getContent(o);
+					                        } else return getXML(o)
+					                    }()).concat(String.fromCharCode(60)).concat("/").concat(o.getAttribute("data-xsd2html2xml-name")).concat(String.fromCharCode(62));
+					                    break;
+					                case "attribute":
+					                	if (attributesOnly)
+											if (getContent(o)
+												|| (o.getElementsByTagName("input").length > 0
+													? o.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase() === "xs:boolean"
+													: false
+												))
+												xml = xml.concat(" ").concat(o.getAttribute("data-xsd2html2xml-name")).concat("=\"").concat(getContent(o)).concat("\"");
+					                    break;
+					                case "cdata":
+					                    if (!attributesOnly) xml = xml.concat(getContent(o));
+					                    break;
+					                default:
+					                    if (!attributesOnly) {
+					                    	if (!o.getAttribute("data-xsd2html2xml-choice"))
+					                    		xml = xml.concat(getXML(o));
+					                    		
+					                    	if (o.getAttribute("data-xsd2html2xml-choice"))
+					                    		if (o.previousElementSibling.getElementsByTagName("input")[0].checked)
+					                    			xml = xml.concat(getXML(o));
+					                    }
+					                    break;
+					            }
+					        }
+					    });
+					    
+					    if (namespaceString) {
+					    	xml = xml.substring(0, xml.indexOf(String.fromCharCode(62))).concat(" ").concat(namespaceString).concat(xml.substring(xml.indexOf(String.fromCharCode(62))));
+					    }
+					    
+					    return xml;
+					};
+					
+					var getContent = function(node) {
+					    if (node.getElementsByTagName("input").length != 0) {
+					        switch (node.getElementsByTagName("input")[0].getAttribute("type").toLowerCase()) {
+					            case "checkbox":
+					                return node.getElementsByTagName("input")[0].checked;
+					            case "file":
+					            case "range":
+					            case "date":
+					            case "time":
+					            case "datetime-local":
+					            	return node.getElementsByTagName("input")[0].getAttribute("value");
+					            default:
+					            	switch (node.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase()) {
+							            case "xs:gday":
+							            case "xs:gmonth":
+							            case "xs:gmonthday":
+							            case "xs:gyear":
+							            case "xs:gyearmonth":
 							            	return node.getElementsByTagName("input")[0].getAttribute("value");
 							            default:
-							            	switch (node.getElementsByTagName("input")[0].getAttribute("data-xsd2html2xml-primitive").toLowerCase()) {
-									            case "xs:gday":
-									            case "xs:gmonth":
-									            case "xs:gmonthday":
-									            case "xs:gyear":
-									            case "xs:gyearmonth":
-									            	return node.getElementsByTagName("input")[0].getAttribute("value");
-									            default:
-									            	return node.getElementsByTagName("input")[0].value;
-							            	}
-							        }
-							    } else if (node.getElementsByTagName("select").length &gt; 0) {
-							        return node.getElementsByTagName("select")[0].value;
-							    } else if (node.getElementsByTagName("textarea").length &gt; 0) {
-							    	return node.getElementsByTagName("textarea")[0].value;
-							    }
-							}
-						</script></form></body></html>
+							            	return node.getElementsByTagName("input")[0].value;
+					            	}
+					        }
+					    } else if (node.getElementsByTagName("select").length != 0) {
+					        return node.getElementsByTagName("select")[0].value;
+					    } else if (node.getElementsByTagName("textarea").length != 0) {
+					    	return node.getElementsByTagName("textarea")[0].value;
+					    }
+					}
+					
+					/* INITIAL CALLS */
+					
+					document.querySelectorAll("[data-xsd2html2xml-filled='true']").forEach(function(o) {
+						if (o.closest("[data-xsd2html2xml-choice]"))
+							o.closest("[data-xsd2html2xml-choice]").previousElementSibling.querySelector("input[type='radio']").click();
+					});
+					</script></form></body></html>
