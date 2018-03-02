@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:dyn="http://exslt.org/dynamic">
 	<!-- MIT License
-
+	
 	Copyright (c) 2017 Michiel Meulendijk
 	
 	Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -418,6 +418,8 @@
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
+		<xsl:param name="min-occurs" />
+		<xsl:param name="max-occurs" />
 		
 		<xsl:variable name="type">
 			<xsl:value-of select="@type"/>
@@ -442,6 +444,8 @@
 					<xsl:with-param name="choice" select="$choice"/>
 					<xsl:with-param name="disabled" select="$disabled" />
 					<xsl:with-param name="tree" select="$tree" />
+					<xsl:with-param name="min-occurs" select="$min-occurs" />
+					<xsl:with-param name="max-occurs" select="$max-occurs" />
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:when test="exsl:node-set($namespace-documents)//xs:complexType[@name=$type-suffix]">
@@ -452,6 +456,8 @@
 					<xsl:with-param name="choice" select="$choice"/>
 					<xsl:with-param name="disabled" select="$disabled" />
 					<xsl:with-param name="tree" select="$tree" />
+					<xsl:with-param name="min-occurs" select="$min-occurs" />
+					<xsl:with-param name="max-occurs" select="$max-occurs" />
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:when test="exsl:node-set($namespace-documents)//xs:simpleType[@name=$type-suffix]">
@@ -461,6 +467,8 @@
 					<xsl:with-param name="choice" select="$choice"/>
 					<xsl:with-param name="disabled" select="$disabled" />
 					<xsl:with-param name="tree" select="$tree" />
+					<xsl:with-param name="min-occurs" select="$min-occurs" />
+					<xsl:with-param name="max-occurs" select="$max-occurs" />
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:when test="substring-before($type, ':') = 'xs'">
@@ -470,6 +478,8 @@
 					<xsl:with-param name="choice" select="$choice"/>
 					<xsl:with-param name="disabled" select="$disabled" />
 					<xsl:with-param name="tree" select="$tree" />
+					<xsl:with-param name="min-occurs" select="$min-occurs" />
+					<xsl:with-param name="max-occurs" select="$max-occurs" />
 				</xsl:call-template>
 			</xsl:when>
 		</xsl:choose>
@@ -482,6 +492,8 @@
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
+		<xsl:param name="min-occurs" />
+		<xsl:param name="max-occurs" />
 		
 		<xsl:call-template name="handle-complex-elements">
 			<xsl:with-param name="root-namespaces" select="$root-namespaces" />
@@ -490,6 +502,8 @@
 			<xsl:with-param name="choice" select="$choice"/>
 			<xsl:with-param name="disabled" select="$disabled" />
 			<xsl:with-param name="tree" select="$tree" />
+			<xsl:with-param name="min-occurs" select="$min-occurs" />
+			<xsl:with-param name="max-occurs" select="$max-occurs" />
 		</xsl:call-template>
 	</xsl:template>
 	
@@ -531,6 +545,8 @@
 			<xsl:with-param name="choice" select="$choice"/>
 			<xsl:with-param name="disabled" select="$disabled" />
 			<xsl:with-param name="tree" select="$tree" />
+			<xsl:with-param name="min-occurs" select="@minOccurs" />
+			<xsl:with-param name="max-occurs" select="@maxOccurs" />
 		</xsl:apply-templates>
 	</xsl:template>
 	
@@ -553,6 +569,8 @@
 			<xsl:with-param name="choice" select="$choice"/>
 			<xsl:with-param name="disabled" select="$disabled" />
 			<xsl:with-param name="tree" select="$tree" />
+			<xsl:with-param name="min-occurs" select="@minOccurs" />
+			<xsl:with-param name="max-occurs" select="@maxOccurs" />
 		</xsl:call-template>
 	</xsl:template>
 	
@@ -595,6 +613,8 @@
 			</xsl:with-param>
 			<xsl:with-param name="disabled" select="$disabled" />
 			<xsl:with-param name="tree" select="$tree" />
+			<xsl:with-param name="min-occurs" select="@minOccurs" />
+			<xsl:with-param name="max-occurs" select="@maxOccurs" />
 		</xsl:apply-templates>
 	</xsl:template>
 	
@@ -608,6 +628,30 @@
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
+		<xsl:param name="min-occurs" />
+		<xsl:param name="max-occurs" />
+		
+		<xsl:variable name="minoccurs">
+			<xsl:choose>
+				<xsl:when test="not($min-occurs)">
+					<xsl:value-of select="@minOccurs" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$min-occurs" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<xsl:variable name="maxoccurs">
+			<xsl:choose>
+				<xsl:when test="not($max-occurs)">
+					<xsl:value-of select="@maxOccurs" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$max-occurs" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		
 		<!-- add radio button if $choice is specified -->
 		<xsl:if test="not($choice = '')">
@@ -683,13 +727,13 @@
 				<xsl:with-param name="count">
 					<xsl:choose>
 						<!-- by default, the minOccurs number of elements is added (or 1); if populated, the number of populated entries is added -->
-						<xsl:when test="@minOccurs">
+						<xsl:when test="not($minoccurs = '')">
 							<xsl:choose>
-								<xsl:when test="count(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'/*[name() = &quot;',$local-namespace-prefix,$id,'&quot;]'))) &gt; @minOccurs">
+								<xsl:when test="count(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'/*[name() = &quot;',$local-namespace-prefix,$id,'&quot;]'))) &gt; $minoccurs">
 									<xsl:value-of select="count(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'/*[name() = &quot;',$local-namespace-prefix,$id,'&quot;]')))" />
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="@minOccurs" />
+									<xsl:value-of select="$minoccurs" />
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
@@ -699,10 +743,12 @@
 				<xsl:with-param name="index">1</xsl:with-param>
 				<xsl:with-param name="disabled" select="$disabled" />
 				<xsl:with-param name="tree" select="concat($tree,'/*[name() = &quot;',$local-namespace-prefix,$id,'&quot;]')" />
+				<xsl:with-param name="min-occurs" select="$minoccurs" />
+				<xsl:with-param name="max-occurs" select="$maxoccurs" />
 			</xsl:call-template>
 			
 			<!-- add another element to be used for dynamically inserted elements -->
-			<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs) and not(@minOccurs = '1' and not(@maxOccurs)) and not(@maxOccurs = '1' and not(@minOccurs))">
+			<xsl:if test="(not($minoccurs = '') or not($maxoccurs = '')) and not($minoccurs = $maxoccurs) and not($minoccurs = '1' and $maxoccurs = '') and not($maxoccurs = '1' and $minoccurs = '')">
 				<xsl:call-template name="handle-complex-element">
 					<xsl:with-param name="root-namespaces" select="$root-namespaces" />
 					<xsl:with-param name="id" select="$id"/>
@@ -718,6 +764,8 @@
 					<xsl:with-param name="invisible">true</xsl:with-param>
 					<xsl:with-param name="disabled">true</xsl:with-param>
 					<xsl:with-param name="tree" select="concat($tree,'/*[name() = &quot;',$local-namespace-prefix,$id,'&quot;]')" />
+					<xsl:with-param name="min-occurs" select="$minoccurs" />
+					<xsl:with-param name="max-occurs" select="$maxoccurs" />
 				</xsl:call-template>
 				
 				<xsl:variable name="nodes-count">
@@ -730,11 +778,13 @@
 					</xsl:with-param>
 					<xsl:with-param name="disabled">
 						<xsl:choose>
-							<xsl:when test="@maxOccurs and $nodes-count = @maxOccurs">true</xsl:when>
-							<xsl:when test="not(@maxOccurs) and $nodes-count = 1">true</xsl:when>
+							<xsl:when test="not($maxoccurs = '') and $nodes-count = $maxoccurs">true</xsl:when>
+							<xsl:when test="$maxoccurs = '' and $nodes-count = 1">true</xsl:when>
 							<xsl:otherwise>false</xsl:otherwise>
 						</xsl:choose>
 					</xsl:with-param>
+					<xsl:with-param name="min-occurs" select="$minoccurs" />
+					<xsl:with-param name="max-occurs" select="$maxoccurs" />
 				</xsl:call-template>
 			</xsl:if>
 		</xsl:element>
@@ -754,6 +804,8 @@
 		<xsl:param name="invisible">false</xsl:param>
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
+		<xsl:param name="min-occurs" />
+		<xsl:param name="max-occurs" />
 		
 		<xsl:if test="$count > 0">
 			<xsl:variable name="type">
@@ -783,7 +835,10 @@
 				
 				<xsl:element name="legend">
 					<xsl:value-of select="$description" />
-					<xsl:call-template name="add-remove-button" />
+					<xsl:call-template name="add-remove-button">
+						<xsl:with-param name="min-occurs" select="$min-occurs" />
+						<xsl:with-param name="max-occurs" select="$max-occurs" />
+					</xsl:call-template>
 				</xsl:element>
 				
 				<xsl:variable name="namespace-documents">
@@ -875,6 +930,8 @@
 				<xsl:with-param name="index" select="$index + 1"/>
 				<xsl:with-param name="disabled" select="$disabled" />
 				<xsl:with-param name="tree" select="$tree"/>
+				<xsl:with-param name="min-occurs" select="$min-occurs" />
+				<xsl:with-param name="max-occurs" select="$max-occurs" />
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
@@ -939,6 +996,30 @@
 		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
+		<xsl:param name="min-occurs" />
+		<xsl:param name="max-occurs" />
+		
+		<xsl:variable name="minoccurs">
+			<xsl:choose>
+				<xsl:when test="not($min-occurs)">
+					<xsl:value-of select="@minOccurs" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$min-occurs" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<xsl:variable name="maxoccurs">
+			<xsl:choose>
+				<xsl:when test="not($max-occurs)">
+					<xsl:value-of select="@maxOccurs" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$max-occurs" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		
 		<xsl:if test="not($choice = '')">
 			<xsl:call-template name="add-choice-button">
@@ -1013,13 +1094,13 @@
 				<xsl:with-param name="count">
 					<xsl:choose>
 						<!-- by default, the minOccurs number of elements is added (or 1); if populated, the number of populated entries is added -->
-						<xsl:when test="@minOccurs">
+						<xsl:when test="not($minoccurs = '')">
 							<xsl:choose>
-								<xsl:when test="count(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'/*[name() = &quot;',$local-namespace-prefix,@name,'&quot;]'))) &gt; @minOccurs">
+								<xsl:when test="count(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'/*[name() = &quot;',$local-namespace-prefix,@name,'&quot;]'))) &gt; $minoccurs">
 									<xsl:value-of select="count(dyn:evaluate(concat('exsl:node-set($xml-doc)',$tree,'/*[name() = &quot;',$local-namespace-prefix,@name,'&quot;]')))" />
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="@minOccurs" />
+									<xsl:value-of select="$minoccurs" />
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
@@ -1029,10 +1110,12 @@
 				<xsl:with-param name="index">1</xsl:with-param>
 				<xsl:with-param name="disabled" select="$disabled" />
 				<xsl:with-param name="tree" select="concat($tree,'/*[name() = &quot;',$local-namespace-prefix,@name,'&quot;]')" />
+				<xsl:with-param name="min-occurs" select="$minoccurs" />
+				<xsl:with-param name="max-occurs" select="$maxoccurs" />
 			</xsl:call-template>
 			
 			<!-- add another element to be used for dynamically inserted elements -->
-			<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs) and not(@minOccurs = '1' and not(@maxOccurs)) and not(@maxOccurs = '1' and not(@minOccurs))">
+			<xsl:if test="(not($minoccurs = '') or not($maxoccurs = '')) and not($minoccurs = $maxoccurs) and not($minoccurs = '1' and $maxoccurs = '') and not($maxoccurs = '1' and $minoccurs = '')">
 				<xsl:call-template name="handle-simple-element">
 					<xsl:with-param name="root-namespaces" select="$root-namespaces" />
 					<xsl:with-param name="id" select="$id"/>
@@ -1048,6 +1131,8 @@
 					<xsl:with-param name="invisible">true</xsl:with-param>
 					<xsl:with-param name="disabled">true</xsl:with-param>
 					<xsl:with-param name="tree" select="concat($tree,'/*[name() = &quot;',$local-namespace-prefix,@name,'&quot;]')" />
+					<xsl:with-param name="min-occurs" select="$minoccurs" />
+					<xsl:with-param name="max-occurs" select="$maxoccurs" />
 				</xsl:call-template>
 				
 				<xsl:variable name="nodes-count">
@@ -1060,11 +1145,13 @@
 					</xsl:with-param>
 					<xsl:with-param name="disabled">
 						<xsl:choose>
-							<xsl:when test="@maxOccurs and $nodes-count = @maxOccurs">true</xsl:when>
-							<xsl:when test="not(@maxOccurs) and $nodes-count = 1">true</xsl:when>
+							<xsl:when test="$maxoccurs and $nodes-count = $maxoccurs">true</xsl:when>
+							<xsl:when test="$maxoccurs = '' and $nodes-count = 1">true</xsl:when>
 							<xsl:otherwise>false</xsl:otherwise>
 						</xsl:choose>
 					</xsl:with-param>
+					<xsl:with-param name="min-occurs" select="$minoccurs" />
+					<xsl:with-param name="max-occurs" select="$maxoccurs" />
 				</xsl:call-template>
 			</xsl:if>
 		</xsl:element>
@@ -1150,6 +1237,8 @@
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		<xsl:param name="html-type" select="local-name()"/> <!-- contains the element name, or 'cdata' in the case of simple content -->
 		<xsl:param name="tree" /> <!-- contains an XPath query relative to the current node, to be used with 'xml-doc' -->
+		<xsl:param name="min-occurs" select="@minOccurs" />
+		<xsl:param name="max-occurs" select="@maxOccurs" />
 		
 		<xsl:if test="$count > 0">
 			<xsl:variable name="type"> <!-- holds the primive type (xs:*) with which the element type will be determined -->
@@ -1200,7 +1289,10 @@
 							<xsl:text>)</xsl:text>
 						</xsl:if>
 						<xsl:if test="not($static = 'true')"> <!-- non-static elements with variable occurrences can be removed -->
-							<xsl:call-template name="add-remove-button" />
+							<xsl:call-template name="add-remove-button">
+								<xsl:with-param name="min-occurs" select="$min-occurs" />
+								<xsl:with-param name="max-occurs" select="$max-occurs" />
+							</xsl:call-template>
 						</xsl:if>
 					</xsl:element>
 				</xsl:if>
@@ -1533,7 +1625,10 @@
 							<xsl:text>)</xsl:text>
 						</xsl:if>
 						<xsl:if test="not($static = 'true')"> <!-- non-static elements with variable occurrences can be removed -->
-							<xsl:call-template name="add-remove-button" />
+							<xsl:call-template name="add-remove-button">
+								<xsl:with-param name="min-occurs" select="$min-occurs" />
+								<xsl:with-param name="max-occurs" select="$max-occurs" />
+							</xsl:call-template>
 						</xsl:if>
 					</xsl:element>
 				</xsl:if>
@@ -1552,6 +1647,8 @@
 				<xsl:with-param name="index" select="$index + 1" />
 				<xsl:with-param name="disabled" select="$disabled" />
 				<xsl:with-param name="tree" select="$tree" />
+				<xsl:with-param name="min-occurs" select="$min-occurs" />
+				<xsl:with-param name="max-occurs" select="$max-occurs" />
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
@@ -1996,7 +2093,10 @@
 	
 	<!-- adds a remove button for dynamic elements -->
 	<xsl:template name="add-remove-button">
-		<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs) and not(@minOccurs = '1' and not(@maxOccurs)) and not(@maxOccurs = '1' and not(@minOccurs))">
+		<xsl:param name="min-occurs" />
+		<xsl:param name="max-occurs" />
+		
+		<xsl:if test="(not($min-occurs = '') or not($max-occurs = '')) and not($min-occurs = $max-occurs) and not($min-occurs = '1' and $max-occurs = '') and not($max-occurs = '1' and $min-occurs = '')">
 			<xsl:element name="button">
 				<xsl:attribute name="type">button</xsl:attribute>
 				<xsl:attribute name="class">remove</xsl:attribute>
@@ -2010,6 +2110,8 @@
 	<xsl:template name="add-add-button">
 		<xsl:param name="description" />
 		<xsl:param name="disabled" /> <!-- indicates if the button should be disabled by default; used when the max number of maxOccurs has been reached in xml-doc -->
+		<xsl:param name="min-occurs" />
+		<xsl:param name="max-occurs" />
 		
 		<!--<xsl:if test="(@minOccurs or @maxOccurs) and not(@minOccurs = @maxOccurs) and not(@minOccurs = '1' and not(@maxOccurs)) and not(@maxOccurs = '1' and not(@minOccurs))">-->
 			<xsl:element name="button">
@@ -2020,13 +2122,13 @@
 				</xsl:if>
 				<xsl:attribute name="data-xsd2html2xml-min">
 					<xsl:choose>
-						<xsl:when test="@minOccurs"><xsl:value-of select="@minOccurs" /></xsl:when>
+						<xsl:when test="not($min-occurs = '')"><xsl:value-of select="$min-occurs" /></xsl:when>
 						<xsl:otherwise>1</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
 				<xsl:attribute name="data-xsd2html2xml-max">
 					<xsl:choose>
-						<xsl:when test="@maxOccurs"><xsl:value-of select="@maxOccurs" /></xsl:when>
+						<xsl:when test="not($max-occurs = '')"><xsl:value-of select="$max-occurs" /></xsl:when>
 						<xsl:otherwise>1</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
