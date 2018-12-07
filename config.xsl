@@ -10,7 +10,7 @@
 	<!-- INFO: information messages (through template 'inform') -->
 	<!-- STACK: stack trace (through template 'log') -->
 	<!-- ERROR: error messages (through template 'throw') -->
-	<xsl:param name="config-debug">error</xsl:param>
+	<xsl:param name="config-debug">info stack error</xsl:param>
 	
 	<!-- if an XSD supports multiple root elements, specify the position of the one that should be used to generate the form from here -->
 	<!-- defaults to 1 -->
