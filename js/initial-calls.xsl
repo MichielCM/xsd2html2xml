@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<xsl:stylesheet version="3.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	
+	<xsl:template name="add-initial-calls">
+		<xsl:element name="script">
+			<xsl:attribute name="type">text/javascript</xsl:attribute>
+			<xsl:text disable-output-escaping="yes">
+				document.addEventListener("DOMContentLoaded",
+					function() {
+						/* INITIAL CALLS */
+						
+						addHiddenFields();
+						xmlToHTML(document);
+						setValues();
+						ensureMinimum();
+						
+						document.querySelectorAll("[data-xsd2html2xml-filled='true']").forEach(function(o) {
+							if (o.closest("[data-xsd2html2xml-choice]"))
+								o.closest("[data-xsd2html2xml-choice]").previousElementSibling.querySelector("input[type='radio']").click();
+						});
+					}
+				);
+			</xsl:text>
+		</xsl:element>	
+	</xsl:template>
+	
+</xsl:stylesheet>
