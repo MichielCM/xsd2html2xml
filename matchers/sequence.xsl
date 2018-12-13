@@ -19,7 +19,7 @@
 			<xsl:with-param name="reference">xs:sequence</xsl:with-param>
 		</xsl:call-template>
 		
-		<xsl:apply-templates select="xs:element|xs:attribute|xs:group|xs:choice|xs:sequence">
+		<xsl:apply-templates select="xs:element|xs:group|xs:choice|xs:sequence">
 			<xsl:with-param name="root-document" select="$root-document" />
 			<xsl:with-param name="root-path" select="$root-path" />
 			<xsl:with-param name="root-namespaces" select="$root-namespaces" />
