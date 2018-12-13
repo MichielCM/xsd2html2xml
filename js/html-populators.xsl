@@ -33,12 +33,18 @@
 						if (o.hasAttribute("data-xsd2html2xml-min")) {
 							//if no minimum, remove element
 							if (o.getAttribute("data-xsd2html2xml-min") === "0"
+								//check for input elements existing to handle empty elements
+								&amp;&amp; o.previousElementSibling.previousElementSibling.querySelector("input, textarea, select")
+								//check if element has been populated with data from an xml document
 								&amp;&amp; !o.previousElementSibling.previousElementSibling.querySelector("input, textarea, select").hasAttribute("data-xsd2html2xml-filled")) {
 								clickRemoveButton(
 									o.parentElement.children[0].querySelector("legend &gt; button.remove, span &gt; button.remove")
 								);
 							//if there is only one allowed element that has been filled, disable the button
 							} else if (o.getAttribute("data-xsd2html2xml-max") === "1"
+								//check for input elements existing to handle empty elements
+								&amp;&amp; o.previousElementSibling.previousElementSibling.querySelector("input, textarea, select")
+								//check if element has been populated with data from an xml document
 								&amp;&amp; o.previousElementSibling.previousElementSibling.querySelector("input, textarea, select").hasAttribute("data-xsd2html2xml-filled")) {
 								o.setAttribute("disabled", "disabled");
 							//else, add up to minimum number of elements
