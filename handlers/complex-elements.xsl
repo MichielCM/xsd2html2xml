@@ -23,116 +23,119 @@
 		<xsl:param name="reference">false</xsl:param> <!-- identifies elements that only refer to other elements (e.g. xs:group) -->
 		<xsl:param name="xpath" /> <!-- contains an XPath query relative to the current node, to be used with xml document -->
 		
-		<xsl:call-template name="log">
-			<xsl:with-param name="reference">handle-complex-elements</xsl:with-param>
-		</xsl:call-template>
-		
-		<!-- add radio button if $choice is specified -->
-		<xsl:if test="not($choice = '')">
-			<xsl:call-template name="add-choice-button">
-				<!-- $choice contains a unique id and is used for the options name -->
-				<xsl:with-param name="name" select="$choice" />
-				<xsl:with-param name="description">
-					<xsl:call-template name="get-description" />
-				</xsl:with-param>
-				<xsl:with-param name="disabled" select="$disabled" />
+		<!-- ensure any declarations within annotation elements are ignored -->
+		<xsl:if test="count(ancestor::xs:annotation) = 0">
+			<xsl:call-template name="log">
+				<xsl:with-param name="reference">handle-complex-elements</xsl:with-param>
 			</xsl:call-template>
-		</xsl:if>
-		
-		<!-- determine type namespace prefix -->
-		<xsl:variable name="type-namespace-prefix">
-			<xsl:choose>
-				<!-- reset it if the current element has a non-default prefix -->
-				<xsl:when test="contains(@type, ':') and not(starts-with(@type, $root-namespaces//root-namespace[@namespace = 'http://www.w3.org/2001/XMLSchema']/@prefix))">
-					<xsl:call-template name="get-prefix">
-						<xsl:with-param name="root-namespaces" select="$root-namespaces" />
-						<xsl:with-param name="string" select="@type" />
-						<xsl:with-param name="include-colon">true</xsl:with-param>
-					</xsl:call-template>
-				</xsl:when>
-				<!-- otherwise, use the inherited prefix -->
-				<xsl:otherwise>
-					<xsl:value-of select="$namespace-prefix" />
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		
-		<!-- determine locally declared namespace -->
-		<xsl:variable name="local-namespace">
-			<xsl:call-template name="get-namespace">
-				<xsl:with-param name="namespace-prefix">
-					<xsl:call-template name="get-prefix">
-						<xsl:with-param name="root-namespaces" select="$root-namespaces" />
-						<xsl:with-param name="string" select="@name" />
-						<xsl:with-param name="include-colon">true</xsl:with-param>
-					</xsl:call-template>
-				</xsl:with-param>
-				<xsl:with-param name="default-targetnamespace">true</xsl:with-param>
-			</xsl:call-template>
-		</xsl:variable>
-		
-		<!-- extract locally declared namespace prefix from schema declarations -->
-		<xsl:variable name="local-namespace-prefix">
-			<xsl:choose>
-				<xsl:when test="$root-namespaces//root-namespace[@namespace=$local-namespace]">
-					<xsl:value-of select="$root-namespaces//root-namespace[@namespace=$local-namespace]/@prefix" />
-				</xsl:when>
-				<!-- <xsl:otherwise>
-					<xsl:value-of select="generate-id()" />
-					<xsl:text>:</xsl:text>
-				</xsl:otherwise> -->
-			</xsl:choose>
-		</xsl:variable>
-		
-		<!-- wrap complex elements in section elements -->
-		<xsl:element name="section">
-			<!-- add an attribute to indicate a choice element -->
+			
+			<!-- add radio button if $choice is specified -->
 			<xsl:if test="not($choice = '')">
-				<xsl:attribute name="data-xsd2html2xml-choice">true</xsl:attribute>
+				<xsl:call-template name="add-choice-button">
+					<!-- $choice contains a unique id and is used for the options name -->
+					<xsl:with-param name="name" select="$choice" />
+					<xsl:with-param name="description">
+						<xsl:call-template name="get-description" />
+					</xsl:with-param>
+					<xsl:with-param name="disabled" select="$disabled" />
+				</xsl:call-template>
 			</xsl:if>
 			
-			<!-- call handle-complex-element with loaded documents -->
-			<xsl:call-template name="handle-complex-element">
-				<xsl:with-param name="root-document" select="$root-document" />
-				<xsl:with-param name="root-path" select="$root-path" />
-				<xsl:with-param name="root-namespaces" select="$root-namespaces" />
-				
-				<xsl:with-param name="namespace-documents" select="$namespace-documents" />
-				<xsl:with-param name="namespace-prefix" select="$type-namespace-prefix" />
-				<xsl:with-param name="local-namespace" select="$local-namespace" />
-				<xsl:with-param name="local-namespace-prefix" select="$local-namespace-prefix" />
-				
-				<xsl:with-param name="id" select="$id" />
-				<xsl:with-param name="description">
-					<xsl:call-template name="get-description" />
-				</xsl:with-param>
-				<xsl:with-param name="min-occurs" select="$min-occurs" />
-				<xsl:with-param name="max-occurs" select="$max-occurs" />
-				<xsl:with-param name="simple" select="$simple" />
-				<xsl:with-param name="disabled" select="$disabled" />
-				<xsl:with-param name="reference" select="$reference" />
-				<xsl:with-param name="xpath">
-					<xsl:choose>
-						<xsl:when test="$reference = 'true'">
-							<xsl:value-of select="$xpath" />
-						</xsl:when>
-						<xsl:otherwise>
-							<!-- <xsl:value-of select="concat($xpath,'/*[name() = &quot;',$local-namespace-prefix,$id,'&quot;]')" /> -->
-							<xsl:value-of select="concat($xpath,'/',$local-namespace-prefix,$id)" />
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:with-param>
-			</xsl:call-template>
+			<!-- determine type namespace prefix -->
+			<xsl:variable name="type-namespace-prefix">
+				<xsl:choose>
+					<!-- reset it if the current element has a non-default prefix -->
+					<xsl:when test="contains(@type, ':') and not(starts-with(@type, $root-namespaces//root-namespace[@namespace = 'http://www.w3.org/2001/XMLSchema']/@prefix))">
+						<xsl:call-template name="get-prefix">
+							<xsl:with-param name="root-namespaces" select="$root-namespaces" />
+							<xsl:with-param name="string" select="@type" />
+							<xsl:with-param name="include-colon">true</xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<!-- otherwise, use the inherited prefix -->
+					<xsl:otherwise>
+						<xsl:value-of select="$namespace-prefix" />
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
 			
-			<!-- add another element to be used for dynamically inserted elements -->
-			<xsl:call-template name="add-add-button">
-				<xsl:with-param name="description">
-					<xsl:call-template name="get-description" />
-				</xsl:with-param>
-				<xsl:with-param name="min-occurs" select="$min-occurs" />
-				<xsl:with-param name="max-occurs" select="$max-occurs" />
-			</xsl:call-template>
-		</xsl:element>
+			<!-- determine locally declared namespace -->
+			<xsl:variable name="local-namespace">
+				<xsl:call-template name="get-namespace">
+					<xsl:with-param name="namespace-prefix">
+						<xsl:call-template name="get-prefix">
+							<xsl:with-param name="root-namespaces" select="$root-namespaces" />
+							<xsl:with-param name="string" select="@name" />
+							<xsl:with-param name="include-colon">true</xsl:with-param>
+						</xsl:call-template>
+					</xsl:with-param>
+					<xsl:with-param name="default-targetnamespace">true</xsl:with-param>
+				</xsl:call-template>
+			</xsl:variable>
+			
+			<!-- extract locally declared namespace prefix from schema declarations -->
+			<xsl:variable name="local-namespace-prefix">
+				<xsl:choose>
+					<xsl:when test="$root-namespaces//root-namespace[@namespace=$local-namespace]">
+						<xsl:value-of select="$root-namespaces//root-namespace[@namespace=$local-namespace]/@prefix" />
+					</xsl:when>
+					<!-- <xsl:otherwise>
+						<xsl:value-of select="generate-id()" />
+						<xsl:text>:</xsl:text>
+					</xsl:otherwise> -->
+				</xsl:choose>
+			</xsl:variable>
+			
+			<!-- wrap complex elements in section elements -->
+			<xsl:element name="section">
+				<!-- add an attribute to indicate a choice element -->
+				<xsl:if test="not($choice = '')">
+					<xsl:attribute name="data-xsd2html2xml-choice">true</xsl:attribute>
+				</xsl:if>
+				
+				<!-- call handle-complex-element with loaded documents -->
+				<xsl:call-template name="handle-complex-element">
+					<xsl:with-param name="root-document" select="$root-document" />
+					<xsl:with-param name="root-path" select="$root-path" />
+					<xsl:with-param name="root-namespaces" select="$root-namespaces" />
+					
+					<xsl:with-param name="namespace-documents" select="$namespace-documents" />
+					<xsl:with-param name="namespace-prefix" select="$type-namespace-prefix" />
+					<xsl:with-param name="local-namespace" select="$local-namespace" />
+					<xsl:with-param name="local-namespace-prefix" select="$local-namespace-prefix" />
+					
+					<xsl:with-param name="id" select="$id" />
+					<xsl:with-param name="description">
+						<xsl:call-template name="get-description" />
+					</xsl:with-param>
+					<xsl:with-param name="min-occurs" select="$min-occurs" />
+					<xsl:with-param name="max-occurs" select="$max-occurs" />
+					<xsl:with-param name="simple" select="$simple" />
+					<xsl:with-param name="disabled" select="$disabled" />
+					<xsl:with-param name="reference" select="$reference" />
+					<xsl:with-param name="xpath">
+						<xsl:choose>
+							<xsl:when test="$reference = 'true'">
+								<xsl:value-of select="$xpath" />
+							</xsl:when>
+							<xsl:otherwise>
+								<!-- <xsl:value-of select="concat($xpath,'/*[name() = &quot;',$local-namespace-prefix,$id,'&quot;]')" /> -->
+								<xsl:value-of select="concat($xpath,'/',$local-namespace-prefix,$id)" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:with-param>
+				</xsl:call-template>
+				
+				<!-- add another element to be used for dynamically inserted elements -->
+				<xsl:call-template name="add-add-button">
+					<xsl:with-param name="description">
+						<xsl:call-template name="get-description" />
+					</xsl:with-param>
+					<xsl:with-param name="min-occurs" select="$min-occurs" />
+					<xsl:with-param name="max-occurs" select="$max-occurs" />
+				</xsl:call-template>
+			</xsl:element>
+		</xsl:if>
 	</xsl:template>
 	
 	<!-- handle complex element -->
