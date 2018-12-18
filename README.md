@@ -52,6 +52,7 @@
 </ul>
 <h2>Implementation</h2>
 <p>It's very straight-forward: transform your XSD or XML file with xsd2html2xml.xsl. A form is generated that is populated with the data in the (optional) XML file. Be sure to download the <a href="https://github.com/MichielCM/xsd2html2xml/releases/latest">latest release</a>; you need all files included in the ZIP, except for those inside /deprecated and /examples.</p>
+<p>You can pass either an XSD file to xsd2html2xml.xsl, or an XML file which references an XSD file through <em>xsi:schemaLocation</em> or <em>xsi:noNamespaceSchemaLocation</em>. In the latter case the content from the XML document is used to populate the generated form.</p>
 <h3>XSLT Processor Support</h3>
 <p>All XSLT processors listed below are (partially) supported. To load documents on the fly, an XSLT extension with a nodeset function is required. For the processors
 listed below, nodeset-xxx.xsl files are provided. Be sure to include the correct nodeset-xxx.xsl file in xsd2html2xml.xsl depending on your implementation.</p>
@@ -65,8 +66,8 @@ listed below, nodeset-xxx.xsl files are provided. Be sure to include the correct
 	<tr>
 		<td>libxslt (Webkit browsers)</td>
 		<td>nodeset-exslt.xsl</td>
-		<td>Partial: transformations must be started from root XSD file rather than XML file.</td>
-		<td>To populate forms, add the XML file to the meta[name='generator'] HTML element after the form has been generated.</td>
+		<td>Partial: transformations must always be started from root XSD file, even when using an XML document referencing its schema.</td>
+		<td>To populate forms in this scenario, add the XML file to the data-xsd2html2xml-source attribute of the meta[name='generator'] HTML element after the form has been generated.</td>
 	</tr>
 	<tr>
 		<td>MSXML / MSXSL  (IE / Edge)</td>
