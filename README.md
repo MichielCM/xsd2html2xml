@@ -51,7 +51,7 @@
 	<li>Recursivity in named types: if complexType A allows for an element of complexType B, which allows for an element of complexType A, an infinite loop is created.</li>
 </ul>
 <h2>Implementation</h2>
-<p>It's very straight-forward: transform your XSD or XML file with xsd2html2xml.xsl. A form is generated that is populated with the data in the (optional) XML file.</p>
+<p>It's very straight-forward: transform your XSD or XML file with xsd2html2xml.xsl. A form is generated that is populated with the data in the (optional) XML file. Be sure to download the <a href="https://github.com/MichielCM/xsd2html2xml/releases/latest">latest release</a>; you need all files included in the ZIP, except for those inside /deprecated and /examples.</p>
 <h3>XSLT Processor Support</h3>
 <p>All XSLT processors listed below are (partially) supported. To load documents on the fly, an XSLT extension with a nodeset function is required. For the processors
 listed below, nodeset-xxx.xsl files are provided. Be sure to include the correct nodeset-xxx.xsl file in xsd2html2xml.xsl depending on your implementation.</p>
