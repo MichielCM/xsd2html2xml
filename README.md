@@ -15,8 +15,9 @@
 </ul>
 <h2>Versions</h2>
 <h3>Source Code</h3>
+<p>It is recommended to always use the <a href="https://github.com/MichielCM/xsd2html2xml/releases/latest">latest release</a>, as the latest commits may contain experimental or untested features.</p>
 <ul>
-	<li>Version 3: a modular rewrite that is much easier to maintain, debug, and implement;</li>
+	<li><a href="https://github.com/MichielCM/xsd2html2xml/releases/latest">Version 3</a>: a modular rewrite that is much easier to maintain, debug, and implement;</li>
 	<li>Version 2 (deprecated): first version with namespaces support;</li>
 	<li>Version 1 (deprecated): original release.</li>
 </ul>
@@ -47,6 +48,7 @@
 	<li>Namespaces loaded from external documents must have a declared prefix in the original XSD.</li>
 	<li><em>elementFormDefault</em> and <em>form</em> are ignored. All elements are supposed to be in the namespaces indicated by their hierarchical position in the
 	document (i.e. <em>elementFormDefault="qualified"</em> is assumed). <em>attributeFormDefault</em> is supported.</li>
+	<li>Recursivity in named types: if complexType A allows for an element of complexType B, which allows for an element of complexType A, an infinite loop is created.</li>
 </ul>
 <h2>Implementation</h2>
 <p>It's very straight-forward: transform your XSD or XML file with xsd2html2xml.xsl. A form is generated that is populated with the data in the (optional) XML file.</p>
@@ -187,8 +189,10 @@ thread</a> for details.</p>
 <h2>FAQ</h2>
 <ul>
 	<li><strong>Why a version 3.x?</strong>
-		<br />Version 3 does not bring a lot of new features over version 2, but it's a lot more efficient and future-proof. XSLT is not well-suited to creating projects of this scale, and having different files at least provides some sort of separation of concerns. The rudimentary stack trace really helps debugging and maintaining.<br>
-		At this moment, version 3 is more thoroughly tested and more efficient than the previous ones.</li>
+		<br />Version 3 does not bring a lot of new features over version 2, but it's a lot more efficient and future-proof. XSLT is not well-suited to creating projects of this scale, and having different files at least provides some sort of separation of concerns. The rudimentary stack trace really helps debugging and maintaining. Apart from that, there is now just one version to use in any scenario.</li>
+	<li>
+		<strong>How is version 3.x different?</strong>
+		<br />For details, check the release notes for each release. In general (as opposed to version 2.x): included and imported documents are kept in memory whenever possible, and not losded every time they are referenced; form population is done through JavaScript, removing the need for a [dyn:]evaluate XSLT function; support for all common XSLT 1-3 implementations (including browsers); support for XHTML and generating XML through XSLT has been removed.</li>
 	<li>
 		<strong>Are there any known bugs?</strong>
 		<br />Please see the <a href="https://github.com/MichielCM/xsd2html2xml/issues">issue list</a>.
