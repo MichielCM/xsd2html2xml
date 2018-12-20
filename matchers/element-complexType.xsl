@@ -100,6 +100,18 @@
 					<xsl:with-param name="reference">xs:element[xs:complexType/*[not(self::xs:simpleContent)]]-forwardee</xsl:with-param>
 				</xsl:call-template>
 				
+				<!-- add radio button if $choice is specified -->
+				<xsl:if test="not($choice = '') and not($choice = 'true')">
+					<xsl:call-template name="add-choice-button">
+						<!-- $choice contains a unique id and is used for the options name -->
+						<xsl:with-param name="name" select="$choice" />
+						<xsl:with-param name="description">
+							<xsl:value-of select="count(preceding-sibling::*) + 1" />
+						</xsl:with-param>
+						<xsl:with-param name="disabled" select="$disabled" />
+					</xsl:call-template>
+				</xsl:if>
+				
 				<xsl:call-template name="handle-complex-elements">
 					<xsl:with-param name="root-document" select="$root-document" />
 					<xsl:with-param name="root-path" select="$root-path" />
@@ -112,7 +124,9 @@
 					<xsl:with-param name="min-occurs" select="$min-occurs" />
 					<xsl:with-param name="max-occurs" select="$max-occurs" />
 					<xsl:with-param name="simple" select="$simple" />
-					<xsl:with-param name="choice" select="$choice" />
+					<xsl:with-param name="choice">
+						<xsl:if test="not($choice = '')">true</xsl:if>
+					</xsl:with-param>
 					<xsl:with-param name="disabled" select="$disabled" />
 					<xsl:with-param name="xpath" select="$xpath" />
 				</xsl:call-template>

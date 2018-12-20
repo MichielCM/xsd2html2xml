@@ -104,6 +104,18 @@
 					<xsl:with-param name="reference">xs:element[@type]-forwardee</xsl:with-param>
 				</xsl:call-template>
 				
+				<!-- add radio button if $choice is specified -->
+				<xsl:if test="not($choice = '') and not($choice = 'true')">
+					<xsl:call-template name="add-choice-button">
+						<!-- $choice contains a unique id and is used for the options name -->
+						<xsl:with-param name="name" select="$choice" />
+						<xsl:with-param name="description">
+							<xsl:value-of select="count(preceding-sibling::*) + 1" />
+						</xsl:with-param>
+						<xsl:with-param name="disabled" select="$disabled" />
+					</xsl:call-template>
+				</xsl:if>
+				
 				<!-- determine appropriate type and send them to the respective handler -->
 				<xsl:choose>
 					<!-- complexType with simpleContent: treated as simple element -->
@@ -120,7 +132,9 @@
 							<xsl:with-param name="min-occurs" select="$min-occurs" />
 							<xsl:with-param name="max-occurs" select="$max-occurs" />
 							<xsl:with-param name="simple">true</xsl:with-param>
-							<xsl:with-param name="choice" select="$choice"/>
+							<xsl:with-param name="choice">
+								<xsl:if test="not($choice = '')">true</xsl:if>
+							</xsl:with-param>
 							<xsl:with-param name="disabled" select="$disabled" />
 							<xsl:with-param name="xpath" select="$xpath" />
 						</xsl:call-template>
@@ -139,7 +153,9 @@
 							<xsl:with-param name="min-occurs" select="$min-occurs" />
 							<xsl:with-param name="max-occurs" select="$max-occurs" />
 							<xsl:with-param name="simple">false</xsl:with-param>
-							<xsl:with-param name="choice" select="$choice"/>
+							<xsl:with-param name="choice">
+								<xsl:if test="not($choice = '')">true</xsl:if>
+							</xsl:with-param>
 							<xsl:with-param name="disabled" select="$disabled" />
 							<xsl:with-param name="xpath" select="$xpath" />
 						</xsl:call-template>
@@ -157,7 +173,9 @@
 							<xsl:with-param name="id" select="$id" />
 							<xsl:with-param name="min-occurs" select="$min-occurs" />
 							<xsl:with-param name="max-occurs" select="$max-occurs" />
-							<xsl:with-param name="choice" select="$choice"/>
+							<xsl:with-param name="choice">
+								<xsl:if test="not($choice = '')">true</xsl:if>
+							</xsl:with-param>
 							<xsl:with-param name="disabled" select="$disabled" />
 							<xsl:with-param name="xpath" select="$xpath" />
 						</xsl:call-template>
@@ -176,7 +194,9 @@
 							<xsl:with-param name="id" select="$id" />
 							<xsl:with-param name="min-occurs" select="$min-occurs" />
 							<xsl:with-param name="max-occurs" select="$max-occurs" />
-							<xsl:with-param name="choice" select="$choice"/>
+							<xsl:with-param name="choice">
+								<xsl:if test="not($choice = '')">true</xsl:if>
+							</xsl:with-param>
 							<xsl:with-param name="disabled" select="$disabled" />
 							<xsl:with-param name="xpath" select="$xpath" />
 						</xsl:call-template>

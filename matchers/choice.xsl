@@ -12,12 +12,25 @@
 		<xsl:param name="namespace-documents" /> <!-- contains all documents in element namespace -->
 		<xsl:param name="namespace-prefix" /> <!-- contains inherited namespace prefix -->
 		
+		<xsl:param name="choice" /> <!-- handles xs:choice elements and descendants; contains a unique ID for radio buttons of the same group to share -->
 		<xsl:param name="xpath" /> <!-- contains an XPath query relative to the current node, to be used with xml document -->
 		<xsl:param name="disabled">false</xsl:param> <!-- is used to disable elements that are copies for additional occurrences -->
 		
 		<xsl:call-template name="log">
 			<xsl:with-param name="reference">choice</xsl:with-param>
 		</xsl:call-template>
+		
+		<!-- add radio button if $choice is specified -->
+		<xsl:if test="not($choice = '') and not($choice = 'true')">
+			<xsl:call-template name="add-choice-button">
+				<!-- $choice contains a unique id and is used for the options name -->
+				<xsl:with-param name="name" select="$choice" />
+				<xsl:with-param name="description">
+					<xsl:value-of select="count(preceding-sibling::*) + 1" />
+				</xsl:with-param>
+				<xsl:with-param name="disabled" select="$disabled" />
+			</xsl:call-template>
+		</xsl:if>
 		
 		<xsl:apply-templates select="xs:element|xs:group|xs:choice|xs:sequence">
 			<xsl:with-param name="root-document" select="$root-document" />
