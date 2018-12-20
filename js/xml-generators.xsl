@@ -74,9 +74,15 @@
 				                    	if (!o.getAttribute("data-xsd2html2xml-choice"))
 				                    		xml = xml.concat(getXML(o));
 				                    		
-				                    	if (o.getAttribute("data-xsd2html2xml-choice"))
-				                    		if (o.previousElementSibling.getElementsByTagName("input")[0].checked)
+				                    	if (o.getAttribute("data-xsd2html2xml-choice")) {
+				                    		var node = o.previousElementSibling;
+				                    		while (node.hasAttribute("data-xsd2html2xml-choice")) {
+				                    			node = node.previousElementSibling;
+				                    		};
+				                    		
+				                    		if (node.getElementsByTagName("input")[0].checked)
 				                    			xml = xml.concat(getXML(o));
+				                    	};
 				                    }
 				                    break;
 				            }

@@ -40,22 +40,42 @@
 				}
 				
 				var clickRadioInput = function(input, name) {
+					var activeSections = [];
+					var currentSection = input.parentElement.nextElementSibling;
+					
+					while (currentSection &amp;&amp; currentSection.hasAttribute("data-xsd2html2xml-choice")) {
+						activeSections.push(currentSection);
+						currentSection = currentSection.nextElementSibling;
+					};
+					
 					document.querySelectorAll("[name=".concat(name).concat("]")).forEach(function(o) {
 						o.removeAttribute("checked");
+						
 						var section = o.parentElement.nextElementSibling;
 						
-						section.querySelectorAll("input, select, textarea").forEach(function(p) {
-							if (input.parentElement.nextElementSibling.contains(p)) {
-								if (p.closest("[data-xsd2html2xml-choice]") === section) {
-									if (p.closest("*[hidden]") === null)
-										p.removeAttribute("disabled");
-									else
-										p.setAttribute("disabled", "disabled");
-								}
-							} else
-								p.setAttribute("disabled", "disabled");
-						});
+						while (section &amp;&amp; section.hasAttribute("data-xsd2html2xml-choice")) {
+							section.querySelectorAll("input, select, textarea").forEach(function(p) {
+								var contained = false;
+								activeSections.forEach(function(q) {
+									if (q.contains(p)) contained = true;
+								});
+								
+								if (contained) {
+									if (p.closest("[data-xsd2html2xml-choice]") === section) {
+										if (p.closest("*[hidden]") === null)
+											p.removeAttribute("disabled");
+										else
+											p.setAttribute("disabled", "disabled");
+									}
+								} else {
+									p.setAttribute("disabled", "disabled");
+								};
+							});
+							
+							section = section.nextElementSibling;
+						};
 					});
+					
 					input.setAttribute("checked","checked");
 				}
 				

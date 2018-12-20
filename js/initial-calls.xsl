@@ -17,8 +17,17 @@
 						ensureMinimum();
 						
 						document.querySelectorAll("[data-xsd2html2xml-filled='true']").forEach(function(o) {
-							if (o.closest("[data-xsd2html2xml-choice]"))
-								o.closest("[data-xsd2html2xml-choice]").previousElementSibling.querySelector("input[type='radio']").click();
+							if (o.closest("[data-xsd2html2xml-choice]")) {
+								var node = o.closest("[data-xsd2html2xml-choice]").previousElementSibling;
+								while (node) {
+									if (!node.hasAttribute("data-xsd2html2xml-choice")) {
+										node.querySelector("input[type='radio']").click();
+										break;										
+									} else {
+										node = node.previousElementSibling;
+									};
+								};
+							};
 						});
 					}
 				);
