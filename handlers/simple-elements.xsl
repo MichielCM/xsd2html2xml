@@ -27,17 +27,6 @@
 				<xsl:with-param name="reference">handle-simple-elements</xsl:with-param>
 			</xsl:call-template>
 			
-			<!-- add radio button if $choice is specified -->
-			<xsl:if test="not($choice = '')">
-				<xsl:call-template name="add-choice-button">
-					<xsl:with-param name="name" select="$choice" />
-					<xsl:with-param name="description">
-						<xsl:call-template name="get-description" />
-					</xsl:with-param>
-					<xsl:with-param name="disabled" select="$disabled" />
-				</xsl:call-template>
-			</xsl:if>
-			
 			<!-- determine type namespace-prefix -->
 			<xsl:variable name="type-namespace-prefix">
 				<xsl:choose>
@@ -86,7 +75,7 @@
 			<!-- wrap simple element in section element -->
 			<xsl:element name="section">
 				<!-- add an attribute to indicate a choice element -->
-				<xsl:if test="not($choice = '')">
+				<xsl:if test="$choice = 'true'">
 					<xsl:attribute name="data-xsd2html2xml-choice">true</xsl:attribute>
 				</xsl:if>
 				

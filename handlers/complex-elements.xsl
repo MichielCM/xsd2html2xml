@@ -29,18 +29,6 @@
 				<xsl:with-param name="reference">handle-complex-elements</xsl:with-param>
 			</xsl:call-template>
 			
-			<!-- add radio button if $choice is specified -->
-			<xsl:if test="not($choice = '')">
-				<xsl:call-template name="add-choice-button">
-					<!-- $choice contains a unique id and is used for the options name -->
-					<xsl:with-param name="name" select="$choice" />
-					<xsl:with-param name="description">
-						<xsl:call-template name="get-description" />
-					</xsl:with-param>
-					<xsl:with-param name="disabled" select="$disabled" />
-				</xsl:call-template>
-			</xsl:if>
-			
 			<!-- determine type namespace prefix -->
 			<xsl:variable name="type-namespace-prefix">
 				<xsl:choose>
@@ -89,7 +77,7 @@
 			<!-- wrap complex elements in section elements -->
 			<xsl:element name="section">
 				<!-- add an attribute to indicate a choice element -->
-				<xsl:if test="not($choice = '')">
+				<xsl:if test="$choice = 'true'">
 					<xsl:attribute name="data-xsd2html2xml-choice">true</xsl:attribute>
 				</xsl:if>
 				
