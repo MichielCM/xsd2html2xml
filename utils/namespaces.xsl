@@ -33,7 +33,7 @@
 		
 		<xsl:choose>
 			<xsl:when test="$namespace = '' and $default-targetnamespace = 'true'">
-				<xsl:value-of select="//xs:schema/@targetNamespace" />
+				<xsl:value-of select="(//xs:schema)[1]/@targetNamespace" />
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$namespace" />
@@ -64,7 +64,7 @@
 		</xsl:variable>
 		
 		<xsl:element name="documents">
-			<xsl:for-each select="//xs:import[@namespace = $namespace]">
+			<xsl:for-each select="(//xs:schema)[1]//xs:import[@namespace = $namespace]">
 				<xsl:call-template name="inform">
 					<xsl:with-param name="message">
 						<xsl:text>Resolving </xsl:text>
@@ -94,10 +94,10 @@
 						<xsl:value-of select="$namespace" />
 					</xsl:attribute>
 					
-					<xsl:copy-of select="//xs:schema" />
+					<xsl:copy-of select="(//xs:schema)[1]" />
 				</xsl:element>
 				
-				<xsl:for-each select="//xs:include">
+				<xsl:for-each select="(//xs:schema)[1]//xs:include">
 					<xsl:call-template name="inform">
 						<xsl:with-param name="message">
 							<xsl:text>Resolving </xsl:text>
