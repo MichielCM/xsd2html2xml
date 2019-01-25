@@ -70,8 +70,14 @@ listed below, nodeset-xxx.xsl files are provided. Be sure to include the correct
 		<td>To populate forms in this scenario, add the XML file to the data-xsd2html2xml-source attribute of the meta[name='generator'] HTML element after the form has been generated.</td>
 	</tr>
 	<tr>
-		<td>MSXML / MSXSL  (IE / Edge)</td>
+		<td>MSXML / MSXSL  (IE, Edge)</td>
 		<td>nodeset-msxsl.xsl</td>
+		<td>Full</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>XslCompiledTransform (.NET)</td>
+		<td>nodeset-exslt.xsl</td>
 		<td>Full</td>
 		<td></td>
 	</tr>
@@ -193,7 +199,7 @@ thread</a> for details.</p>
 		<br />Version 3 does not bring a lot of new features over version 2, but it's a lot more efficient and future-proof. XSLT is not well-suited to creating projects of this scale, and having different files at least provides some sort of separation of concerns. The rudimentary stack trace really helps debugging and maintaining. Apart from that, there is now just one version to use in any scenario.</li>
 	<li>
 		<strong>How is version 3.x different?</strong>
-		<br />For details, check the release notes for each release. In general (as opposed to version 2.x): included and imported documents are kept in memory whenever possible, and not losded every time they are referenced; form population is done through JavaScript, removing the need for a [dyn:]evaluate XSLT function; support for all common XSLT 1-3 implementations (including browsers); support for XHTML and generating XML through XSLT has been removed.</li>
+		<br />For details, check the release notes for each release. In general (as opposed to version 2.x): included and imported documents are kept in memory whenever possible, and not loaded every time they are referenced; form population is done through JavaScript, removing the need for a [dyn:]evaluate XSLT function; support for all common XSLT 1-3 implementations (including browsers); support for XHTML and generating XML through XSLT has been removed.</li>
 	<li>
 		<strong>Are there any known bugs?</strong>
 		<br />Please see the <a href="https://github.com/MichielCM/xsd2html2xml/issues">issue list</a>.
