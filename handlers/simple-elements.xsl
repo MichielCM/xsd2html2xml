@@ -166,6 +166,11 @@
 				<xsl:value-of select="$xpath" />
 			</xsl:attribute>
 			
+			<!-- add custom appinfo data -->
+			<xsl:for-each select="xs:annotation/xs:appinfo/*">
+				<xsl:call-template name="add-appinfo" />
+			</xsl:for-each>
+			
 			<!-- pattern is used later to determine multiline text fields -->
 			<xsl:variable name="pattern">
 				<xsl:call-template name="attr-value">

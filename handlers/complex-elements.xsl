@@ -203,6 +203,11 @@
 						</xsl:attribute>
 					</xsl:if>
 					
+					<!-- add custom appinfo data -->
+					<xsl:for-each select="xs:annotation/xs:appinfo/*">
+						<xsl:call-template name="add-appinfo" />
+					</xsl:for-each>
+					
 					<!-- use a legend element to contain the description -->
 					<xsl:element name="legend">
 						<xsl:value-of select="$description" />
@@ -231,11 +236,13 @@
 						|xs:complexType/xs:complexContent/xs:restriction/xs:attributeGroup
 						|xs:complexType/xs:simpleContent/xs:restriction/xs:attribute
 						|xs:complexType/xs:simpleContent/xs:restriction/xs:attributeGroup
+						|xs:complexType/xs:simpleContent/xs:restriction/xs:anyAttribute
 						|$namespace-documents//xs:complexType[@name=$type-suffix]/xs:sequence
 						|$namespace-documents//xs:complexType[@name=$type-suffix]/xs:all
 						|$namespace-documents//xs:complexType[@name=$type-suffix]/xs:choice
 						|$namespace-documents//xs:complexType[@name=$type-suffix]/xs:attribute
 						|$namespace-documents//xs:complexType[@name=$type-suffix]/xs:attributeGroup
+						|$namespace-documents//xs:complexType[@name=$type-suffix]/xs:anyAttribute
 						|$namespace-documents//xs:complexType[@name=$type-suffix]/xs:complexContent/xs:restriction/xs:sequence
 						|$namespace-documents//xs:complexType[@name=$type-suffix]/xs:complexContent/xs:restriction/xs:all
 						|$namespace-documents//xs:complexType[@name=$type-suffix]/xs:complexContent/xs:restriction/xs:choice
@@ -243,6 +250,7 @@
 						|$namespace-documents//xs:complexType[@name=$type-suffix]/xs:complexContent/xs:restriction/xs:attributeGroup
 						|$namespace-documents//xs:complexType[@name=$type-suffix]/xs:simpleContent/xs:restriction/xs:attribute
 						|$namespace-documents//xs:complexType[@name=$type-suffix]/xs:simpleContent/xs:restriction/xs:attributeGroup
+						|$namespace-documents//xs:complexType[@name=$type-suffix]/xs:simpleContent/xs:restriction/xs:anyAttribute
 						|$namespace-documents//xs:group[@name=$ref-suffix]/*">
 						<xsl:with-param name="root-document" select="$root-document" />
 						<xsl:with-param name="root-path" select="$root-path" />
