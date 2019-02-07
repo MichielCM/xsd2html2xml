@@ -7,33 +7,33 @@
 		<xsl:element name="style">
 			<xsl:attribute name="type">text/css</xsl:attribute>
 			<xsl:text>
-				form.xsd2html2xml [hidden] {
+				[hidden] {
 					display: none;
 				}
-				form.xsd2html2xml section {
+				section {
 					margin: 5px;
 				}
-				form.xsd2html2xml label {
+				label {
 					display: block;
 				}
-				form.xsd2html2xml label > span {
+				label > span {
 					float: left;
 					margin-right: 5px;
 					min-width: 200px;
 				}
-				form.xsd2html2xml button[type='submit']:before {
+				button[type='submit']:before {
 					content: "OK";
 				}
-				form.xsd2html2xml button.add:before {
+				button.add:before {
 					content: "+ ";
 				}
-				form.xsd2html2xml button.remove:before {
+				button.remove:before {
 					content: "-";
 				}
-				form.xsd2html2xml input[data-xsd2html2xml-duration='days'] + span:after {
+				input[data-xsd2html2xml-duration='days'] + span:after {
 					content: " (days)";
 				}
-				form.xsd2html2xml input[data-xsd2html2xml-duration='minutes'] + span:after {
+				input[data-xsd2html2xml-duration='minutes'] + span:after {
 					content: " (minutes)";
 				}
 			</xsl:text>
