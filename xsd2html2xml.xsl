@@ -17,6 +17,7 @@
 	<xsl:include href="init.xsl" />
 	<xsl:include href="config.xsl" />
 	
+	<xsl:include href="utils/appinfo.xsl" />
 	<xsl:include href="utils/attr-value.xsl" />
 	<xsl:include href="utils/documentation.xsl" />
 	<xsl:include href="utils/gui-attributes.xsl" />
@@ -39,6 +40,7 @@
 	<xsl:include href="matchers/element@type.xsl" />
 	<xsl:include href="matchers/group@ref.xsl" />
 	<xsl:include href="matchers/sequence.xsl" />
+	<xsl:include href="matchers/unsupported.xsl" />
 	
 	<xsl:include href="handlers/complex-elements.xsl" />
 	<xsl:include href="handlers/default-types.xsl" />
@@ -62,133 +64,157 @@
 	<xsl:variable name="attributeGroup-stylesheet" select="document('matchers/attributeGroup@ref.xsl')" />
 	<xsl:variable name="attr-value-stylesheet" select="document('utils/attr-value.xsl')" />
 	<xsl:variable name="gui-attributes-stylesheet" select="document('utils/gui-attributes.xsl')" />
+ 	<xsl:variable name="namespaces-stylesheet" select="document('utils/namespaces.xsl')" />
 	<xsl:variable name="types-stylesheet" select="document('utils/types.xsl')" />
 	
 	<xsl:template match="*" />
 	
 	<xsl:template match="/*">
-		<xsl:choose>
-			<!-- check if noNamespaceSchemaLocation contains a value -->
-			<xsl:when test="@xsi:noNamespaceSchemaLocation">
-				<xsl:call-template name="inform">
-					<xsl:with-param name="message">
-						<xsl:text>XML file detected. Loading schema: </xsl:text><xsl:value-of select="@xsi:noNamespaceSchemaLocation" />
-					</xsl:with-param>
-				</xsl:call-template>
-				
-				<xsl:call-template name="add-metadata">
-					<xsl:with-param name="xml-document" select="." />
-				</xsl:call-template>
-				
-				<xsl:for-each select="document(@xsi:noNamespaceSchemaLocation)/*">
+		<xsl:element name="html">
+			<xsl:choose>
+				<!-- check if noNamespaceSchemaLocation contains a value -->
+				<xsl:when test="@xsi:noNamespaceSchemaLocation">
+					<xsl:call-template name="inform">
+						<xsl:with-param name="message">
+							<xsl:text>XML file detected. Loading schema: </xsl:text><xsl:value-of select="@xsi:noNamespaceSchemaLocation" />
+						</xsl:with-param>
+					</xsl:call-template>
+					
+					<xsl:call-template name="add-metadata">
+						<xsl:with-param name="xml-document" select="." />
+					</xsl:call-template>
+					
+					<xsl:for-each select="document(@xsi:noNamespaceSchemaLocation)/*">
+						<xsl:call-template name="handle-schema" />
+					</xsl:for-each>
+				</xsl:when>
+				<!-- check if schemaLocation contains a value -->
+				<xsl:when test="@xsi:schemaLocation">
+					<xsl:choose>
+						<!-- check if schemaLocation contains spaces (and thus namespace-location combinations) -->
+						<xsl:when test="contains(@xsi:schemaLocation, ' ')">
+							<!-- extract the namespace of the root element -->
+							<xsl:variable name="default-namespace">
+								<xsl:value-of select="namespace::*[name() = substring-before(name(), concat(':', local-name()))]" />
+							</xsl:variable>
+							
+							<!-- extract schema location relative to default namespace -->
+							<xsl:variable name="schema-location">
+								<xsl:value-of select="normalize-space(substring-after(@xsi:schemaLocation, $default-namespace))" />
+							</xsl:variable>
+							
+							<xsl:choose>
+								<!-- if schema-location still contains spaces, break off before the first one to find the schema location -->
+								<xsl:when test="contains($schema-location, ' ')">
+									<xsl:call-template name="inform">
+										<xsl:with-param name="message">
+											<xsl:text>XML file detected. Loading schema: </xsl:text><xsl:value-of select="normalize-space(substring-before($schema-location, ' '))" />
+										</xsl:with-param>
+									</xsl:call-template>
+									
+									<xsl:call-template name="add-metadata">
+										<xsl:with-param name="xml-document" select="." />
+									</xsl:call-template>
+									
+									<xsl:for-each select="document(normalize-space(substring-before($schema-location, ' ')))/*">
+										<xsl:call-template name="handle-schema" />
+									</xsl:for-each>
+								</xsl:when>
+								<!-- otherwise, the remaining value should point to a schema -->
+								<xsl:otherwise>
+									<xsl:call-template name="inform">
+										<xsl:with-param name="message">
+											<xsl:text>XML file detected. Loading schema: </xsl:text><xsl:value-of select="$schema-location" />
+										</xsl:with-param>
+									</xsl:call-template>
+									
+									<xsl:call-template name="add-metadata">
+										<xsl:with-param name="xml-document" select="." />
+									</xsl:call-template>
+									
+									<xsl:for-each select="document($schema-location)/*">
+										<xsl:call-template name="handle-schema" />
+									</xsl:for-each>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<!-- if not, assume the value points to a schema -->
+						<xsl:otherwise>
+							<xsl:call-template name="inform">
+								<xsl:with-param name="message">
+									<xsl:text>XML file detected. Loading schema: </xsl:text><xsl:value-of select="@xsi:schemaLocation" />
+								</xsl:with-param>
+							</xsl:call-template>
+							
+							<xsl:call-template name="add-metadata">
+								<xsl:with-param name="xml-document" select="." />
+							</xsl:call-template>
+							
+							<xsl:for-each select="document(@xsi:schemaLocation)/*">
+								<xsl:call-template name="handle-schema" />
+							</xsl:for-each>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<!-- else, assume an XSD document -->
+				<xsl:otherwise>
+					<xsl:call-template name="add-metadata" />
 					<xsl:call-template name="handle-schema" />
-				</xsl:for-each>
-			</xsl:when>
-			<!-- check if schemaLocation contains a value -->
-			<xsl:when test="@xsi:schemaLocation">
-				<xsl:choose>
-					<!-- check if schemaLocation contains spaces (and thus namespace-location combinations) -->
-					<xsl:when test="contains(@xsi:schemaLocation, ' ')">
-						<!-- extract the namespace of the root element -->
-						<xsl:variable name="default-namespace">
-							<xsl:value-of select="namespace::*[name() = substring-before(name(), concat(':', local-name()))]" />
-						</xsl:variable>
-						
-						<!-- extract schema location relative to default namespace -->
-						<xsl:variable name="schema-location">
-							<xsl:value-of select="normalize-space(substring-after(@xsi:schemaLocation, $default-namespace))" />
-						</xsl:variable>
-						
-						<xsl:choose>
-							<!-- if schema-location still contains spaces, break off before the first one to find the schema location -->
-							<xsl:when test="contains($schema-location, ' ')">
-								<xsl:call-template name="inform">
-									<xsl:with-param name="message">
-										<xsl:text>XML file detected. Loading schema: </xsl:text><xsl:value-of select="normalize-space(substring-before($schema-location, ' '))" />
-									</xsl:with-param>
-								</xsl:call-template>
-								
-								<xsl:call-template name="add-metadata">
-									<xsl:with-param name="xml-document" select="." />
-								</xsl:call-template>
-								
-								<xsl:for-each select="document(normalize-space(substring-before($schema-location, ' ')))/*">
-									<xsl:call-template name="handle-schema" />
-								</xsl:for-each>
-							</xsl:when>
-							<!-- otherwise, the remaining value should point to a schema -->
-							<xsl:otherwise>
-								<xsl:call-template name="inform">
-									<xsl:with-param name="message">
-										<xsl:text>XML file detected. Loading schema: </xsl:text><xsl:value-of select="$schema-location" />
-									</xsl:with-param>
-								</xsl:call-template>
-								
-								<xsl:call-template name="add-metadata">
-									<xsl:with-param name="xml-document" select="." />
-								</xsl:call-template>
-								
-								<xsl:for-each select="document($schema-location)/*">
-									<xsl:call-template name="handle-schema" />
-								</xsl:for-each>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:when>
-					<!-- if not, assume the value points to a schema -->
-					<xsl:otherwise>
-						<xsl:call-template name="inform">
-							<xsl:with-param name="message">
-								<xsl:text>XML file detected. Loading schema: </xsl:text><xsl:value-of select="@xsi:schemaLocation" />
-							</xsl:with-param>
-						</xsl:call-template>
-						
-						<xsl:call-template name="add-metadata">
-							<xsl:with-param name="xml-document" select="." />
-						</xsl:call-template>
-						
-						<xsl:for-each select="document(@xsi:schemaLocation)/*">
-							<xsl:call-template name="handle-schema" />
-						</xsl:for-each>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>
-			<!-- else, assume an XSD document -->
-			<xsl:otherwise>
-				<xsl:call-template name="add-metadata" />
-				<xsl:call-template name="handle-schema" />
-			</xsl:otherwise>
-		</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:element>
 	</xsl:template>
 	
 	<!-- add metadata, including optionally xml document, to head section -->
 	<xsl:template name="add-metadata">
 		<xsl:param name="xml-document"></xsl:param>
 		
-		<xsl:element name="title">
-			<xsl:text>HTML5 Form - Generated by XSD2HTML2XML v3</xsl:text>
-		</xsl:element>
-		
-		<!-- add stylesheet and script elements -->
-		<xsl:call-template name="add-style" />
-		
-		<xsl:call-template name="add-polyfills" />
-		<xsl:call-template name="add-xml-generators" />
-		<xsl:call-template name="add-html-populators" />
-		<xsl:call-template name="add-value-fixers" />
-		<xsl:call-template name="add-event-handlers" />
-		<xsl:call-template name="add-initial-calls" />
-		
-		<!-- add a generator meta element -->
-		<xsl:element name="meta">
-			<xsl:attribute name="name">generator</xsl:attribute>
-			<xsl:attribute name="content">XSD2HTML2XML v3: https://github.com/MichielCM/xsd2html2xml</xsl:attribute>
+		<xsl:element name="head">
+			<xsl:element name="title">
+				<xsl:value-of select="$config-title" />
+			</xsl:element>
 			
-			<!-- if an xml document has been provided, save it as an attribute to the meta element -->
-			<xsl:if test="not($xml-document = '')">
-				<xsl:attribute name="data-xsd2html2xml-source">
-					<xsl:apply-templates select="$xml-document" mode="serialize" />
-				</xsl:attribute>
+			<!-- add stylesheet and script elements -->
+			<xsl:if test="not($config-style = '')">
+				<xsl:element name="link">
+					<xsl:attribute name="rel">stylesheet</xsl:attribute>
+					<xsl:attribute name="type">text/css</xsl:attribute>
+					<xsl:attribute name="href">
+						<xsl:value-of select="$config-style" />
+					</xsl:attribute>
+				</xsl:element>
 			</xsl:if>
+			
+			<xsl:call-template name="add-style" />
+			
+			<xsl:call-template name="add-polyfills" />
+			<xsl:call-template name="add-xml-generators" />
+			<xsl:call-template name="add-html-populators" />
+			<xsl:call-template name="add-value-fixers" />
+			<xsl:call-template name="add-event-handlers" />
+			<xsl:call-template name="add-initial-calls" />
+			
+			<xsl:if test="not($config-script = '')">
+				<xsl:element name="script">
+					<xsl:attribute name="type">text/javascript</xsl:attribute>
+					<xsl:attribute name="src">
+						<xsl:value-of select="$config-script" />
+					</xsl:attribute>
+				</xsl:element>
+			</xsl:if>
+			
+			<!-- add a generator meta element -->
+			<xsl:element name="meta">
+				<xsl:attribute name="name">generator</xsl:attribute>
+				<xsl:attribute name="content">XSD2HTML2XML v3: https://github.com/MichielCM/xsd2html2xml</xsl:attribute>
+				
+				<!-- if an xml document has been provided, save it as an attribute to the meta element -->
+				<xsl:if test="not($xml-document = '')">
+					<xsl:attribute name="data-xsd2html2xml-source">
+						<xsl:apply-templates select="$xml-document" mode="serialize" />
+					</xsl:attribute>
+				</xsl:if>
+			</xsl:element>
 		</xsl:element>
 	</xsl:template>
 	
@@ -255,6 +281,11 @@
 					<xsl:value-of select="$config-callback" />
 					<xsl:text>(htmlToXML(this));</xsl:text>
 				</xsl:attribute>
+				
+				<!-- add custom appinfo data -->
+				<xsl:for-each select="xs:annotation/xs:appinfo/*">
+					<xsl:call-template name="add-appinfo" />
+				</xsl:for-each>
 				
 				<!-- start parsing the XSD from the top -->
 				<xsl:for-each select="xs:element">
