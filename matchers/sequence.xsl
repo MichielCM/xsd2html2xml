@@ -32,7 +32,7 @@
 			</xsl:call-template>
 		</xsl:if>
 		
-		<xsl:apply-templates select="xs:element|xs:group|xs:choice|xs:sequence">
+		<xsl:apply-templates select="xs:element|xs:group|xs:choice|xs:sequence|xs:any">
 			<xsl:with-param name="root-document" select="$root-document" />
 			<xsl:with-param name="root-path" select="$root-path" />
 			<xsl:with-param name="root-namespaces" select="$root-namespaces" />

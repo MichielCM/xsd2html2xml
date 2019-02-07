@@ -103,7 +103,7 @@
 				<xsl:call-template name="log">
 					<xsl:with-param name="reference">xs:element[@type]-forwardee</xsl:with-param>
 				</xsl:call-template>
-				
+								
 				<!-- add radio button if $choice is specified -->
 				<xsl:if test="not($choice = '') and not($choice = 'true')">
 					<xsl:call-template name="add-choice-button">
