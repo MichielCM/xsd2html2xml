@@ -18,6 +18,23 @@
 						if (o.closest("[hidden]") == null)
 							o.removeAttribute("disabled");
 					});
+          
+          //set a new random id for radio buttons
+          newNode.querySelectorAll("input[type='radio']").forEach(function(o) {
+            if (o.parentElement.previousElementSibling != null
+              &amp;&amp; o.parentElement.previousElementSibling.previousElementSibling != null
+              &amp;&amp; o.parentElement.previousElementSibling.previousElementSibling.children.length &gt; 0
+              &amp;&amp; o.parentElement.previousElementSibling.previousElementSibling.children[0].hasAttribute("type")
+              &amp;&amp; o.parentElement.previousElementSibling.previousElementSibling.children[0].getAttribute("type") === "radio") {
+              o.setAttribute("name", o.parentElement.previousElementSibling.previousElementSibling.children[0].getAttribute("name"));
+            } else {
+              o.setAttribute("name", o.getAttribute("name").concat(
+                Math.random().toString().substring(2)
+              ));
+            };
+            
+            o.setAttribute("onclick", "clickRadioInput(this, '".concat(o.getAttribute("name")).concat("');"));
+          });
 					
 					button.parentNode.insertBefore(
 						newNode, button.previousElementSibling

@@ -36,6 +36,29 @@
 						}
 					};
 				}
+        
+        /* add .previousElementSibling if not supported */
+        (function (arr) {
+          arr.forEach(function (item) {
+            if (item.hasOwnProperty('previousElementSibling')) {
+              return;
+            }
+            Object.defineProperty(item, 'previousElementSibling', {
+              configurable: true,
+              enumerable: true,
+              get: function () {
+                let el = this;
+                while (el = el.previousSibling) {
+                  if (el.nodeType === 1) {
+                    return el;
+                  }
+                }
+                return null;
+              },
+              set: undefined
+            });
+          });
+        })([Element.prototype, CharacterData.prototype]);
 			</xsl:text>
 		</xsl:element>	
 	</xsl:template>
