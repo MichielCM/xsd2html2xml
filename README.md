@@ -114,6 +114,9 @@ listed below, nodeset-xxx.xsl files are provided. Be sure to include the correct
 	<li>config-root: for XSD schemas that contain multiple root nodes, determines the number of the root node to be used. Defaults to 1;</li>
 	<li>config-callback: contains the JavaScript function that is called when a user submits the form. It should accept a string argument containing the
 	generated XML.</li>
+	<li>config-title: contains the title given to the generated document.</li>
+	<li>config-script: optionally contains the URL to a JavaScript reference, which will be referenced in the generated document.</li>
+	<li>config-style: optionally contains the URL to a CSS reference, which will be referenced in the generated document.</li>
 	<li>config-documentation: specifies whether element's annotation/documentation tags should be used for descriptions (works together with config-language).
 	Defaults to false, i.e. uses element's @name or @ref (unprefixed) attributes as descriptions.</li>
 	<li>config-language: optionally specifies which annotation/documentation language (determined by xml:lang) should be used for descriptions. Defaults to none.</li>
@@ -164,6 +167,28 @@ listed below, nodeset-xxx.xsl files are provided. Be sure to include the correct
 		</td>
 	</tr>
 </table>
+<h2>Customization</h2>
+<p>In case you want to add custom functionality to the generated form, I highly recommended you to do so using JavaScript and CSS, and not to directly alter the XSLT. This project frequently has new releases and updating is a hassle if you have custom functions built-in. Use the <em>config-script</em> and/or <em>config-style</em> parameters to generate HTML elements referring to external JavaScript or CSS files. See the information on config.xsl for more information.</p>
+<p>To access data that is not automatically placed in the form, use <em>appinfo</em> elements in your XSD. Any data stored in such an <em>appinfo</em> element is converted into <em>data-appinfo-...</em> HTML attributes. For example:</p>
+<pre><code>&lt;xs:element type=&quot;xs:string&quot; name=&quot;string&quot; default=&quot;singleline string&quot;&gt;
+	&lt;xs:annotation&gt;
+		&lt;xs:appinfo source=&quot;https://github.com/MichielCM/xsd2html2xml&quot;&gt;
+			&lt;class&gt;element-with-extra-data&lt;/class&gt;
+		&lt;/xs:appinfo&gt;
+		&lt;xs:appinfo&gt;
+			&lt;identifier&gt;abc123&lt;/identifier&gt;
+		&lt;/xs:appinfo&gt;
+	&lt;/xs:annotation&gt;
+&lt;/xs:element&gt;</code></pre>
+<p>Please note that <em>appinfo</em> elements with their <em>source</em> referring to <em>https://github.com/MichielCM/xsd2html2xml</em> are added to the HTML element directly, without a <em>data-appinfo-</em> prefix. The above code leads to the following generated HTML:</p>
+<pre><code>&lt;label ... class=&quot;element-with-extra-data&quot; data-appinfo-identifier=&quot;abc123&quot;&gt;
+	&lt;input ... &gt;
+&lt;/label&gt;</code></pre>
+<p>These attributes can be accessed through JavaScript or CSS and displayed or transformed at will:</p>
+<pre><code>label.element-with-extra-data:after {
+	content: attr(data-appinfo-identifier);
+}
+</code></pre>
 <h2>Under the Hood</h2>
 <p>The third version of XSD2HTML2XML works in a modular infrastructure, to make development, maintainenance and implementation easier. The main file, xsd2html2xml.xsl,
 includes all other files in these directories:</p>
