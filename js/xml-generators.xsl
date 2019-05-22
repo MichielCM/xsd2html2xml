@@ -120,7 +120,11 @@
 				            	}
 				        }
 				    } else if (node.getElementsByTagName("select").length != 0) {
-				        return node.getElementsByTagName("select")[0].value;
+						if (node.getElementsByTagName("select")[0].getElementsByTagName("option")[node.getElementsByTagName("select")[0].selectedIndex].hasAttribute("value")) {
+							return node.getElementsByTagName("select")[0].value;
+						} else {
+							return null;
+						}
 				    } else if (node.getElementsByTagName("textarea").length != 0) {
 				    	return node.getElementsByTagName("textarea")[0].value;
 				    }
