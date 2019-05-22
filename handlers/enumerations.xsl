@@ -45,6 +45,11 @@
 				<xsl:attribute name="data-xsd2html2xml-filled">true</xsl:attribute>
 			</xsl:if> -->
 			
+			<!-- add option to select no value in case of optional attribute -->
+			<xsl:if test="$attribute = 'true' and @use = 'optional'">
+				<xsl:element name="option">-</xsl:element>
+			</xsl:if>
+			
 			<!-- add options for each value; populate the element if there is corresponding data, or fill it with a fixed or default value -->
 			<xsl:call-template name="handle-enumerations">
 				<xsl:with-param name="root-document" select="$root-document" />
