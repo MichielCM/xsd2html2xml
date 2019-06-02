@@ -101,7 +101,19 @@
 					};
 					
 					if (element.querySelector("select") !== null) {
-						element.querySelector("select option[value = '".concat(value).concat("']")).setAttribute("selected", "selected");
+						if (element.querySelector("select").getAttribute("data-xsd2html2xml-primitive") === "idref"
+							|| element.querySelector("select").getAttribute("data-xsd2html2xml-primitive") === "idrefs") {
+							globalValuesMap.push({
+								object: element.querySelector("select"),
+								values: value.split(/\s+/)
+							});
+							/*var values = value.split(/\\s+/);
+							for (var i=0; i&lt;values.length; i++) {
+								element.querySelector("select option[value = '".concat(values[i]).concat("']")).setAttribute("selected", "selected");
+							}*/
+						} else {
+							element.querySelector("select option[value = '".concat(value).concat("']")).setAttribute("selected", "selected");
+						}
 					};
 				};
 				
@@ -177,6 +189,16 @@
 								previousChildName = childNode.nodeName;
 							}
 						};
+					}
+				};
+				
+				var setDynamicValues = function() {
+					for (var i=0; i&lt;globalValuesMap.length; i++) {
+						for (var j=0; j&lt;globalValuesMap[i].values.length; j++) {
+							globalValuesMap[i].object.querySelector(
+								"select option[value = '".concat(globalValuesMap[i].values[j]).concat("']")
+							).setAttribute("selected", "selected");
+						}
 					}
 				};
 			</xsl:text>

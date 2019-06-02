@@ -7,12 +7,16 @@
 		<xsl:element name="script">
 			<xsl:attribute name="type">text/javascript</xsl:attribute>
 			<xsl:text disable-output-escaping="yes">
+				var globalValuesMap = [];
+				
 				document.addEventListener("DOMContentLoaded",
 					function() {
 						/* INITIAL CALLS */
 						
 						addHiddenFields();
 						xmlToHTML(document);
+						updateIdentifiers();
+						setDynamicValues();
 						setValues();
 						ensureMinimum();
 						
