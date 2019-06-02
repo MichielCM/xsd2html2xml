@@ -446,6 +446,15 @@
 					<xsl:with-param name="namespace-documents" select="$namespace-documents" />
 				</xsl:call-template>
 			</xsl:when>
+			<xsl:when test="$type = 'id'">
+				<xsl:call-template name="set-pattern">
+					<xsl:with-param name="prefix">(?!_)[_A-Za-z][-._A-Za-z0-9]*</xsl:with-param>
+					<xsl:with-param name="root-document" select="$root-document" />
+					<xsl:with-param name="root-path" select="$root-path" />
+					<xsl:with-param name="root-namespaces" select="$root-namespaces" />
+					<xsl:with-param name="namespace-documents" select="$namespace-documents" />
+				</xsl:call-template>
+			</xsl:when>
 			<xsl:otherwise>
 				<xsl:call-template name="set-pattern">
 					<xsl:with-param name="root-document" select="$root-document" />
