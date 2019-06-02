@@ -245,7 +245,7 @@
 			
 			<xsl:choose>
 				<!-- enumerations are rendered as select elements -->
-				<xsl:when test="not($choice='')">
+				<xsl:when test="not($choice='') or $type='idref' or $type='idrefs'">
 					<xsl:call-template name="generate-select">
 						<xsl:with-param name="root-document" select="$root-document" />
 						<xsl:with-param name="root-path" select="$root-path" />
@@ -254,7 +254,14 @@
 						<xsl:with-param name="namespace-documents" select="$namespace-documents" />
 						
 						<xsl:with-param name="description" select="$description" />
+						<xsl:with-param name="type" select="$type" />
 						<xsl:with-param name="attribute" select="$attribute" />
+						<xsl:with-param name="multiple">
+							<xsl:choose>
+								<xsl:when test="$type='idrefs'">true</xsl:when>
+								<xsl:otherwise>false</xsl:otherwise>
+							</xsl:choose>
+						</xsl:with-param>
 						<xsl:with-param name="disabled" select="$disabled" />
 					</xsl:call-template>
 				</xsl:when>

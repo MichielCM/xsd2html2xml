@@ -12,7 +12,9 @@
 		<xsl:param name="namespace-documents" /> <!-- contains all documents in element namespace -->
 		
 		<xsl:param name="description" /> <!-- contains preferred description for element -->
+		<xsl:param name="type" /> <!-- contains primitive type -->
 		<xsl:param name="attribute" /> <!-- boolean indicating whether or not node is an attribute -->
+		<xsl:param name="multiple" /> <!-- boolean indicating whether or not generated element should be able to allow for multiple values -->
 		<xsl:param name="disabled" /> <!-- boolean indicating whether or not generated element should be disabled -->
 		
 		<xsl:element name="select">
@@ -49,6 +51,15 @@
 			<xsl:if test="$attribute = 'true' and @use = 'optional'">
 				<xsl:element name="option">-</xsl:element>
 			</xsl:if>
+			
+			<!-- add multiple keyword if several selections are allowed -->
+			<xsl:if test="$multiple = 'true'">
+				<xsl:attribute name="multiple">multiple</xsl:attribute>
+			</xsl:if>
+			
+			<xsl:attribute name="data-xsd2html2xml-primitive">
+				<xsl:value-of select="$type" />
+			</xsl:attribute>
 			
 			<!-- add options for each value; populate the element if there is corresponding data, or fill it with a fixed or default value -->
 			<xsl:call-template name="handle-enumerations">
