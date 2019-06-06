@@ -130,7 +130,8 @@
 				</xsl:variable>
 				
 				<!-- call attr-value on all matching simple types named type suffix -->
-				<xsl:for-each select="$namespace-documents//xs:simpleType[@name=$type-suffix]">
+				<xsl:for-each select="$namespace-documents//xs:complexType[@name=$type-suffix]
+					|$namespace-documents//xs:simpleType[@name=$type-suffix]">
 					<xsl:call-template name="attr-value">
 						<xsl:with-param name="root-document" select="$root-document" />
 						<xsl:with-param name="root-path" select="$root-path" />
