@@ -16,14 +16,14 @@
 		<xsl:param name="attribute" /> <!-- boolean indicating whether or not node is an attribute -->
 		<xsl:param name="disabled" /> <!-- boolean indicating whether or not generated element should be disabled -->
 		<xsl:param name="pattern" /> <!-- regex pattern to be applied to element input -->
-		<xsl:param name="min-length" /> <!-- minLength attribute used to determine whether or not generated element should be optional -->
+		<xsl:param name="min-length" /> <!-- minLength attribute used to determine if generated element should be optional -->
 		<xsl:param name="whitespace" /> <!-- whitespace rule to be applied to element input -->
 		
 		<xsl:element name="input">
 			<xsl:attribute name="type">
 				<!-- primive type determines the input element type -->
 				<xsl:choose>
-					<xsl:when test="$type = 'string' or $type = 'normalizedstring' or $type = 'token' or $type = 'language' or $type = 'id'">
+					<xsl:when test="$type = 'string' or $type = 'normalizedstring' or $type = 'token' or $type = 'language'">
 						<xsl:text>text</xsl:text>
 					</xsl:when>
 					<xsl:when test="$type = 'decimal' or $type = 'float' or $type = 'double' or $type = 'integer' or $type = 'byte' or $type = 'int' or $type = 'long' or $type = 'positiveinteger' or $type = 'negativeinteger' or $type = 'nonpositiveinteger' or $type = 'nonnegativeinteger' or $type = 'short' or $type = 'unsignedlong' or $type = 'unsignedint' or $type = 'unsignedshort' or $type = 'unsignedbyte' or $type = 'gday' or $type = 'gmonth' or $type = 'gyear'">
@@ -84,9 +84,6 @@
 					</xsl:when>
 					<xsl:when test="$type = 'duration'"> <!-- Use the output element for ranges -->
 						<xsl:text>this.setAttribute("value", "</xsl:text><xsl:call-template name="get-duration-info"><xsl:with-param name="type">prefix</xsl:with-param><xsl:with-param name="pattern" select="$pattern" /></xsl:call-template>".concat(this.value).concat("<xsl:call-template name="get-duration-info"><xsl:with-param name="type">abbreviation</xsl:with-param><xsl:with-param name="pattern" select="$pattern" /></xsl:call-template><xsl:text>")); this.previousElementSibling.textContent = this.value;</xsl:text>
-					</xsl:when>
-					<xsl:when test="$type = 'id'">
-						<xsl:text>if (this.value) { this.setAttribute("value", this.value); } else { this.removeAttribute("value"); }; updateIdentifiers();</xsl:text>
 					</xsl:when>
 					<xsl:otherwise> <!-- Use value if otherwise -->
 						<xsl:text>if (this.value) { this.setAttribute("value", this.value</xsl:text><xsl:if test="$whitespace = 'replace'">.replace(/\s/g, " ")</xsl:if><xsl:if test="$whitespace = 'collapse'">.replace(/\s+/g, " ").trim()</xsl:if><xsl:text>); } else { this.removeAttribute("value"); };</xsl:text>

@@ -12,6 +12,7 @@
 		<xsl:param name="namespace-documents" /> <!-- contains all documents in element namespace -->
 		
 		<xsl:param name="description" /> <!-- contains preferred description for element -->
+		<xsl:param name="min-length" /> <!-- minLength attribute used to determine if generated element should be optional -->
 		<xsl:param name="attribute" /> <!-- boolean indicating whether or not node is an attribute -->
 		<xsl:param name="disabled" /> <!-- boolean indicating whether or not generated element should be disabled -->
 		<xsl:param name="whitespace" /> <!-- whitespace rule to be applied to element input -->
@@ -28,9 +29,9 @@
 						<xsl:attribute name="required">required</xsl:attribute>
 					</xsl:if>
 				</xsl:when>
-				<xsl:otherwise>
+				<xsl:when test="$min-length = '' or $min-length > 0">
 					<xsl:attribute name="required">required</xsl:attribute>
-				</xsl:otherwise>
+				</xsl:when>
 			</xsl:choose>
 			
 			<!-- attributes can be prohibited, rendered as readonly -->
