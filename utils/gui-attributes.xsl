@@ -276,9 +276,17 @@
 					<xsl:with-param name="namespace-documents" select="$namespace-documents" />
 				</xsl:call-template>
 			</xsl:when>
+			<xsl:when test="$type = 'integer'">
+				<xsl:call-template name="set-pattern">
+					<xsl:with-param name="prefix">[-]?</xsl:with-param>
+					<xsl:with-param name="root-document" select="$root-document" />
+					<xsl:with-param name="root-path" select="$root-path" />
+					<xsl:with-param name="root-namespaces" select="$root-namespaces" />
+					<xsl:with-param name="namespace-documents" select="$namespace-documents" />
+				</xsl:call-template>
+			</xsl:when>
 			<xsl:when test="$type = 'nonpositiveinteger'">
 				<xsl:call-template name="set-numeric-range">
-					<xsl:with-param name="min-value">-2147483648</xsl:with-param>
 					<xsl:with-param name="max-value">0</xsl:with-param>
 					<xsl:with-param name="root-document" select="$root-document" />
 					<xsl:with-param name="root-path" select="$root-path" />
@@ -296,7 +304,6 @@
 			<xsl:when test="$type = 'nonnegativeinteger'">
 				<xsl:call-template name="set-numeric-range">
 					<xsl:with-param name="min-value">0</xsl:with-param>
-					<xsl:with-param name="max-value">2147483647</xsl:with-param>
 					<xsl:with-param name="root-document" select="$root-document" />
 					<xsl:with-param name="root-path" select="$root-path" />
 					<xsl:with-param name="root-namespaces" select="$root-namespaces" />
@@ -313,7 +320,6 @@
 			<xsl:when test="$type = 'positiveinteger'">
 				<xsl:call-template name="set-numeric-range">
 					<xsl:with-param name="min-value">1</xsl:with-param>
-					<xsl:with-param name="max-value">2147483647</xsl:with-param>
 					<xsl:with-param name="root-document" select="$root-document" />
 					<xsl:with-param name="root-path" select="$root-path" />
 					<xsl:with-param name="root-namespaces" select="$root-namespaces" />
@@ -329,7 +335,6 @@
 			</xsl:when>
 			<xsl:when test="$type = 'negativeinteger'">
 				<xsl:call-template name="set-numeric-range">
-					<xsl:with-param name="min-value">-2147483648</xsl:with-param>
 					<xsl:with-param name="max-value">-1</xsl:with-param>
 					<xsl:with-param name="root-document" select="$root-document" />
 					<xsl:with-param name="root-path" select="$root-path" />
@@ -501,7 +506,7 @@
 			</xsl:call-template>
 		</xsl:variable>
 		
-		<xsl:if test="$minInclusive = '' and $minExclusive = ''">
+		<xsl:if test="$minInclusive = '' and $minExclusive = '' and not($min-value = '')">
 			<xsl:attribute name="min">
 				<xsl:value-of select="$min-value"/>
 			</xsl:attribute>
@@ -527,7 +532,7 @@
 			</xsl:call-template>
 		</xsl:variable>
 		
-		<xsl:if test="$maxInclusive = '' and $maxExclusive = ''">
+		<xsl:if test="$maxInclusive = '' and $maxExclusive = '' and not($max-value = '')">
 			<xsl:attribute name="max">
 				<xsl:value-of select="$max-value"/>
 			</xsl:attribute>
