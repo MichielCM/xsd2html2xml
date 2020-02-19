@@ -138,7 +138,7 @@
 			<xsl:with-param name="reference">handle-simple-element</xsl:with-param>
 		</xsl:call-template>
 		
-		<xsl:variable name="type"> <!-- holds the primive type (xs:*) with which the element type will be determined -->
+		<xsl:variable name="type"> <!-- holds the primitive type (xs:*) with which the element type will be determined -->
 			<xsl:call-template name="get-suffix">
 				<xsl:with-param name="string">
 					<xsl:call-template name="get-primitive-type">
