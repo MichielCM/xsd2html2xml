@@ -148,14 +148,14 @@
 							resetFilePicker(input);
 						} else {
 							input.setAttribute("value",
-								(type.endsWith(":base64binary"))
+								(type === "base64binary" || type.endsWith(":base64binary"))
 								? fileReader.result.substring(fileReader.result.indexOf(",") + 1)
 								//convert base64 to base16 (hexBinary)
 								: atob(fileReader.result.substring(fileReader.result.indexOf(",") + 1))
-							    	.split('')
-							    	.map(function (aChar) {
-							    		return ('0' + aChar.charCodeAt(0).toString(16)).slice(-2);
-							    	})
+									.split('')
+									.map(function (aChar) {
+										return ('0' + aChar.charCodeAt(0).toString(16)).slice(-2);
+									})
 									.join('')
 									.toUpperCase()
 							);
