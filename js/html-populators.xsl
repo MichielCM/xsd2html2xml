@@ -85,6 +85,9 @@
 						if (element.querySelector("input").getAttribute("data-xsd2html2xml-primitive") === "boolean") {
 							if (value === "true") {
 								element.querySelector("input").setAttribute("checked", "checked");
+							}
+							else if(value === "false" &amp;&amp; element.querySelector("input").hasAttribute("checked")) {
+								element.querySelector("input").removeAttribute("checked");
 							};
 						} else {
 							element.querySelector("input").setAttribute("value", value);
