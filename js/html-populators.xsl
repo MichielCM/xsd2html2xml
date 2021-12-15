@@ -36,7 +36,7 @@
 								//check for input elements existing to handle empty elements
 								&amp;&amp; o.previousElementSibling.previousElementSibling.querySelector("input, textarea, select")
 								//check if element has been populated with data from an xml document
-								&amp;&amp; !o.previousElementSibling.previousElementSibling.querySelector("input, textarea, select").hasAttribute("data-xsd2html2xml-filled")) {
+								&amp;&amp; Array.from(o.previousElementSibling.previousElementSibling.querySelectorAll("input, textarea, select")).filter(function(el) {return el.hasAttribute("data-xsd2html2xml-filled")}).length == 0) {
 								clickRemoveButton(
 									o.parentElement.children[0].querySelector("legend &gt; button.remove, span &gt; button.remove")
 								);
@@ -85,6 +85,9 @@
 						if (element.querySelector("input").getAttribute("data-xsd2html2xml-primitive") === "boolean") {
 							if (value === "true") {
 								element.querySelector("input").setAttribute("checked", "checked");
+							}
+							else if(value === "false" &amp;&amp; element.querySelector("input").hasAttribute("checked")) {
+								element.querySelector("input").removeAttribute("checked");
 							};
 						} else {
 							element.querySelector("input").setAttribute("value", value);
