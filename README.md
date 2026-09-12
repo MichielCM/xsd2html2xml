@@ -14,17 +14,11 @@
 	<li>Is free for any purpose (MIT).</li>
 </ul>
 <h2>Versions</h2>
-<h3>Source Code</h3>
 <p>It is recommended to always use the <a href="https://github.com/MichielCM/xsd2html2xml/releases/latest">latest release</a>, as the latest commits may contain experimental or untested features.</p>
 <ul>
 	<li><a href="https://github.com/MichielCM/xsd2html2xml/releases/latest">Version 3</a>: a modular rewrite that is much easier to maintain, debug, and implement;</li>
 	<li>Version 2 (deprecated): first version with namespaces support;</li>
 	<li>Version 1 (deprecated): original release.</li>
-</ul>
-<h3>Software</h3>
-<ul>
-	<li>I provide a free online implementation <a href="https://www.linguadata.nl">on my website</a>;</li>
-	<li>I offer an <a href="https://www.linguadata.nl">off-line Java implementation</a> with user-friendly GUI and platform-independent CLI.</li>
 </ul>
 <h2>Features</h2>
 <h3>Supported XSD Structures &amp; Datatypes</h3>
@@ -243,7 +237,4 @@ thread</a> for details.</p>
 	<li>
 		<strong>I can't edit xs:long values in Chrome!</strong>
 		<br />The upper and lower bounds of long values are too high for Chrome to work with. Either use another browser or comment out the bounds in the set-type-specifics function for the xs:long type.</li>
-	<li>
-		<strong>What's the easiest way to test this?</strong>
-		<br />Please see <a href="https://xsd2html2xml.linguadata.nl">my website</a> for a free online implementation or an offline Java application.</li>
 </ul>
