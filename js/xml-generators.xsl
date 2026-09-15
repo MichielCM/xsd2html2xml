@@ -116,7 +116,7 @@
 						            case "gyearmonth":
 						            	return node.getElementsByTagName("input")[0].getAttribute("value");
 						            default:
-						            	return node.getElementsByTagName("input")[0].value;
+						            	return escapeContent(node.getElementsByTagName("input")[0].value);
 				            	}
 				        }
 				    } else if (node.getElementsByTagName("select").length != 0) {
@@ -132,6 +132,22 @@
 				    } else if (node.getElementsByTagName("textarea").length != 0) {
 				    	return node.getElementsByTagName("textarea")[0].value;
 				    }
+				};
+
+				var characterToXmlSafe = {
+					"&lt;": "&amp;lt;",
+					"&gt;": "&amp;gt;",
+					"&amp;": "&amp;amp;",
+					"\&quot;": "&amp;quot;",
+					"&apos;": "&amp;apos;" /* This doesn't seem to work, so turned off in escapeContent function */
+				};
+
+				var escapeContent = function(content)
+				{
+					return content.replace(/[&lt;&gt;&amp;&quot;]/g, function(character)
+					{
+						return characterToXmlSafe[character];
+					});
 				}
 			</xsl:text>
 		</xsl:element>	
