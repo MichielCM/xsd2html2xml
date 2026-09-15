@@ -21,7 +21,7 @@
 		
 		<xsl:element name="input">
 			<xsl:attribute name="type">
-				<!-- primive type determines the input element type -->
+				<!-- primitive type determines the input element type -->
 				<xsl:choose>
 					<xsl:when test="$type = 'string' or $type = 'normalizedstring' or $type = 'token' or $type = 'language'">
 						<xsl:text>text</xsl:text>
@@ -86,7 +86,7 @@
 						<xsl:text>this.setAttribute("value", "</xsl:text><xsl:call-template name="get-duration-info"><xsl:with-param name="type">prefix</xsl:with-param><xsl:with-param name="pattern" select="$pattern" /></xsl:call-template>".concat(this.value).concat("<xsl:call-template name="get-duration-info"><xsl:with-param name="type">abbreviation</xsl:with-param><xsl:with-param name="pattern" select="$pattern" /></xsl:call-template><xsl:text>")); this.previousElementSibling.textContent = this.value;</xsl:text>
 					</xsl:when>
 					<xsl:otherwise> <!-- Use value if otherwise -->
-						<xsl:text>if (this.value) { this.setAttribute("value", this.value</xsl:text><xsl:if test="$whitespace = 'replace'">.replace(/\s/g, " ")</xsl:if><xsl:if test="$whitespace = 'collapse'">.replace(/\s+/g, " ").trim()</xsl:if><xsl:text>); } else { this.removeAttribute("value"); };</xsl:text>
+						<xsl:text>if (this.value) { this.setAttribute("value", this.value</xsl:text><xsl:if test="$whitespace = 'replace'">.replace(/\s/g, " ")</xsl:if><xsl:if test="$whitespace = 'collapse'">.replace(/\s+/g, " ").trim()</xsl:if><xsl:text>); } else { this.removeAttribute("value"); };</xsl:text><xsl:if test="$type = 'id'"> updateIdentifiers();</xsl:if>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
